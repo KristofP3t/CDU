@@ -7,32 +7,107 @@
     <meta name="description" content="Anstehende Termine und Veranstaltungen des CDU Kreisverbands Landeshauptstadt Schwerin.">
     <link rel="stylesheet" href="../css/styles.css">
     <style>
+        /* Filter Buttons */
+        .events-filter {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            margin: var(--spacing-lg) 0 var(--spacing-xl) 0;
+        }
+
+        .filter-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--color-light-bg);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text);
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background-color: #c2e5ec;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
+        .filter-btn:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Timeline Container */
         .events-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-lg);
+            position: relative;
             margin: var(--spacing-xl) 0;
+            padding-left: 40px;
+        }
+
+        .events-container::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--color-primary), var(--color-accent));
         }
 
         .event-card {
             background-color: var(--color-white);
-            border-left: 4px solid var(--color-primary);
             padding: var(--spacing-lg);
-            border-radius: 4px;
-            display: grid;
-            grid-template-columns: 150px 1fr;
-            gap: var(--spacing-lg);
-            align-items: start;
+            border-radius: 8px;
+            margin-bottom: var(--spacing-lg);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            left: -40px;
+            top: 24px;
+            width: 18px;
+            height: 18px;
+            background-color: var(--color-white);
+            border: 3px solid var(--color-primary);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            box-shadow: 0 8px 24px rgba(82, 183, 193, 0.2);
+            transform: translateX(8px);
+        }
+
+        .event-card:hover::before {
+            background-color: var(--color-primary);
+            box-shadow: 0 0 0 8px rgba(82, 183, 193, 0.1);
+        }
+
+        .event-card.hidden {
+            display: none;
         }
 
         .event-date {
             background-color: var(--color-primary);
             color: var(--color-white);
             padding: var(--spacing-md);
-            border-radius: 4px;
+            border-radius: 6px;
             text-align: center;
             font-weight: 600;
             line-height: 1.4;
+            margin-bottom: var(--spacing-md);
+            display: inline-block;
+            min-width: 120px;
         }
 
         .event-date-label {
@@ -44,12 +119,45 @@
 
         .event-date-main {
             font-size: 18px;
+            font-weight: bold;
+        }
+
+        .event-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: var(--spacing-sm) 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .event-badge.vorstand {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .event-badge.wahlveranstaltung {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+
+        .event-badge.parteitag {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .event-badge.gedenkveranstaltung {
+            background-color: #e8eaf6;
+            color: #3f51b5;
         }
 
         .event-details h3 {
             color: var(--color-dark);
             margin: 0 0 var(--spacing-sm) 0;
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: 600;
         }
 
         .event-details p {
@@ -62,16 +170,17 @@
         .event-time {
             font-size: 14px;
             color: var(--color-text-light);
+            font-weight: 500;
         }
 
         .event-location:before {
             content: "📍 ";
-            margin-right: 4px;
+            margin-right: 6px;
         }
 
         .event-time:before {
             content: "🕐 ";
-            margin-right: 4px;
+            margin-right: 6px;
         }
 
         .event-organizer {
@@ -82,20 +191,25 @@
         }
 
         @media (max-width: var(--breakpoint-md)) {
+            .events-container {
+                padding-left: 30px;
+            }
+
+            .events-container::before {
+                left: 10px;
+            }
+
+            .event-card::before {
+                left: -30px;
+            }
+
             .event-card {
-                grid-template-columns: 1fr;
-                gap: var(--spacing-md);
+                padding: var(--spacing-md);
             }
 
             .event-date {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: var(--spacing-sm);
-                text-align: left;
-            }
-
-            .event-date-label {
-                margin-bottom: 0;
+                display: block;
+                width: 100%;
             }
         }
     </style>
@@ -214,90 +328,132 @@
                 <p>Folgende Termine und Veranstaltungen sind in nächster Zeit vorgesehen.</p>
             </section>
 
+            <!-- Filter Buttons -->
+            <section class="events-filter">
+                <button class="filter-btn active" data-filter="all">Alle</button>
+                <button class="filter-btn" data-filter="vorstand">Vorstand</button>
+                <button class="filter-btn" data-filter="wahlveranstaltung">Wahlveranstaltung</button>
+                <button class="filter-btn" data-filter="parteitag">Parteitag</button>
+                <button class="filter-btn" data-filter="gedenkveranstaltung">Gedenkveranstaltung</button>
+            </section>
+
             <section class="events-container">
-                <article class="event-card">
+                <article class="event-card" data-category="wahlveranstaltung" data-date="2026-09-05">
                     <div class="event-date">
                         <span class="event-date-label">September 2026</span>
-                        <span class="event-date-main">05./12./19.09</span>
+                        <span class="event-date-main">05.09.</span>
                     </div>
                     <div class="event-details">
                         <h3>Infostand zur Landtagswahl</h3>
+                        <span class="event-badge wahlveranstaltung">Wahlveranstaltung</span>
                         <p class="event-location">Marienplatz, Schwerin</p>
                         <p class="event-organizer">CDU Landeshauptstadt Schwerin</p>
                     </div>
                 </article>
 
-                <article class="event-card">
+                <article class="event-card" data-category="wahlveranstaltung" data-date="2026-09-12">
+                    <div class="event-date">
+                        <span class="event-date-label">September 2026</span>
+                        <span class="event-date-main">12.09.</span>
+                    </div>
+                    <div class="event-details">
+                        <h3>Infostand zur Landtagswahl</h3>
+                        <span class="event-badge wahlveranstaltung">Wahlveranstaltung</span>
+                        <p class="event-location">Marienplatz, Schwerin</p>
+                        <p class="event-organizer">CDU Landeshauptstadt Schwerin</p>
+                    </div>
+                </article>
+
+                <article class="event-card" data-category="wahlveranstaltung" data-date="2026-09-19">
+                    <div class="event-date">
+                        <span class="event-date-label">September 2026</span>
+                        <span class="event-date-main">19.09.</span>
+                    </div>
+                    <div class="event-details">
+                        <h3>Infostand zur Landtagswahl</h3>
+                        <span class="event-badge wahlveranstaltung">Wahlveranstaltung</span>
+                        <p class="event-location">Marienplatz, Schwerin</p>
+                        <p class="event-organizer">CDU Landeshauptstadt Schwerin</p>
+                    </div>
+                </article>
+
+                <article class="event-card" data-category="vorstand" data-date="2026-09-21">
                     <div class="event-date">
                         <span class="event-date-label">September 2026</span>
                         <span class="event-date-main">21.09.</span>
                     </div>
                     <div class="event-details">
                         <h3>Vorsitzendenkonferenz CDU Schwerin</h3>
+                        <span class="event-badge vorstand">Vorstand</span>
                         <p class="event-time">19:30 Uhr</p>
                         <p class="event-location">Intercity Hotel, Grunthalplatz 5, 19053 Schwerin</p>
                         <p class="event-organizer">CDU Landeshauptstadt Schwerin</p>
                     </div>
                 </article>
 
-                <article class="event-card">
+                <article class="event-card" data-category="vorstand" data-date="2026-10-28">
                     <div class="event-date">
                         <span class="event-date-label">Oktober 2026</span>
                         <span class="event-date-main">28.10.</span>
                     </div>
                     <div class="event-details">
                         <h3>Vorsitzendenkonferenz CDU Schwerin</h3>
+                        <span class="event-badge vorstand">Vorstand</span>
                         <p class="event-time">19:30 Uhr</p>
                         <p class="event-location">Weinhaus Wöhler, Puschkinstr. 26, 19055 Schwerin</p>
                         <p class="event-organizer">CDU Landeshauptstadt Schwerin</p>
                     </div>
                 </article>
 
-                <article class="event-card">
+                <article class="event-card" data-category="gedenkveranstaltung" data-date="2026-11-15">
                     <div class="event-date">
                         <span class="event-date-label">November 2026</span>
                         <span class="event-date-main">15.11.</span>
                     </div>
                     <div class="event-details">
                         <h3>Kranzniederlegung Volkstrauertag</h3>
+                        <span class="event-badge gedenkveranstaltung">Gedenkveranstaltung</span>
                         <p class="event-time">10:00 Uhr</p>
                         <p class="event-location">Alter Friedhof, Schwerin</p>
                         <p class="event-organizer">CDU Landeshauptstadt Schwerin</p>
                     </div>
                 </article>
 
-                <article class="event-card">
+                <article class="event-card" data-category="vorstand" data-date="2026-11-19">
                     <div class="event-date">
                         <span class="event-date-label">November 2026</span>
                         <span class="event-date-main">19.11.</span>
                     </div>
                     <div class="event-details">
                         <h3>Videokonferenz CDU Schwerin</h3>
+                        <span class="event-badge vorstand">Vorstand</span>
                         <p class="event-time">19:30 Uhr</p>
                         <p>Bei Bedarf zur Vorbereitung KPT (Kreisparteitag)</p>
                         <p class="event-organizer">CDU Landeshauptstadt Schwerin</p>
                     </div>
                 </article>
 
-                <article class="event-card">
+                <article class="event-card" data-category="parteitag" data-date="2026-11-27">
                     <div class="event-date">
                         <span class="event-date-label">November 2026</span>
                         <span class="event-date-main">27.11.</span>
                     </div>
                     <div class="event-details">
                         <h3>Kreisparteitag – Neuwahl Kreisvorstand</h3>
+                        <span class="event-badge parteitag">Parteitag</span>
                         <p class="event-time">18:00 Uhr</p>
                         <p class="event-organizer">CDU Landeshauptstadt Schwerin</p>
                     </div>
                 </article>
 
-                <article class="event-card">
+                <article class="event-card" data-category="vorstand" data-date="2026-12-11">
                     <div class="event-date">
                         <span class="event-date-label">Dezember 2026</span>
                         <span class="event-date-main">11.12.</span>
                     </div>
                     <div class="event-details">
                         <h3>Vorsitzendenkonferenz CDU Schwerin</h3>
+                        <span class="event-badge vorstand">Vorstand</span>
                         <p class="event-time">17:30 Uhr</p>
                         <p class="event-location">Weinhaus Wöhler, Puschkinstr. 26, 19055 Schwerin</p>
                         <p class="event-organizer">CDU Landeshauptstadt Schwerin</p>
@@ -335,5 +491,57 @@
     </footer>
 
     <script src="../js/main.js"></script>
+
+    <script>
+        // Events Filter & Past Events Management
+        const EventsManager = (() => {
+            const init = () => {
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                const eventCards = document.querySelectorAll('.event-card');
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                // Hide past events on load
+                eventCards.forEach(card => {
+                    const eventDate = card.getAttribute('data-date');
+                    const cardDate = new Date(eventDate);
+                    if (cardDate < today) {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                // Filter button click events
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        // Update active button
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+
+                        const filterValue = button.getAttribute('data-filter');
+
+                        // Show/hide cards based on filter
+                        eventCards.forEach(card => {
+                            const eventDate = card.getAttribute('data-date');
+                            const cardDate = new Date(eventDate);
+                            const isPast = cardDate < today;
+                            const matchesFilter = filterValue === 'all' || card.getAttribute('data-category') === filterValue;
+
+                            if (isPast || !matchesFilter) {
+                                card.classList.add('hidden');
+                            } else {
+                                card.classList.remove('hidden');
+                            }
+                        });
+                    });
+                });
+            };
+
+            return { init };
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            EventsManager.init();
+        });
+    </script>
 </body>
 </html>
