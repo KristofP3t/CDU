@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Willkommen beim CDU Kreisverband Schwerin</title>
+    <meta name="description" content="Wir informieren Sie über die Arbeit und die Ziele der CDU in der Landeshauptstadt Schwerin.">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Willkommen beim CDU Kreisverband Schwerin">
+    <meta property="og:description" content="Wir informieren Sie über die Arbeit und die Ziele der CDU in der Landeshauptstadt Schwerin.">
+    <meta property="og:url" content="https://cdu-schwerin.com/">
+    <meta property="og:site_name" content="CDU Kreisverband Landeshauptstadt Schwerin">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Preconnect to GA (optional) -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="assets/images/logo.png" sizes="32x32">
+</head>
+<body>
+    <!-- Skip Link for Keyboard Navigation -->
+    <a href="#main" class="skip-link">Direkt zum Inhalt</a>
+
+    <!-- Cookie Consent Banner -->
+    <div id="consent-banner" class="consent-banner" role="region" aria-label="Cookie-Zustimmung">
+        <div class="consent-content">
+            <p>Wir nutzen Google Analytics zur Verbesserung unserer Website. Sie können Ihre Zustimmung jederzeit ändern.</p>
+            <div class="consent-actions">
+                <button id="consent-accept" class="btn btn-primary">Akzeptieren</button>
+                <button id="consent-decline" class="btn btn-secondary">Ablehnen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="header" class="site-header" role="banner">
+        <div class="container">
+            <!-- Top Bar with Contact & Social -->
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <a href="tel:+493855900426" class="top-bar-item">☎ 0385 - 59 00 426</a>
+                    <a href="mailto:kreisverband@cdu-schwerin.com" class="top-bar-item">✉ kreisverband@cdu-schwerin.com</a>
+                </div>
+                <nav class="top-bar-social" role="navigation" aria-label="Soziale Netzwerke">
+                    <a href="https://www.facebook.com/CduKreisverbandSchwerin" rel="external" aria-label="Facebook" class="social-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.instagram.com/schwerin_cdu/" rel="external" aria-label="Instagram" class="social-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                            <circle cx="18" cy="6" r="0.9" fill="currentColor"/>
+                        </svg>
+                    </a>
+                    <!-- Instagram-Handle: schwerin_cdu (aktuell, prüfen ob cduschwerin richtig ist) -->
+                </nav>
+            </div>
+
+            <!-- Branding & Navigation -->
+            <div class="header-main">
+                <div class="site-branding">
+                    <a href="/" rel="home" class="logo-link">
+                        <img src="assets/images/logo.png" alt="CDU Kreisverband Landeshauptstadt Schwerin Logo" width="235" height="88" loading="eager" fetchpriority="high">
+                    </a>
+                </div>
+
+                <nav id="main-nav" class="main-navigation" role="navigation" aria-label="Hauptnavigation">
+                    <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Navigation öffnen">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <ul id="nav-menu" class="nav-menu">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link">Startseite</a>
+                        </li>
+                        <li class="nav-item has-submenu">
+                            <a href="/der-vorstand/" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                                Die Partei
+                                <span class="submenu-indicator" aria-hidden="true">▼</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="/der-vorstand/">Der Vorstand der CDU Schwerin</a></li>
+                                <li><a href="/geschaeftsstelle-der-cdu-schwerin/">Geschäftsstelle der CDU Schwerin</a></li>
+                                <li class="submenu-parent">
+                                    <a href="/stadtbezirksverbaende/" aria-haspopup="true" aria-expanded="false">
+                                        Die Stadtbezirksverbände
+                                        <span class="submenu-indicator" aria-hidden="true">▼</span>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li><a href="/stadtbezirksverband-nordwest/">Nordwest</a></li>
+                                        <li><a href="/stadtbezirksverband-mitte/">Mitte</a></li>
+                                        <li><a href="/stadtbezirksverband-sued-fernsehturm/">Süd-Fernsehturm</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="/spenden/">Spenden</a></li>
+                                <li><a href="/mitglied-werden/">Mitglied werden</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-submenu">
+                            <a href="/vereinigungen/" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                                Vereinigungen
+                                <span class="submenu-indicator" aria-hidden="true">▼</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="/wirtschafts-und-mittelstandsvereinigung/">Mittelstands- und Wirtschaftsunion der CDU</a></li>
+                                <li><a href="/frauen-union-schwerin/">Frauen Union Schwerin</a></li>
+                                <li><a href="/senioren-union-schwerin/">Senioren Union Schwerin</a></li>
+                                <li><a href="/junge-union-schwerin/">Junge Union Schwerin</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-submenu">
+                            <a href="/service/" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                                Service
+                                <span class="submenu-indicator" aria-hidden="true">▼</span>
+                            </a>
+                            <ul class="submenu">
+                                <li class="submenu-parent">
+                                    <a href="/wahlarchiv/" aria-haspopup="true" aria-expanded="false">
+                                        Wahlarchiv
+                                        <span class="submenu-indicator" aria-hidden="true">▼</span>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li><a href="/kommunalwahl-2024/">Kommunalwahl 2024</a></li>
+                                        <li><a href="/europawahl-2024/">Europawahl 2024</a></li>
+                                        <li><a href="/kommunalwahl-2019/">Kommunalwahl 2019</a></li>
+                                        <li><a href="/europawahl-2019/">Europawahl 2019</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="/kontakt/">Kontakt</a></li>
+                                <li><a href="/links/">Links & Downloads</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/spenden/" class="nav-link">Spenden</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a>
+                        </li>
+                        <li class="nav-item has-submenu">
+                            <a href="/aktuelles/" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                                Aktuelles
+                                <span class="submenu-indicator" aria-hidden="true">▼</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="/termine/">Termine</a></li>
+                                <li><a href="/newsarchiv/">Newsarchiv</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main" class="site-main" role="main">
+
+        <!-- Image Slider -->
+        <section class="slider-section" aria-label="Bildergalerie der Landeshauptstadt Schwerin">
+            <div class="slider-container">
+                <div class="slider-wrapper">
+                    <img src="assets/images/slider-1-schloss.jpg" alt="Schweriner Schloss" width="1400" height="500" loading="eager" fetchpriority="high">
+                    <img src="assets/images/slider-2-marstall.jpg" alt="Marstall Schwerin" width="1400" height="500" loading="lazy">
+                    <img src="assets/images/slider-3-wiese.jpg" alt="Schwimmende Wiese Schwerin" width="1400" height="500" loading="lazy">
+                    <img src="assets/images/slider-4-luftbild.jpg" alt="Luftaufnahme Schweriner Schloss" width="1400" height="500" loading="lazy">
+                    <img src="assets/images/slider-5-pfaffenteich.jpg" alt="Pfaffenteich Schwerin" width="1400" height="500" loading="lazy">
+                </div>
+                <div class="slider-nav">
+                    <button class="slider-btn prev" aria-label="Vorheriges Bild">‹</button>
+                    <button class="slider-btn next" aria-label="Nächstes Bild">›</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hero Content Sections -->
+        <div class="container">
+
+            <!-- Campaign Hero Section -->
+            <section class="hero-section">
+                <div class="hero-grid">
+                    <div class="hero-item">
+                        <img src="assets/images/hero-wahlkampf.jpg" alt="Wahlkampf-Sujet: GEMEINSAM. BESSER. JASCHA & DORIN FÜR SCHWERIN." width="1400" height="1007" loading="lazy">
+                    </div>
+                    <div class="hero-item">
+                        <a href="https://danielpeters-mv.de/wp-content/uploads/2026/06/Wahlprogramm-CDU-MV-2026.pdf" target="_blank" rel="noopener" class="pdf-link">
+                            <img src="assets/images/wahlprogramm-cover.jpg" alt="CDU Wahlprogramm 2026" width="486" height="717" loading="lazy">
+                            <span class="pdf-label">PDF herunterladen</span>
+                        </a>
+                        <!-- Wahlprogramm-PDF: derzeit auf danielpeters-mv.de (externe Quelle, funktioniert) -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Landtagswahl Banner -->
+            <section class="banner-section">
+                <img src="assets/images/ltw-2026-banner.jpg" alt="Landtagswahl 2026 – CDU Schwerin" width="2400" height="1169" loading="lazy">
+            </section>
+
+            <!-- Membership Video Section -->
+            <section class="video-section">
+                <div class="video-container">
+                    <!-- Video element without autoplay attribute for accessibility,
+                         autoplay is added via JS based on prefers-reduced-motion -->
+                    <video muted loop playsinline class="membership-video" aria-label="CDU Mitglieder-Werbevideo">
+                        <source src="assets/video/mitglieder-werbung.mp4" type="video/mp4">
+                        Ihr Browser unterstützt das Video-Format nicht.
+                    </video>
+                </div>
+                <div class="membership-cta">
+                    <a href="/mitglied-werden/" class="btn btn-large">
+                        <img src="assets/images/btn-mitglied.png" alt="" width="200" height="200" loading="lazy">
+                        Jetzt Mitglied werden
+                    </a>
+                </div>
+            </section>
+
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h1>Herzlich Willkommen bei der CDU der Landeshauptstadt Schwerin</h1>
+
+                <div class="welcome-content">
+                    <div class="welcome-image">
+                        <img src="assets/images/jascha-dopp.png" alt="Jascha Rainer Dopp, Vorsitzender des CDU Kreisverbandes Schwerin" width="291" height="291" loading="lazy">
+                    </div>
+                    <div class="welcome-text">
+                        <p>Als Vorsitzender des CDU Kreisverbandes der Landeshauptstadt Schwerin begrüße ich Sie ganz herzlich auf unseren Internetseiten und wünsche Ihnen viel Spaß beim „Surfen". Neben aktuellen Informationen über unsere Arbeit wollen wir die Gelegenheit nutzen uns bei Ihnen auch persönlich vorzustellen. Falls Sie noch Fragen haben, Anregungen oder auch Kritik geben wollen, sind wir gerne für Sie da. Viele Schweriner aus den verschiedensten Bereichen engagieren sich in unserem Kreisverband.</p>
+
+                        <p>Ich würde mich freuen auch Sie in unseren Reihen begrüßen zu können.<br>
+                        Mischen Sie sich ein, denn nur wer mitmacht kann etwas für unsere Stadt und unser Land erreichen.</p>
+
+                        <p>Herzliche Grüße Ihr<br>
+                        <strong>Jascha Rainer Dopp</strong><br>
+                        Vorsitzender des CDU Kreisverbandes Schwerin</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature Cards Section -->
+            <section class="features-section">
+                <h2>Unsere Angebote</h2>
+                <div class="features-grid">
+                    <article class="feature-card">
+                        <div class="feature-icon">📅</div>
+                        <h3><a href="/termine/">Termine CDU Schwerin</a></h3>
+                        <p>Hier finden Sie die wichtigsten Termine des CDU Kreisverbandes und unserer Vereinigungen für das aktuelle Jahr als Übersicht.</p>
+                        <a href="/termine/" class="feature-link">zu den Terminen →</a>
+                    </article>
+
+                    <article class="feature-card">
+                        <div class="feature-icon">💝</div>
+                        <h3><a href="/spenden/">Unterstützen Sie uns</a></h3>
+                        <p>Nur ein kleinerer Teil unserer Mittel wird durch die staatliche Parteienfinanzierung bereitgestellt. Ein großer Teil stammt aus den Beiträgen und Spenden unserer Mitglieder und Freunde.</p>
+                        <a href="/spenden/" class="feature-link">weitere Informationen →</a>
+                    </article>
+
+                    <article class="feature-card">
+                        <div class="feature-icon">🏛️</div>
+                        <h3><a href="https://cdu-schwerin.de">CDU Fraktion Schwerin</a></h3>
+                        <p>Hier kommen Sie zur Website der Stadtfraktion der CDU in der Stadtvertretung Schwerin. (externer Link öffnet in neuem Fenster)</p>
+                        <a href="https://cdu-schwerin.de" rel="external" class="feature-link">Zur Stadtfraktion →</a>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Latest News Section -->
+            <section class="news-section">
+                <h2>Letzte Meldungen</h2>
+                <div class="news-grid">
+                    <article class="news-card">
+                        <h3><a href="https://cdu-schwerin.com/einladung-wahlkampfauftakt/" class="news-link">
+                            <span class="news-image" style="background-image: url('assets/images/news-1.jpg')"></span>
+                            Einladung Wahlkampfauftakt
+                        </a></h3>
+                    </article>
+
+                    <article class="news-card">
+                        <h3><a href="https://cdu-schwerin.com/cdu-schwerin-nominiert-sebastian-ehlers-einstimmig-als-kandidaten-fuer-die-ob-wahl/" class="news-link">
+                            <span class="news-image" style="background-image: url('assets/images/news-2.jpg')"></span>
+                            CDU Schwerin nominiert Sebastian Ehlers einstimmig als Kandidaten für die OB-Wahl
+                        </a></h3>
+                    </article>
+
+                    <article class="news-card">
+                        <h3><a href="https://cdu-schwerin.com/cdu-kreisvorstand-schlaegt-stadtpraesident-sebastian-ehlers-als-ob-kandidaten-vor/" class="news-link">
+                            <span class="news-image" style="background-image: url('assets/images/news-3.jpg')"></span>
+                            CDU-Kreisvorstand schlägt Stadtpräsident Sebastian Ehlers als OB-Kandidaten vor
+                        </a></h3>
+                    </article>
+
+                    <article class="news-card">
+                        <h3><a href="https://cdu-schwerin.com/cdu-schwerin-geht-mit-sebastian-ehlers-und-dorin-muethel-brenncke-in-den-landtagswahlkampf/" class="news-link">
+                            <span class="news-image" style="background-image: url('assets/images/news-4.jpg')"></span>
+                            CDU Schwerin geht mit Sebastian Ehlers und Dorin Müthel-Brenncke in den Landtagswahlkampf
+                        </a></h3>
+                    </article>
+                </div>
+                <div class="news-all">
+                    <a href="https://cdu-schwerin.com/newsarchiv/" class="btn btn-secondary">Alle Meldungen anzeigen</a>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="site-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-main">
+
+                <!-- Contact Info -->
+                <section class="footer-section">
+                    <h3>CDU Kreisverband Schwerin</h3>
+                    <address>
+                        Wismarsche Straße 173<br>
+                        19053 Schwerin<br>
+                        Telefon: <a href="tel:+493855900426">(0385) 59 00 426</a><br>
+                        Fax: (0385) 59 00 421<br>
+                        E-Mail: <a href="mailto:kreisverband@cdu-schwerin.com">kreisverband@cdu-schwerin.com</a>
+                    </address>
+                    <nav class="footer-links">
+                        <a href="/impressum/">Impressum</a>
+                        <a href="/datenschutz/">Datenschutz</a>
+                    </nav>
+                </section>
+
+                <!-- Social Media -->
+                <section class="footer-section">
+                    <h3>Unsere Facebook-Seite</h3>
+                    <a href="https://www.facebook.com/CduKreisverbandSchwerin" rel="external" class="social-image">
+                        <img src="assets/images/footer-facebook.jpg" alt="Facebook-Seite der CDU Schwerin" width="250" height="250" loading="lazy">
+                    </a>
+                </section>
+
+                <section class="footer-section">
+                    <h3>Unser Instagram-Account</h3>
+                    <a href="https://www.instagram.com/schwerin_cdu/" rel="external" class="social-image">
+                        <img src="assets/images/footer-instagram.jpg" alt="Instagram-Account der CDU Schwerin" width="250" height="250" loading="lazy">
+                    </a>
+                    <!-- Instagram-Handle: schwerin_cdu (aktuell, prüfen ob cduschwerin richtig ist) -->
+                </section>
+
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="copyright">&copy; 2026 <a href="/">CDU Kreisverband Landeshauptstadt Schwerin</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Google Analytics (loaded conditionally based on consent) -->
+    <script src="js/main.js"></script>
+    <script id="ga-script"></script>
+</body>
+</html>
