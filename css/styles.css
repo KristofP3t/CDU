@@ -1187,3 +1187,170 @@ body {
         max-width: 100%;
     }
 }
+
+/* ==========================================================================
+   Board Members Section (Vorstandsmitglieder)
+   ========================================================================== */
+
+.vorstand-section {
+    padding: var(--spacing-xl) 0;
+}
+
+.vorstand-section h2 {
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.vorstand-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.member-card {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    height: 180px;
+}
+
+.member-card:hover,
+.member-card:focus-within {
+    box-shadow: 0 12px 32px rgba(82, 183, 193, 0.25);
+    transform: translateY(-2px);
+}
+
+.member-image {
+    width: 150px;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    background-color: var(--color-light-bg);
+}
+
+.member-info {
+    padding: var(--spacing-md);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.member-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+}
+
+.member-position {
+    font-size: 13px;
+    color: var(--color-text-light);
+    font-style: normal;
+    margin-bottom: 0.5rem;
+}
+
+.member-email {
+    font-size: 12px;
+    color: var(--color-text-light);
+    text-decoration: none;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.member-card:hover .member-email,
+.member-card:focus-within .member-email {
+    color: var(--color-primary);
+    background-color: rgba(82, 183, 193, 0.1);
+}
+
+.member-email:hover {
+    text-decoration: underline;
+    color: var(--color-primary);
+}
+
+.member-email:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -1px;
+}
+
+/* Desktop: 2 Columns */
+@media (max-width: var(--breakpoint-lg)) {
+    .vorstand-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablet: 1 Column */
+@media (max-width: var(--breakpoint-md)) {
+    .vorstand-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .vorstand-section h2 {
+        font-size: 24px;
+    }
+
+    .member-card {
+        grid-template-columns: 120px 1fr;
+        height: 150px;
+    }
+
+    .member-image {
+        width: 120px;
+        height: 150px;
+        border-radius: 8px 0 0 8px;
+    }
+
+    .member-info {
+        padding: var(--spacing-sm);
+    }
+
+    .member-name {
+        font-size: 14px;
+    }
+
+    .member-position {
+        font-size: 12px;
+    }
+
+    .member-email {
+        font-size: 11px;
+    }
+}
+
+/* Mobile: Full Width */
+@media (max-width: var(--breakpoint-sm)) {
+    .member-card {
+        grid-template-columns: 100px 1fr;
+        height: 130px;
+    }
+
+    .member-image {
+        width: 100px;
+        height: 130px;
+    }
+
+    .member-name {
+        font-size: 13px;
+    }
+
+    .member-position {
+        font-size: 11px;
+    }
+
+    .member-email {
+        font-size: 10px;
+    }
+}

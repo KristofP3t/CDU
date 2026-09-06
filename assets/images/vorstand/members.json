@@ -1,0 +1,130 @@
+{
+  "members": [
+    {
+      "name": "Jascha Rainer Dopp",
+      "position": "Vorsitzender",
+      "image_files": [
+        "Jascha_Dopp.jpg",
+        "jascha_dopp.jpg",
+        "jascha-dopp.jpg"
+      ],
+      "local_file": "jascha-rainer-dopp.jpg"
+    },
+    {
+      "name": "Manuela Preuß-Daschke",
+      "position": "Stellvertretende Vorsitzende",
+      "image_files": [
+        "Preuss-Daschke.jpg",
+        "preuss-daschke.jpg",
+        "manuela-preuss-daschke.jpg"
+      ],
+      "local_file": "manuela-preuß-daschke.jpg"
+    },
+    {
+      "name": "Ralf Klein",
+      "position": "Stellvertretender Vorsitzender",
+      "image_files": [
+        "CDU_SN_Ralf_klein.jpg",
+        "ralf-klein.jpg",
+        "ralf_klein.jpg"
+      ],
+      "local_file": "ralf-klein.jpg"
+    },
+    {
+      "name": "Sebastian Hafemeister",
+      "position": "Schatzmeister",
+      "image_files": [
+        "CDU_SN_Sebastian_havemeister.jpg",
+        "sebastian-hafemeister.jpg"
+      ],
+      "local_file": "sebastian-hafemeister.jpg"
+    },
+    {
+      "name": "Phillip Geib",
+      "position": "Mitgliedschaftsleiter",
+      "image_files": [
+        "Philipp_Geib.jpg",
+        "phillip-geib.jpg",
+        "philipp_geib.jpg"
+      ],
+      "local_file": "phillip-geib.jpg"
+    },
+    {
+      "name": "Hendrik Ahrens",
+      "position": "Vorstandsmitglied",
+      "image_files": [
+        "CDU_SN_Hendrik_ahrens.jpg",
+        "hendrik-ahrens.jpg"
+      ],
+      "local_file": "hendrik-ahrens.jpg"
+    },
+    {
+      "name": "Silvia Rabethke",
+      "position": "Vorstandsmitglied",
+      "image_files": [
+        "silvia_rabethke.jpg",
+        "silvia-rabethke.jpg"
+      ],
+      "local_file": "silvia-rabethke.jpg"
+    },
+    {
+      "name": "Heike Corinth",
+      "position": "Vorstandsmitglied",
+      "image_files": [
+        "Heike_Corinth.jpg",
+        "heike-corinth.jpg",
+        "heike_corinth.jpg"
+      ],
+      "local_file": "heike-corinth.jpg"
+    },
+    {
+      "name": "Franziska Jeske",
+      "position": "Vorstandsmitglied",
+      "image_files": [
+        "franziska_jeske.jpg",
+        "franziska-jeske.jpg"
+      ],
+      "local_file": "franziska-jeske.jpg"
+    },
+    {
+      "name": "Georg Kleinfeld",
+      "position": "Vorstandsmitglied",
+      "image_files": [
+        "georg_kleinfeld_2017.jpg",
+        "georg-kleinfeld.jpg"
+      ],
+      "local_file": "georg-kleinfeld.jpg"
+    },
+    {
+      "name": "Robert Lange",
+      "position": "Vorstandsmitglied",
+      "image_files": [
+        "CDU_SN_Robert_Lange.jpg",
+        "robert-lange.jpg"
+      ],
+      "local_file": "robert-lange.jpg"
+    },
+    {
+      "name": "Timon Matzick",
+      "position": "Vorstandsmitglied",
+      "image_files": [
+        "Timon_Matzick.jpg",
+        "timon-matzick.jpg",
+        "timon_matzick.jpg"
+      ],
+      "local_file": "timon-matzick.jpg"
+    },
+    {
+      "name": "Astrid Rochow",
+      "position": "Vorstandsmitglied",
+      "image_files": [
+        "astrid-rochow.jpg",
+        "astrid_rochow.jpg"
+      ],
+      "local_file": "astrid-rochow.jpg"
+    }
+  ],
+  "failed": [],
+  "total_downloaded": 13,
+  "total_failed": 0
+}
