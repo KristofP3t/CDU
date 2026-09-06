@@ -7,12 +7,52 @@
     <meta name="description" content="Anstehende Termine und Veranstaltungen des CDU Kreisverbands Landeshauptstadt Schwerin.">
     <link rel="stylesheet" href="../css/styles.css">
     <style>
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .toggle-slider.pulse {
+            animation: pulse 0.4s ease-out;
+        }
+
+        .event-card.animate-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
         /* Filter Buttons */
         .events-filter {
             display: flex;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin: var(--spacing-lg) 0 var(--spacing-xl) 0;
+            padding: var(--spacing-md);
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .filter-buttons-group {
+            display: flex;
             gap: var(--spacing-sm);
             flex-wrap: wrap;
-            margin: var(--spacing-lg) 0 var(--spacing-xl) 0;
         }
 
         .filter-btn {
@@ -41,6 +81,80 @@
         .filter-btn:focus-visible {
             outline: 2px solid var(--color-accent);
             outline-offset: 2px;
+        }
+
+        /* Toggle Switch */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-slider {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            background-color: #ccc;
+            border-radius: 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--color-white);
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-checkbox:checked + .toggle-slider {
+            background-color: var(--color-primary);
+        }
+
+        .toggle-checkbox:checked + .toggle-slider::before {
+            left: 22px;
+        }
+
+        .toggle-checkbox:focus-visible + .toggle-slider {
+            box-shadow: 0 0 0 3px rgba(82, 183, 193, 0.2);
+        }
+
+        .toggle-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        @media (max-width: var(--breakpoint-md)) {
+            .events-filter {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-buttons-group {
+                width: 100%;
+            }
+
+            .toggle-group {
+                width: 100%;
+            }
         }
 
         /* Timeline Container */
@@ -330,11 +444,20 @@
 
             <!-- Filter Buttons -->
             <section class="events-filter">
-                <button class="filter-btn active" data-filter="all">Alle</button>
-                <button class="filter-btn" data-filter="vorstand">Vorstand</button>
-                <button class="filter-btn" data-filter="wahlveranstaltung">Wahlveranstaltung</button>
-                <button class="filter-btn" data-filter="parteitag">Parteitag</button>
-                <button class="filter-btn" data-filter="gedenkveranstaltung">Gedenkveranstaltung</button>
+                <div class="filter-buttons-group">
+                    <button class="filter-btn active" data-filter="all">Alle</button>
+                    <button class="filter-btn" data-filter="vorstand">Vorstand</button>
+                    <button class="filter-btn" data-filter="wahlveranstaltung">Wahlveranstaltung</button>
+                    <button class="filter-btn" data-filter="parteitag">Parteitag</button>
+                    <button class="filter-btn" data-filter="gedenkveranstaltung">Gedenkveranstaltung</button>
+                </div>
+                <div class="toggle-group">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="show-past-toggle" class="toggle-checkbox">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-text">Vergangene anzeigen</span>
+                    </label>
+                </div>
             </section>
 
             <section class="events-container">
@@ -495,45 +618,72 @@
     <script>
         // Events Filter & Past Events Management
         const EventsManager = (() => {
-            const init = () => {
+            let showPastEvents = false;
+
+            const updateEventVisibility = () => {
                 const filterButtons = document.querySelectorAll('.filter-btn');
                 const eventCards = document.querySelectorAll('.event-card');
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
 
-                // Hide past events on load
+                // Get active filter
+                const activeFilter = document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all';
+
+                // Show/hide cards based on filters with animation
+                let visibleIndex = 0;
                 eventCards.forEach(card => {
                     const eventDate = card.getAttribute('data-date');
                     const cardDate = new Date(eventDate);
-                    if (cardDate < today) {
+                    const isPast = cardDate < today;
+                    const matchesFilter = activeFilter === 'all' || card.getAttribute('data-category') === activeFilter;
+                    const shouldShowPast = showPastEvents || !isPast;
+
+                    if (!matchesFilter || !shouldShowPast) {
                         card.classList.add('hidden');
+                        card.classList.remove('animate-in');
+                    } else {
+                        card.classList.remove('hidden');
+                        // Staggered animation: each card animates with a delay
+                        card.style.animationDelay = `${visibleIndex * 0.08}s`;
+                        card.classList.add('animate-in');
+                        visibleIndex++;
                     }
                 });
+            };
+
+            const init = () => {
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                const showPastToggle = document.getElementById('show-past-toggle');
+
+                // Initial visibility
+                updateEventVisibility();
 
                 // Filter button click events
                 filterButtons.forEach(button => {
                     button.addEventListener('click', () => {
-                        // Update active button
                         filterButtons.forEach(btn => btn.classList.remove('active'));
                         button.classList.add('active');
-
-                        const filterValue = button.getAttribute('data-filter');
-
-                        // Show/hide cards based on filter
-                        eventCards.forEach(card => {
-                            const eventDate = card.getAttribute('data-date');
-                            const cardDate = new Date(eventDate);
-                            const isPast = cardDate < today;
-                            const matchesFilter = filterValue === 'all' || card.getAttribute('data-category') === filterValue;
-
-                            if (isPast || !matchesFilter) {
-                                card.classList.add('hidden');
-                            } else {
-                                card.classList.remove('hidden');
-                            }
-                        });
+                        updateEventVisibility();
                     });
                 });
+
+                // Toggle past events
+                if (showPastToggle) {
+                    showPastToggle.addEventListener('change', (e) => {
+                        showPastEvents = e.target.checked;
+
+                        // Add pulse animation to toggle slider
+                        const toggleSlider = showPastToggle.nextElementSibling;
+                        if (toggleSlider) {
+                            toggleSlider.classList.remove('pulse');
+                            // Trigger reflow to restart animation
+                            void toggleSlider.offsetWidth;
+                            toggleSlider.classList.add('pulse');
+                        }
+
+                        updateEventVisibility();
+                    });
+                }
             };
 
             return { init };
