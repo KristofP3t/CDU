@@ -241,17 +241,42 @@ body {
 
 @media (max-width: var(--breakpoint-md)) {
     .top-bar {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;
+        justify-content: center;
         gap: var(--spacing-xs);
+        padding: var(--spacing-xs);
     }
 
     .top-bar-left {
-        flex-direction: column;
+        display: flex;
         gap: var(--spacing-xs);
+        padding-left: 0;
+    }
+
+    .top-bar-item {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        text-indent: -9999px;
+        white-space: nowrap;
     }
 
     .top-bar-social {
+        display: flex;
+        gap: var(--spacing-xs);
+    }
+
+    .top-bar-social a {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
         justify-content: center;
     }
 }
@@ -453,6 +478,8 @@ body {
 
     .nav-link {
         border-bottom: 1px solid var(--color-border);
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 15px;
     }
 
     .submenu {
@@ -1338,6 +1365,11 @@ body {
 
 /* Mobile: Full Width */
 @media (max-width: var(--breakpoint-sm)) {
+    .nav-link {
+        padding: var(--spacing-xs) var(--spacing-xs);
+        font-size: 13px;
+    }
+
     .member-card {
         grid-template-columns: 100px 1fr;
         height: 130px;
