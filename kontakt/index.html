@@ -7,6 +7,25 @@
     <meta name="description" content="Kontaktieren Sie den CDU Kreisverband Schwerin. Wir antworten schnellstmöglich auf Ihre Anfrage.">
     <link rel="stylesheet" href="../css/styles.css">
     <style>
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Layout */
         .contact-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -14,6 +33,7 @@
             margin: var(--spacing-xl) 0;
         }
 
+        /* Contact Info Sidebar */
         .contact-info {
             background-color: var(--color-light-bg);
             padding: var(--spacing-lg);
@@ -23,113 +43,283 @@
         .contact-info h3 {
             color: var(--color-dark);
             margin-bottom: var(--spacing-md);
+            font-size: 16px;
+            font-weight: 600;
         }
 
         .contact-info p {
-            margin-bottom: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
             line-height: 1.8;
+            color: var(--color-text);
         }
 
+        .contact-info a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-info ul li {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .contact-info ul li a {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Contact Form */
         .contact-form {
             background-color: var(--color-white);
             border: 1px solid var(--color-border);
             padding: var(--spacing-lg);
             border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        .form-group {
-            margin-bottom: var(--spacing-md);
+        /* Form Messages */
+        .form-message {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            margin-bottom: var(--spacing-lg);
+            animation: slideIn 0.3s ease-out;
         }
 
-        label {
+        .form-message.success-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .form-message.error-message {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .message-icon {
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .form-message strong {
             display: block;
-            margin-bottom: var(--spacing-xs);
-            font-weight: 600;
-            color: var(--color-text);
+            margin-bottom: 4px;
         }
 
-        label .required {
-            color: #e74c3c;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        textarea {
-            width: 100%;
-            padding: var(--spacing-sm);
-            border: 1px solid var(--color-border);
-            border-radius: 4px;
-            font-family: var(--font-primary);
+        .form-message p {
+            margin: 0;
             font-size: 14px;
-            transition: border-color 0.2s ease;
         }
 
-        input[type="text"]:focus-visible,
-        input[type="email"]:focus-visible,
-        input[type="tel"]:focus-visible,
-        textarea:focus-visible {
-            outline: 2px solid var(--color-primary);
-            outline-offset: 2px;
+        /* Form Groups */
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Form Field Container */
+        .form-field {
+            position: relative;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* Form Inputs */
+        .form-input {
+            width: 100%;
+            padding: 12px 12px 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: var(--font-primary);
+            font-size: 15px;
+            background-color: var(--color-white);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-input:hover {
             border-color: var(--color-primary);
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 120px;
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(82, 183, 193, 0.1);
         }
 
+        .form-input:focus-visible {
+            box-shadow: 0 0 0 3px rgba(82, 183, 193, 0.1);
+        }
+
+        /* Floating Labels */
+        .form-label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            pointer-events: none;
+            transition: all 0.2s ease;
+            transform-origin: left top;
+        }
+
+        .form-input:focus ~ .form-label,
+        .form-input:not(:placeholder-shown) ~ .form-label {
+            top: -8px;
+            left: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-primary);
+            background-color: var(--color-white);
+            padding: 0 4px;
+        }
+
+        /* Textarea */
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+            padding-top: 16px;
+        }
+
+        .form-textarea ~ .form-label {
+            top: 16px;
+        }
+
+        .form-textarea:focus ~ .form-label,
+        .form-textarea:not(:placeholder-shown) ~ .form-label {
+            top: -8px;
+        }
+
+        /* Character Count */
+        .char-count {
+            position: absolute;
+            right: 12px;
+            bottom: 8px;
+            font-size: 11px;
+            color: var(--color-text-light);
+            pointer-events: none;
+        }
+
+        /* Form Hints */
         .form-hint {
             font-size: 12px;
             color: var(--color-text-light);
             margin-top: var(--spacing-xs);
+            display: block;
         }
 
+        /* Required Indicator */
+        .required {
+            color: var(--color-text-light);
+            font-weight: normal;
+            margin-left: 2px;
+        }
+
+        /* Privacy Notice */
         .privacy-notice {
             font-size: 13px;
             color: var(--color-text-light);
-            margin-bottom: var(--spacing-md);
-            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
             background-color: #f0f8f9;
-            border-left: 3px solid var(--color-primary);
-            border-radius: 4px;
+            border-left: 4px solid var(--color-primary);
+            border-radius: 6px;
+        }
+
+        .privacy-notice p {
+            margin: 0;
+            line-height: 1.6;
         }
 
         .privacy-notice a {
             color: var(--color-primary);
             text-decoration: none;
+            font-weight: 500;
         }
 
         .privacy-notice a:hover {
             text-decoration: underline;
         }
 
+        /* Submit Button */
         .submit-btn {
+            width: 100%;
+            padding: 12px var(--spacing-lg);
             background-color: var(--color-primary);
             color: var(--color-white);
-            padding: var(--spacing-sm) var(--spacing-lg);
-            border: none;
-            border-radius: 4px;
+            border: 2px solid var(--color-primary);
+            border-radius: 6px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
         }
 
-        .submit-btn:hover,
-        .submit-btn:focus {
+        .submit-btn:hover {
             background-color: #3a9fa7;
+            border-color: #3a9fa7;
+            box-shadow: 0 4px 12px rgba(82, 183, 193, 0.2);
+        }
+
+        .submit-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(82, 183, 193, 0.2);
         }
 
         .submit-btn:focus-visible {
-            outline: 2px solid var(--color-accent);
-            outline-offset: 2px;
+            box-shadow: 0 0 0 3px rgba(82, 183, 193, 0.2);
         }
 
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--color-white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: var(--breakpoint-md)) {
             .contact-container {
                 grid-template-columns: 1fr;
                 gap: var(--spacing-lg);
+            }
+
+            .contact-form {
+                padding: var(--spacing-md);
+            }
+
+            .form-input {
+                padding: 12px 12px 8px 12px;
+                font-size: 16px;
+            }
+
+            .submit-btn {
+                padding: 14px var(--spacing-md);
+                font-size: 15px;
             }
         }
     </style>
@@ -250,94 +440,128 @@
 
             <div class="contact-container">
                 <!-- Contact Form -->
-                <form class="contact-form" method="POST" action="https://formspree.io/f/FORMSPREE_ID_EINFUEGEN" aria-label="Kontaktformular" onsubmit="alert('Bitte Formspree-ID in HTML ersetzen (action Attribut)'); return false;">
+                <form class="contact-form" id="contact-form" method="POST" action="https://formspree.io/f/FORMSPREE_ID_EINFUEGEN" aria-label="Kontaktformular">
+                    <!-- Success Message -->
+                    <div id="success-message" class="form-message success-message" style="display: none;">
+                        <span class="message-icon">✓</span>
+                        <div>
+                            <strong>Nachricht gesendet!</strong>
+                            <p>Vielen Dank für Ihre Anfrage. Wir antworten Ihnen schnellstmöglich.</p>
+                        </div>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="error-message" class="form-message error-message" style="display: none;">
+                        <span class="message-icon">!</span>
+                        <div>
+                            <strong>Fehler beim Absenden</strong>
+                            <p id="error-text">Bitte überprüfen Sie Ihre Eingaben.</p>
+                        </div>
+                    </div>
+
+                    <!-- Name Field -->
                     <div class="form-group">
-                        <label for="name">
-                            Name <span class="required">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            required
-                            maxlength="100"
-                            aria-required="true"
-                            autocomplete="name"
-                        >
+                        <div class="form-field">
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="form-input"
+                                required
+                                maxlength="100"
+                                aria-required="true"
+                                autocomplete="name"
+                            >
+                            <label for="name" class="form-label">Name <span class="required">*</span></label>
+                        </div>
                         <span class="form-hint">Ihr vollständiger Name</span>
                     </div>
 
+                    <!-- Email Field -->
                     <div class="form-group">
-                        <label for="email">
-                            E-Mail <span class="required">*</span>
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            required
-                            maxlength="100"
-                            aria-required="true"
-                            autocomplete="email"
-                        >
+                        <div class="form-field">
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-input"
+                                required
+                                maxlength="100"
+                                aria-required="true"
+                                autocomplete="email"
+                            >
+                            <label for="email" class="form-label">E-Mail <span class="required">*</span></label>
+                        </div>
                         <span class="form-hint">Ihre E-Mail-Adresse</span>
                     </div>
 
+                    <!-- Phone Field -->
                     <div class="form-group">
-                        <label for="phone">
-                            Telefonnummer
-                        </label>
-                        <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            maxlength="20"
-                            autocomplete="tel"
-                            inputmode="tel"
-                        >
+                        <div class="form-field">
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                class="form-input"
+                                maxlength="20"
+                                autocomplete="tel"
+                                inputmode="tel"
+                            >
+                            <label for="phone" class="form-label">Telefonnummer</label>
+                        </div>
                         <span class="form-hint">Optional – damit wir Sie ggf. anrufen können</span>
                     </div>
 
+                    <!-- Subject Field -->
                     <div class="form-group">
-                        <label for="subject">
-                            Betreff <span class="required">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="subject"
-                            name="subject"
-                            required
-                            maxlength="100"
-                            aria-required="true"
-                        >
+                        <div class="form-field">
+                            <input
+                                type="text"
+                                id="subject"
+                                name="subject"
+                                class="form-input"
+                                required
+                                maxlength="100"
+                                aria-required="true"
+                            >
+                            <label for="subject" class="form-label">Betreff <span class="required">*</span></label>
+                        </div>
                         <span class="form-hint">Worum geht es in Ihrer Anfrage?</span>
                     </div>
 
+                    <!-- Message Field -->
                     <div class="form-group">
-                        <label for="message">
-                            Nachricht <span class="required">*</span>
-                        </label>
-                        <textarea
-                            id="message"
-                            name="message"
-                            required
-                            maxlength="2000"
-                            aria-required="true"
-                            placeholder="Ihre Nachricht…"
-                        ></textarea>
+                        <div class="form-field">
+                            <textarea
+                                id="message"
+                                name="message"
+                                class="form-input form-textarea"
+                                required
+                                maxlength="2000"
+                                aria-required="true"
+                            ></textarea>
+                            <label for="message" class="form-label">Nachricht <span class="required">*</span></label>
+                            <span class="char-count">0 / 2000</span>
+                        </div>
                         <span class="form-hint">Max. 2000 Zeichen</span>
                     </div>
 
+                    <!-- Privacy Notice -->
                     <div class="privacy-notice">
                         <p>🔒 <strong>Sicher übertragen.</strong> Ihre Daten werden über eine sichere Verbindung übertragen. Lesen Sie unsere <a href="/datenschutz/">Datenschutzerklärung</a> für weitere Informationen.</p>
                     </div>
 
-                    <button type="submit" class="submit-btn">Nachricht senden</button>
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn" id="submit-btn">
+                        <span class="btn-text">Nachricht senden</span>
+                        <span class="btn-loader" style="display: none;">
+                            <span class="spinner"></span> Wird gesendet...
+                        </span>
+                    </button>
                 </form>
 
                 <!-- Contact Info -->
                 <aside class="contact-info">
-                    <h3>📍 Besuchenadresse</h3>
                     <p>
                         <strong>CDU Kreisverband<br>Landeshauptstadt Schwerin</strong><br>
                         Wismarsche Straße 173<br>
@@ -397,5 +621,114 @@
     </footer>
 
     <script src="../js/main.js"></script>
+
+    <script>
+        // Contact Form Management
+        const ContactForm = (() => {
+            const form = document.getElementById('contact-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const messageArea = document.getElementById('contact-form');
+            const successMsg = document.getElementById('success-message');
+            const errorMsg = document.getElementById('error-message');
+            const textareaField = document.getElementById('message');
+            const charCount = document.querySelector('.char-count');
+
+            const init = () => {
+                if (!form) return;
+
+                // Character Counter
+                if (textareaField && charCount) {
+                    textareaField.addEventListener('input', updateCharCount);
+                }
+
+                // Form Submission
+                form.addEventListener('submit', handleSubmit);
+            };
+
+            const updateCharCount = () => {
+                const current = textareaField.value.length;
+                const max = 2000;
+                charCount.textContent = `${current} / ${max}`;
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+
+                // Validate all fields
+                let isFormValid = true;
+                form.querySelectorAll('.form-input[required]').forEach(input => {
+                    if (!input.checkValidity()) {
+                        isFormValid = false;
+                        validateField({ target: input });
+                    }
+                });
+
+                if (!isFormValid) {
+                    showError('Bitte füllen Sie alle erforderlichen Felder aus.');
+                    return;
+                }
+
+                // Show loading state
+                showLoading();
+
+                // Get form data
+                const formData = new FormData(form);
+
+                try {
+                    // Submit to Formspree
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        showSuccess();
+                        form.reset();
+                    } else {
+                        const data = await response.json();
+                        showError(data.error || 'Es gab einen Fehler beim Senden. Bitte versuchen Sie es später erneut.');
+                    }
+                } catch (error) {
+                    showError('Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.');
+                } finally {
+                    hideLoading();
+                }
+            };
+
+            const showLoading = () => {
+                submitBtn.disabled = true;
+                document.querySelector('.btn-text').style.display = 'none';
+                document.querySelector('.btn-loader').style.display = 'inline-flex';
+            };
+
+            const hideLoading = () => {
+                submitBtn.disabled = false;
+                document.querySelector('.btn-text').style.display = 'inline';
+                document.querySelector('.btn-loader').style.display = 'none';
+            };
+
+            const showSuccess = () => {
+                successMsg.style.display = 'flex';
+                errorMsg.style.display = 'none';
+                successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            };
+
+            const showError = (message) => {
+                errorMsg.style.display = 'flex';
+                errorMsg.querySelector('#error-text').textContent = message;
+                successMsg.style.display = 'none';
+                errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            };
+
+            return { init };
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            ContactForm.init();
+        });
+    </script>
 </body>
 </html>
