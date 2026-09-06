@@ -186,6 +186,497 @@
             }
         }
 
+        /* Membership Form Section */
+        .membership-form-section {
+            background-color: var(--color-white);
+            border: 1px solid var(--color-border);
+            padding: var(--spacing-xl);
+            border-radius: 8px;
+            margin-bottom: var(--spacing-xl);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .membership-form-section h2 {
+            text-align: center;
+            color: var(--color-dark);
+            margin-bottom: var(--spacing-sm);
+            font-size: 28px;
+        }
+
+        .form-intro {
+            text-align: center;
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-lg);
+            font-size: 15px;
+        }
+
+        /* Form Layout */
+        .membership-form {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        /* Form Inputs - reuse from contact form */
+        .membership-form .form-input {
+            width: 100%;
+            padding: 12px 12px 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: var(--font-primary);
+            font-size: 15px;
+            background-color: var(--color-white);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .membership-form .form-input:hover {
+            border-color: var(--color-primary);
+        }
+
+        .membership-form .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(82, 183, 193, 0.1);
+        }
+
+        .membership-form .form-field {
+            position: relative;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .membership-form .form-label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            pointer-events: none;
+            transition: all 0.2s ease;
+            transform-origin: left top;
+        }
+
+        .membership-form .form-input:focus ~ .form-label {
+            top: -8px;
+            left: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-primary);
+            background-color: var(--color-white);
+            padding: 0 4px;
+        }
+
+        .membership-form .form-input:not(:placeholder-shown) ~ .form-label {
+            top: -8px;
+            left: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-light);
+            background-color: var(--color-white);
+            padding: 0 4px;
+        }
+
+        /* Form Messages */
+        .form-message {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            margin-bottom: var(--spacing-lg);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-message.success-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .form-message.error-message {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .message-icon {
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .form-message strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .form-message p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Submit Button */
+        .membership-submit-btn {
+            width: 100%;
+            padding: 12px var(--spacing-lg);
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            border: 2px solid var(--color-primary);
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .membership-submit-btn:hover {
+            background-color: #3a9fa7;
+            border-color: #3a9fa7;
+            box-shadow: 0 4px 12px rgba(82, 183, 193, 0.2);
+        }
+
+        .membership-submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--color-white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* PDF Alternative */
+        .pdf-alternative {
+            text-align: center;
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .pdf-alternative p {
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-md);
+            font-size: 14px;
+        }
+
+        .pdf-download-btn {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .pdf-download-btn:hover {
+            background-color: rgba(82, 183, 193, 0.1);
+        }
+
+        .pdf-download-btn:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: var(--breakpoint-md)) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .membership-form-section {
+                padding: var(--spacing-lg);
+            }
+
+            .membership-submit-btn {
+                padding: 14px var(--spacing-md);
+                font-size: 15px;
+            }
+        }
+
+        /* Multi-Step Form Styles */
+        .progress-bar {
+            margin-bottom: var(--spacing-xl);
+            position: relative;
+            height: 60px;
+        }
+
+        .progress-fill {
+            position: absolute;
+            height: 4px;
+            background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+            top: 22px;
+            left: 30px;
+            right: 30px;
+            z-index: 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-step {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            color: var(--color-text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .progress-step.active {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            box-shadow: 0 0 0 4px rgba(82, 183, 193, 0.2);
+        }
+
+        .progress-step.completed {
+            background-color: #28a745;
+            color: var(--color-white);
+        }
+
+        /* Form Steps */
+        .form-step {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-step h3 {
+            color: var(--color-dark);
+            font-size: 20px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .step-intro {
+            color: var(--color-text-light);
+            font-size: 14px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Radio & Checkbox Groups */
+        .radio-group-label,
+        .checkbox-group-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-text);
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .radio-label,
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .radio-label input,
+        .checkbox-label input {
+            margin-right: var(--spacing-sm);
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .radio-label input:focus-visible,
+        .checkbox-label input:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+        }
+
+        /* Form Navigation */
+        .form-navigation {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+            justify-content: space-between;
+        }
+
+        .nav-btn,
+        .membership-submit-btn {
+            padding: 12px var(--spacing-lg);
+            border: 2px solid var(--color-primary);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn {
+            background-color: transparent;
+            color: var(--color-primary);
+            flex: 1;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(82, 183, 193, 0.1);
+        }
+
+        .prev-btn {
+            order: 1;
+        }
+
+        .next-btn {
+            order: 2;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .next-btn:hover {
+            background-color: #3a9fa7;
+        }
+
+        .membership-submit-btn {
+            order: 2;
+            width: 100%;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .membership-submit-btn:hover {
+            background-color: #3a9fa7;
+            box-shadow: 0 4px 12px rgba(82, 183, 193, 0.2);
+        }
+
+        .membership-submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--color-white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        @media (max-width: var(--breakpoint-md)) {
+            .progress-bar {
+                height: 50px;
+            }
+
+            .progress-step {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .progress-fill {
+                top: 17px;
+                left: 20px;
+                right: 20px;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .form-navigation {
+                flex-direction: column;
+            }
+
+            .nav-btn,
+            .membership-submit-btn {
+                width: 100%;
+            }
+
+            .prev-btn {
+                order: 1;
+            }
+
+            .next-btn {
+                order: 2;
+            }
+        }
+
         @media (max-width: var(--breakpoint-md)) {
             .membership-hero {
                 padding: var(--spacing-lg);
@@ -339,36 +830,181 @@
                 </div>
             </section>
 
-            <!-- Process Section -->
-            <section class="steps-container">
-                <h2>Drei Schritte zur Mitgliedschaft</h2>
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <h3>Formular downloaden</h3>
-                        <p>Laden Sie den Mitgliedsantrag als PDF herunter und füllen Sie ihn online aus.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <h3>Absenden</h3>
-                        <p>Senden Sie den ausgefüllten Antrag per E-Mail, Fax, Post oder persönlich an uns.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <h3>Willkommen!</h3>
-                        <p>Wir begrüßen Sie als neues Mitglied und informieren Sie über die nächsten Schritte.</p>
+            <!-- Online Membership Form Section -->
+            <section class="membership-form-section">
+                <h2>Jetzt anmelden – Online-Formular</h2>
+                <p class="form-intro">6 einfache Schritte zur CDU-Mitgliedschaft. Alle Felder werden benötigt.</p>
+
+                <!-- Progress Bar -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                    <div class="progress-steps">
+                        <div class="progress-step active" data-step="1">1</div>
+                        <div class="progress-step" data-step="2">2</div>
+                        <div class="progress-step" data-step="3">3</div>
+                        <div class="progress-step" data-step="4">4</div>
+                        <div class="progress-step" data-step="5">5</div>
+                        <div class="progress-step" data-step="6">6</div>
                     </div>
                 </div>
-            </section>
 
-            <!-- CTA Section -->
-            <section style="text-align: center; margin-bottom: var(--spacing-xl);">
-                <a href="https://cdu-mv.de/wp-content/uploads/2024/07/Aktuelle-CDU_Mitgliedsantrag-06-24.pdf" target="_blank" rel="noopener noreferrer" aria-label="PDF herunterladen (öffnet in neuem Fenster)" class="cta-button">
-                    📥 Mitgliedsantrag PDF herunterladen
-                </a>
-                <p style="margin-top: var(--spacing-md); color: var(--color-text-light); font-size: 14px;">
-                    oder füllen Sie den Antrag online aus und speichern Sie ihn ab
-                </p>
+                <form class="membership-form" id="membership-form" method="POST" action="https://formspree.io/f/FORMSPREE_ID_EINFUEGEN">
+                    <!-- Success Message -->
+                    <div id="membership-success" class="form-message success-message" style="display: none;">
+                        <span class="message-icon">✓</span>
+                        <div>
+                            <strong>Antrag eingegangen!</strong>
+                            <p>Vielen Dank für Ihren Mitgliedsantrag. Wir werden uns schnellstmöglich mit Ihnen in Verbindung setzen.</p>
+                        </div>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="membership-error" class="form-message error-message" style="display: none;">
+                        <span class="message-icon">!</span>
+                        <div>
+                            <strong>Fehler beim Absenden</strong>
+                            <p id="membership-error-text">Bitte überprüfen Sie Ihre Eingaben.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Personal Data -->
+                    <div class="form-step active" data-step="1">
+                        <h3>Schritt 1: Persönliche Daten</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="radio-group-label">Anrede <span class="required">*</span></label>
+                                <div class="radio-group">
+                                    <label class="radio-label"><input type="radio" name="salutation" value="Herr" required> Herr</label>
+                                    <label class="radio-label"><input type="radio" name="salutation" value="Frau" required> Frau</label>
+                                    <label class="radio-label"><input type="radio" name="salutation" value="ohne" required> Ohne Anrede</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><div class="form-field"><input type="text" name="first-name" class="form-input" required maxlength="50" autocomplete="given-name"><label class="form-label">Vorname <span class="required">*</span></label></div></div>
+                            <div class="form-group"><div class="form-field"><input type="text" name="last-name" class="form-input" required maxlength="50" autocomplete="family-name"><label class="form-label">Nachname <span class="required">*</span></label></div></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><div class="form-field"><input type="date" name="birthdate" class="form-input" required><label class="form-label">Geburtsdatum <span class="required">*</span></label></div></div>
+                            <div class="form-group"><div class="form-field"><input type="text" name="birthplace" class="form-input" required maxlength="50"><label class="form-label">Geburtsort <span class="required">*</span></label></div></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><div class="form-field"><input type="text" name="nationality" class="form-input" required maxlength="50" value="Deutsch"><label class="form-label">Staatsangehörigkeit <span class="required">*</span></label></div></div>
+                            <div class="form-group"><div class="form-field"><input type="text" name="religion" class="form-input" maxlength="50"><label class="form-label">Religion/Konfession</label></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Contact Data -->
+                    <div class="form-step" data-step="2">
+                        <h3>Schritt 2: Kontaktdaten</h3>
+                        <div class="form-row full">
+                            <div class="form-group"><div class="form-field"><input type="email" name="email" class="form-input" required maxlength="100" autocomplete="email"><label class="form-label">E-Mail <span class="required">*</span></label></div></div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group"><div class="form-field"><input type="tel" name="phone" class="form-input" required maxlength="20" autocomplete="tel" inputmode="tel"><label class="form-label">Telefon/Mobil <span class="required">*</span></label></div></div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group"><div class="form-field"><input type="text" name="recruited-by" class="form-input" maxlength="50"><label class="form-label">Geworben durch</label></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Address -->
+                    <div class="form-step" data-step="3">
+                        <h3>Schritt 3: Adresse</h3>
+                        <div class="form-row">
+                            <div class="form-group"><div class="form-field"><input type="text" name="street" class="form-input" required maxlength="100" autocomplete="street-address"><label class="form-label">Straße <span class="required">*</span></label></div></div>
+                            <div class="form-group"><div class="form-field"><input type="text" name="house-number" class="form-input" required maxlength="10"><label class="form-label">Hausnummer <span class="required">*</span></label></div></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><div class="form-field"><input type="text" name="postal-code" class="form-input" required maxlength="10" autocomplete="postal-code"><label class="form-label">PLZ <span class="required">*</span></label></div></div>
+                            <div class="form-group"><div class="form-field"><input type="text" name="city" class="form-input" required maxlength="50" autocomplete="address-level2"><label class="form-label">Stadt <span class="required">*</span></label></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Profession & Functions -->
+                    <div class="form-step" data-step="4">
+                        <h3>Schritt 4: Beruf & Engagement</h3>
+                        <div class="form-row full">
+                            <div class="form-group"><div class="form-field"><input type="text" name="profession" class="form-input" maxlength="50"><label class="form-label">Beruf</label></div></div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group"><div class="form-field"><textarea name="functions" class="form-input form-textarea" maxlength="500"></textarea><label class="form-label">Ehrenamtliche Funktionen, Ämter, Mitgliedschaften</label></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Organizations -->
+                    <div class="form-step" data-step="5">
+                        <h3>Schritt 5: Vereinigungen</h3>
+                        <p class="step-intro">Wählen Sie die Vereinigungen, zu denen Sie Informationen erhalten möchten:</p>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="JU"> Junge Union Deutschlands (JU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="FU"> Frauen Union der CDU Deutschlands (FU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="CDA"> Christlich-Demokratische Arbeitnehmerschaft (CDA)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="KPV"> Kommunalpolitische Vereinigung (KPV)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="MIT"> Mittelstands- und Wirtschaftsunion (MIT)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="OMV"> Ost- und Mitteldeutsche Vereinigung (OMV)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="SU"> Senioren-Union (SU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="EAK"> Evangelischer Arbeitskreis (EAK)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="RCDS"> Ring Christlich-Demokratischer Studenten (RCDS)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="LSU"> Lesben und Schwule in der Union (LSU)</label>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Finance & Confirmation -->
+                    <div class="form-step" data-step="6">
+                        <h3>Schritt 6: Finanzen & Bestätigung</h3>
+                        <div class="form-row">
+                            <div class="form-group"><div class="form-field"><input type="number" name="monthly-fee" class="form-input" required min="8" step="0.01" value="15"><label class="form-label">Monatsbeitrag (€) <span class="required">*</span></label></div></div>
+                            <div class="form-group">
+                                <label class="radio-group-label">Zahlweise <span class="required">*</span></label>
+                                <div class="radio-group">
+                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="monatlich" required checked> Monatlich</label>
+                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="quartalsweise" required> Quartal</label>
+                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="halbjährlich" required> Halbjahr</label>
+                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="jährlich" required> Jährlich</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group"><div class="form-field"><input type="number" name="startup-fee" class="form-input" min="0" step="0.01"><label class="form-label">Aufnahmespende (€) - optional</label></div></div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group"><div class="form-field"><input type="text" name="iban" class="form-input" required maxlength="34"><label class="form-label">IBAN <span class="required">*</span></label></div></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><div class="form-field"><input type="text" name="bank-name" class="form-input" required maxlength="100"><label class="form-label">Geldinstitut <span class="required">*</span></label></div></div>
+                            <div class="form-group"><div class="form-field"><input type="text" name="bic" class="form-input" maxlength="11"><label class="form-label">BIC</label></div></div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group"><div class="form-field"><input type="text" name="account-holder" class="form-input" maxlength="100"><label class="form-label">Kontoinhaber (falls abweichend)</label></div></div>
+                        </div>
+
+                        <!-- Privacy Notice -->
+                        <div class="privacy-notice" style="margin-top: var(--spacing-lg);">
+                            <p>🔒 <strong>Sicher übertragen.</strong> Ihre Daten werden über eine sichere Verbindung übertragen. Lesen Sie unsere <a href="/datenschutz/">Datenschutzerklärung</a> für weitere Informationen.</p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="form-navigation">
+                        <button type="button" class="nav-btn prev-btn" id="prev-btn" style="display: none;">← Zurück</button>
+                        <button type="button" class="nav-btn next-btn" id="next-btn">Weiter →</button>
+                        <button type="submit" class="submit-btn membership-submit-btn" id="membership-submit-btn" style="display: none;">
+                            <span class="btn-text">Antrag absenden</span>
+                            <span class="btn-loader" style="display: none;">
+                                <span class="spinner"></span> Wird gesendet...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- PDF Alternative -->
+                <div class="pdf-alternative">
+                    <p><strong>Oder klassisch per Post:</strong></p>
+                    <a href="https://cdu-mv.de/wp-content/uploads/2024/07/Aktuelle-CDU_Mitgliedsantrag-06-24.pdf" target="_blank" rel="noopener noreferrer" aria-label="PDF herunterladen (öffnet in neuem Fenster)" class="pdf-download-btn">
+                        📥 Mitgliedsantrag als PDF herunterladen
+                    </a>
+                </div>
             </section>
 
             <!-- Contact Section -->
@@ -411,5 +1047,173 @@
     </footer>
 
     <script src="../js/main.js"></script>
+
+    <script>
+        // Multi-Step Membership Form Wizard
+        const MembershipWizard = (() => {
+            let currentStep = 1;
+            const totalSteps = 6;
+            const form = document.getElementById('membership-form');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('membership-submit-btn');
+
+            const init = () => {
+                if (!form) return;
+
+                prevBtn.addEventListener('click', goToPreviousStep);
+                nextBtn.addEventListener('click', goToNextStep);
+                form.addEventListener('submit', handleSubmit);
+
+                updateDisplay();
+            };
+
+            const goToNextStep = () => {
+                if (validateCurrentStep()) {
+                    if (currentStep < totalSteps) {
+                        currentStep++;
+                        updateDisplay();
+                        scrollToForm();
+                    }
+                }
+            };
+
+            const goToPreviousStep = () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateDisplay();
+                    scrollToForm();
+                }
+            };
+
+            const validateCurrentStep = () => {
+                const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+                if (!currentStepElement) return true;
+
+                const requiredInputs = currentStepElement.querySelectorAll('input[required], textarea[required]');
+                for (let input of requiredInputs) {
+                    if (input.type === 'radio' || input.type === 'checkbox') {
+                        const groupName = input.name;
+                        const group = document.querySelectorAll(`input[name="${groupName}"]`);
+                        let isChecked = false;
+                        for (let item of group) {
+                            if (item.checked) {
+                                isChecked = true;
+                                break;
+                            }
+                        }
+                        if (!isChecked) {
+                            showError(`Bitte füllen Sie alle erforderlichen Felder in Schritt ${currentStep} aus.`);
+                            return false;
+                        }
+                    } else if (!input.value) {
+                        showError(`Bitte füllen Sie alle erforderlichen Felder in Schritt ${currentStep} aus.`);
+                        return false;
+                    }
+                }
+                return true;
+            };
+
+            const updateDisplay = () => {
+                // Update form steps
+                document.querySelectorAll('.form-step').forEach(step => {
+                    step.classList.remove('active');
+                });
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+
+                // Update progress bar
+                updateProgressBar();
+
+                // Update buttons
+                prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
+                nextBtn.style.display = currentStep < totalSteps ? 'block' : 'none';
+                submitBtn.style.display = currentStep === totalSteps ? 'flex' : 'none';
+            };
+
+            const updateProgressBar = () => {
+                document.querySelectorAll('.progress-step').forEach((step, index) => {
+                    const stepNum = index + 1;
+                    step.classList.remove('active', 'completed');
+
+                    if (stepNum < currentStep) {
+                        step.classList.add('completed');
+                    } else if (stepNum === currentStep) {
+                        step.classList.add('active');
+                    }
+                });
+
+                // Update progress fill width
+                const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+                document.getElementById('progress-fill').style.width = progress + '%';
+            };
+
+            const scrollToForm = () => {
+                document.querySelector('.membership-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+
+                if (!validateCurrentStep()) return;
+
+                showLoading();
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'Accept': 'application/json' }
+                    });
+
+                    if (response.ok) {
+                        showSuccess();
+                        form.reset();
+                        currentStep = 1;
+                        updateDisplay();
+                    } else {
+                        const data = await response.json();
+                        showError(data.error || 'Es gab einen Fehler beim Senden.');
+                    }
+                } catch (error) {
+                    showError('Netzwerkfehler. Bitte versuchen Sie es später erneut.');
+                } finally {
+                    hideLoading();
+                }
+            };
+
+            const showLoading = () => {
+                submitBtn.disabled = true;
+                document.querySelector('.membership-submit-btn .btn-text').style.display = 'none';
+                document.querySelector('.membership-submit-btn .btn-loader').style.display = 'inline-flex';
+            };
+
+            const hideLoading = () => {
+                submitBtn.disabled = false;
+                document.querySelector('.membership-submit-btn .btn-text').style.display = 'inline';
+                document.querySelector('.membership-submit-btn .btn-loader').style.display = 'none';
+            };
+
+            const showSuccess = () => {
+                document.getElementById('membership-success').style.display = 'flex';
+                document.getElementById('membership-error').style.display = 'none';
+                document.getElementById('membership-success').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            };
+
+            const showError = (message) => {
+                const errorMsg = document.getElementById('membership-error');
+                errorMsg.querySelector('#membership-error-text').textContent = message;
+                errorMsg.style.display = 'flex';
+                document.getElementById('membership-success').style.display = 'none';
+                errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            };
+
+            return { init };
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            MembershipWizard.init();
+        });
+    </script>
 </body>
 </html>
