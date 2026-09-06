@@ -23,6 +23,9 @@
     --spacing-lg: 2.25rem;
     --spacing-xl: 3.38rem;
 
+    /* Nur als Referenz. NICHT in @media verwenden – var() ist in
+       Media-Query-Bedingungen nicht erlaubt, die Regel wird dann komplett
+       verworfen. In @media immer den Pixelwert ausschreiben. */
     --breakpoint-sm: 480px;
     --breakpoint-md: 768px;
     --breakpoint-lg: 1024px;
@@ -46,7 +49,11 @@
 
 html {
     scroll-behavior: smooth;
-    color-scheme: light dark;
+    /* Die Seite hat kein Dark-Theme – alle Farben sind fest hell definiert.
+       Mit "light dark" stylt der Browser Formularfelder bei dunklem OS-Theme
+       dunkel (helle Schrift), waehrend das CSS den Hintergrund weiss erzwingt:
+       weisse Schrift auf weissem Grund. */
+    color-scheme: light;
 }
 
 body {
@@ -162,7 +169,7 @@ body {
     padding: 0 var(--spacing-sm);
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .container {
         padding: 0 var(--spacing-xs);
     }
@@ -255,7 +262,7 @@ body {
     outline-offset: 2px;
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .top-bar {
         flex-direction: row;
         justify-content: center;
@@ -470,7 +477,7 @@ body {
 }
 
 /* Mobile Navigation */
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .menu-toggle {
         display: flex;
     }
@@ -678,7 +685,7 @@ body {
     outline-offset: 2px;
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .slider-wrapper {
         height: 300px;
     }
@@ -751,7 +758,7 @@ body {
     font-size: 14px;
 }
 
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: 1024px) {
     .hero-grid {
         grid-template-columns: 1fr;
     }
@@ -855,7 +862,7 @@ body {
     margin-bottom: 0;
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .welcome-section h1 {
         font-size: 24px;
     }
@@ -966,13 +973,13 @@ body {
     outline-offset: 2px;
 }
 
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: 1024px) {
     .features-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .features-grid {
         grid-template-columns: 1fr;
     }
@@ -1059,13 +1066,13 @@ body {
     border-top: 1px solid var(--color-border);
 }
 
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: 1024px) {
     .news-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .news-grid {
         grid-template-columns: 1fr;
     }
@@ -1202,13 +1209,13 @@ body {
     outline-offset: 2px;
 }
 
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: 1024px) {
     .footer-main {
         grid-template-columns: 1fr 1fr;
     }
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .footer-main {
         grid-template-columns: 1fr;
     }
@@ -1360,14 +1367,14 @@ body {
 }
 
 /* Desktop: 2 Columns */
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: 1024px) {
     .vorstand-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 /* Tablet: 1 Column */
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .vorstand-grid {
         grid-template-columns: 1fr;
         gap: var(--spacing-md);
@@ -1406,7 +1413,7 @@ body {
 }
 
 /* Mobile: Full Width */
-@media (max-width: var(--breakpoint-sm)) {
+@media (max-width: 480px) {
     .nav-link {
         padding: var(--spacing-xs) var(--spacing-xs);
         font-size: 13px;
