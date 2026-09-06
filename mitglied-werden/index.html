@@ -253,40 +253,12 @@
         }
 
         .membership-form .form-field {
-            position: relative;
             margin-bottom: var(--spacing-sm);
         }
 
-        .membership-form .form-label {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--color-text-light);
-            pointer-events: none;
-            transition: all 0.2s ease;
-            transform-origin: left top;
-        }
-
-        .membership-form .form-input:focus ~ .form-label {
-            top: -8px;
-            left: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-primary);
-            background-color: var(--color-white);
-            padding: 0 4px;
-        }
-
-        .membership-form .form-input:not(:placeholder-shown) ~ .form-label {
-            top: -8px;
-            left: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-text-light);
-            background-color: var(--color-white);
-            padding: 0 4px;
+        .membership-form .form-textarea {
+            resize: vertical;
+            min-height: 120px;
         }
 
         /* Form Messages */
@@ -869,114 +841,120 @@
 
                     <!-- Step 1: Personal Data -->
                     <div class="form-step active" data-step="1">
-                        <h3>Schritt 1: Persönliche Daten</h3>
+                        <h2>Schritt 1: Persönliche Daten</h2>
+                        <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-1-announcement">Schritt 1 von 6: Persönliche Daten</div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="radio-group-label">Anrede <span class="required">*</span></label>
                                 <div class="radio-group">
-                                    <label class="radio-label"><input type="radio" name="salutation" value="Herr" required> Herr</label>
-                                    <label class="radio-label"><input type="radio" name="salutation" value="Frau" required> Frau</label>
-                                    <label class="radio-label"><input type="radio" name="salutation" value="ohne" required> Ohne Anrede</label>
+                                    <label class="radio-label"><input type="radio" name="salutation" value="Herr" required aria-label="Anrede: Herr"> Herr</label>
+                                    <label class="radio-label"><input type="radio" name="salutation" value="Frau" required aria-label="Anrede: Frau"> Frau</label>
+                                    <label class="radio-label"><input type="radio" name="salutation" value="ohne" required aria-label="Anrede: Ohne Anrede"> Ohne Anrede</label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><div class="form-field"><input type="text" name="first-name" class="form-input" required maxlength="50" autocomplete="given-name"><label class="form-label">Vorname <span class="required">*</span></label></div></div>
-                            <div class="form-group"><div class="form-field"><input type="text" name="last-name" class="form-input" required maxlength="50" autocomplete="family-name"><label class="form-label">Nachname <span class="required">*</span></label></div></div>
+                            <div class="form-group"><label for="first-name" class="form-label">Vorname <span class="required">*</span></label><div class="form-field"><input type="text" id="first-name" name="first-name" class="form-input" required maxlength="50" autocomplete="given-name" aria-label="Vorname" placeholder=""></div></div>
+                            <div class="form-group"><label for="last-name" class="form-label">Nachname <span class="required">*</span></label><div class="form-field"><input type="text" id="last-name" name="last-name" class="form-input" required maxlength="50" autocomplete="family-name" aria-label="Nachname" placeholder=""></div></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><div class="form-field"><input type="date" name="birthdate" class="form-input" required><label class="form-label">Geburtsdatum <span class="required">*</span></label></div></div>
-                            <div class="form-group"><div class="form-field"><input type="text" name="birthplace" class="form-input" required maxlength="50"><label class="form-label">Geburtsort <span class="required">*</span></label></div></div>
+                            <div class="form-group"><label for="birthdate" class="form-label">Geburtsdatum <span class="required">*</span></label><div class="form-field"><input type="date" id="birthdate" name="birthdate" class="form-input" required aria-label="Geburtsdatum" placeholder=""></div></div>
+                            <div class="form-group"><label for="birthplace" class="form-label">Geburtsort <span class="required">*</span></label><div class="form-field"><input type="text" id="birthplace" name="birthplace" class="form-input" required maxlength="50" aria-label="Geburtsort" placeholder=""></div></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><div class="form-field"><input type="text" name="nationality" class="form-input" required maxlength="50" value="Deutsch"><label class="form-label">Staatsangehörigkeit <span class="required">*</span></label></div></div>
-                            <div class="form-group"><div class="form-field"><input type="text" name="religion" class="form-input" maxlength="50"><label class="form-label">Religion/Konfession</label></div></div>
+                            <div class="form-group"><label for="nationality" class="form-label">Staatsangehörigkeit <span class="required">*</span></label><div class="form-field"><input type="text" id="nationality" name="nationality" class="form-input" required maxlength="50" value="Deutsch" aria-label="Staatsangehörigkeit" placeholder=""></div></div>
+                            <div class="form-group"><label for="religion" class="form-label">Religion/Konfession</label><div class="form-field"><input type="text" id="religion" name="religion" class="form-input" maxlength="50" aria-label="Religion/Konfession" placeholder=""></div></div>
                         </div>
                     </div>
 
                     <!-- Step 2: Contact Data -->
                     <div class="form-step" data-step="2">
-                        <h3>Schritt 2: Kontaktdaten</h3>
+                        <h2>Schritt 2: Kontaktdaten</h2>
+                        <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-2-announcement">Schritt 2 von 6: Kontaktdaten</div>
                         <div class="form-row full">
-                            <div class="form-group"><div class="form-field"><input type="email" name="email" class="form-input" required maxlength="100" autocomplete="email"><label class="form-label">E-Mail <span class="required">*</span></label></div></div>
+                            <div class="form-group"><label for="email" class="form-label">E-Mail <span class="required">*</span></label><div class="form-field"><input type="email" id="email" name="email" class="form-input" required maxlength="100" autocomplete="email" aria-label="E-Mail" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><div class="form-field"><input type="tel" name="phone" class="form-input" required maxlength="20" autocomplete="tel" inputmode="tel"><label class="form-label">Telefon/Mobil <span class="required">*</span></label></div></div>
+                            <div class="form-group"><label for="phone" class="form-label">Telefon/Mobil <span class="required">*</span></label><div class="form-field"><input type="tel" id="phone" name="phone" class="form-input" required maxlength="20" autocomplete="tel" inputmode="tel" aria-label="Telefon/Mobil" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><div class="form-field"><input type="text" name="recruited-by" class="form-input" maxlength="50"><label class="form-label">Geworben durch</label></div></div>
+                            <div class="form-group"><label for="recruited-by" class="form-label">Geworben durch</label><div class="form-field"><input type="text" id="recruited-by" name="recruited-by" class="form-input" maxlength="50" aria-label="Geworben durch" placeholder=""></div></div>
                         </div>
                     </div>
 
                     <!-- Step 3: Address -->
                     <div class="form-step" data-step="3">
-                        <h3>Schritt 3: Adresse</h3>
+                        <h2>Schritt 3: Adresse</h2>
+                        <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-3-announcement">Schritt 3 von 6: Adresse</div>
                         <div class="form-row">
-                            <div class="form-group"><div class="form-field"><input type="text" name="street" class="form-input" required maxlength="100" autocomplete="street-address"><label class="form-label">Straße <span class="required">*</span></label></div></div>
-                            <div class="form-group"><div class="form-field"><input type="text" name="house-number" class="form-input" required maxlength="10"><label class="form-label">Hausnummer <span class="required">*</span></label></div></div>
+                            <div class="form-group"><label for="street" class="form-label">Straße <span class="required">*</span></label><div class="form-field"><input type="text" id="street" name="street" class="form-input" required maxlength="100" autocomplete="street-address" aria-label="Straße" placeholder=""></div></div>
+                            <div class="form-group"><label for="house-number" class="form-label">Hausnummer <span class="required">*</span></label><div class="form-field"><input type="text" id="house-number" name="house-number" class="form-input" required maxlength="10" aria-label="Hausnummer" placeholder=""></div></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><div class="form-field"><input type="text" name="postal-code" class="form-input" required maxlength="10" autocomplete="postal-code"><label class="form-label">PLZ <span class="required">*</span></label></div></div>
-                            <div class="form-group"><div class="form-field"><input type="text" name="city" class="form-input" required maxlength="50" autocomplete="address-level2"><label class="form-label">Stadt <span class="required">*</span></label></div></div>
+                            <div class="form-group"><label for="postal-code" class="form-label">PLZ <span class="required">*</span></label><div class="form-field"><input type="text" id="postal-code" name="postal-code" class="form-input" required maxlength="10" autocomplete="postal-code" aria-label="PLZ" placeholder=""></div></div>
+                            <div class="form-group"><label for="city" class="form-label">Stadt <span class="required">*</span></label><div class="form-field"><input type="text" id="city" name="city" class="form-input" required maxlength="50" autocomplete="address-level2" aria-label="Stadt" placeholder=""></div></div>
                         </div>
                     </div>
 
                     <!-- Step 4: Profession & Functions -->
                     <div class="form-step" data-step="4">
-                        <h3>Schritt 4: Beruf & Engagement</h3>
+                        <h2>Schritt 4: Beruf & Engagement</h2>
+                        <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-4-announcement">Schritt 4 von 6: Beruf und Engagement</div>
                         <div class="form-row full">
-                            <div class="form-group"><div class="form-field"><input type="text" name="profession" class="form-input" maxlength="50"><label class="form-label">Beruf</label></div></div>
+                            <div class="form-group"><label for="profession" class="form-label">Beruf</label><div class="form-field"><input type="text" id="profession" name="profession" class="form-input" maxlength="50" aria-label="Beruf" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><div class="form-field"><textarea name="functions" class="form-input form-textarea" maxlength="500"></textarea><label class="form-label">Ehrenamtliche Funktionen, Ämter, Mitgliedschaften</label></div></div>
+                            <div class="form-group"><label for="functions" class="form-label">Ehrenamtliche Funktionen, Ämter, Mitgliedschaften</label><div class="form-field"><textarea id="functions" name="functions" class="form-input form-textarea" maxlength="500" aria-label="Ehrenamtliche Funktionen, Ämter, Mitgliedschaften" placeholder=""></textarea></div></div>
                         </div>
                     </div>
 
                     <!-- Step 5: Organizations -->
                     <div class="form-step" data-step="5">
-                        <h3>Schritt 5: Vereinigungen</h3>
+                        <h2>Schritt 5: Vereinigungen</h2>
+                        <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-5-announcement">Schritt 5 von 6: Vereinigungen</div>
                         <p class="step-intro">Wählen Sie die Vereinigungen, zu denen Sie Informationen erhalten möchten:</p>
                         <div class="checkbox-group">
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="JU"> Junge Union Deutschlands (JU)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="FU"> Frauen Union der CDU Deutschlands (FU)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="CDA"> Christlich-Demokratische Arbeitnehmerschaft (CDA)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="KPV"> Kommunalpolitische Vereinigung (KPV)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="MIT"> Mittelstands- und Wirtschaftsunion (MIT)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="OMV"> Ost- und Mitteldeutsche Vereinigung (OMV)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="SU"> Senioren-Union (SU)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="EAK"> Evangelischer Arbeitskreis (EAK)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="RCDS"> Ring Christlich-Demokratischer Studenten (RCDS)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="LSU"> Lesben und Schwule in der Union (LSU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="JU" aria-label="Junge Union Deutschlands"> Junge Union Deutschlands (JU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="FU" aria-label="Frauen Union der CDU Deutschlands"> Frauen Union der CDU Deutschlands (FU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="CDA" aria-label="Christlich-Demokratische Arbeitnehmerschaft"> Christlich-Demokratische Arbeitnehmerschaft (CDA)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="KPV" aria-label="Kommunalpolitische Vereinigung"> Kommunalpolitische Vereinigung (KPV)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="MIT" aria-label="Mittelstands- und Wirtschaftsunion"> Mittelstands- und Wirtschaftsunion (MIT)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="OMV" aria-label="Ost- und Mitteldeutsche Vereinigung"> Ost- und Mitteldeutsche Vereinigung (OMV)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="SU" aria-label="Senioren-Union"> Senioren-Union (SU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="EAK" aria-label="Evangelischer Arbeitskreis"> Evangelischer Arbeitskreis (EAK)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="RCDS" aria-label="Ring Christlich-Demokratischer Studenten"> Ring Christlich-Demokratischer Studenten (RCDS)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="LSU" aria-label="Lesben und Schwule in der Union"> Lesben und Schwule in der Union (LSU)</label>
                         </div>
                     </div>
 
                     <!-- Step 6: Finance & Confirmation -->
                     <div class="form-step" data-step="6">
-                        <h3>Schritt 6: Finanzen & Bestätigung</h3>
+                        <h2>Schritt 6: Finanzen & Bestätigung</h2>
+                        <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-6-announcement">Schritt 6 von 6: Finanzen und Bestätigung</div>
                         <div class="form-row">
-                            <div class="form-group"><div class="form-field"><input type="number" name="monthly-fee" class="form-input" required min="8" step="0.01" value="15"><label class="form-label">Monatsbeitrag (€) <span class="required">*</span></label></div></div>
+                            <div class="form-group"><label for="monthly-fee" class="form-label">Monatsbeitrag (€) <span class="required">*</span></label><div class="form-field"><input type="number" id="monthly-fee" name="monthly-fee" class="form-input" required min="8" step="0.01" value="15" aria-label="Monatsbeitrag" placeholder=""></div></div>
                             <div class="form-group">
                                 <label class="radio-group-label">Zahlweise <span class="required">*</span></label>
                                 <div class="radio-group">
-                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="monatlich" required checked> Monatlich</label>
-                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="quartalsweise" required> Quartal</label>
-                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="halbjährlich" required> Halbjahr</label>
-                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="jährlich" required> Jährlich</label>
+                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="monatlich" required checked aria-label="Zahlweise: Monatlich"> Monatlich</label>
+                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="quartalsweise" required aria-label="Zahlweise: Quartal"> Quartal</label>
+                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="halbjährlich" required aria-label="Zahlweise: Halbjahr"> Halbjahr</label>
+                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="jährlich" required aria-label="Zahlweise: Jährlich"> Jährlich</label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><div class="form-field"><input type="number" name="startup-fee" class="form-input" min="0" step="0.01"><label class="form-label">Aufnahmespende (€) - optional</label></div></div>
+                            <div class="form-group"><label for="startup-fee" class="form-label">Aufnahmespende (€) - optional</label><div class="form-field"><input type="number" id="startup-fee" name="startup-fee" class="form-input" min="0" step="0.01" aria-label="Aufnahmespende" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><div class="form-field"><input type="text" name="iban" class="form-input" required maxlength="34"><label class="form-label">IBAN <span class="required">*</span></label></div></div>
+                            <div class="form-group"><label for="iban" class="form-label">IBAN <span class="required">*</span></label><div class="form-field"><input type="text" id="iban" name="iban" class="form-input" required maxlength="34" aria-label="IBAN" placeholder=""></div></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><div class="form-field"><input type="text" name="bank-name" class="form-input" required maxlength="100"><label class="form-label">Geldinstitut <span class="required">*</span></label></div></div>
-                            <div class="form-group"><div class="form-field"><input type="text" name="bic" class="form-input" maxlength="11"><label class="form-label">BIC</label></div></div>
+                            <div class="form-group"><label for="bank-name" class="form-label">Geldinstitut <span class="required">*</span></label><div class="form-field"><input type="text" id="bank-name" name="bank-name" class="form-input" required maxlength="100" aria-label="Geldinstitut" placeholder=""></div></div>
+                            <div class="form-group"><label for="bic" class="form-label">BIC</label><div class="form-field"><input type="text" id="bic" name="bic" class="form-input" maxlength="11" aria-label="BIC" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><div class="form-field"><input type="text" name="account-holder" class="form-input" maxlength="100"><label class="form-label">Kontoinhaber (falls abweichend)</label></div></div>
+                            <div class="form-group"><label for="account-holder" class="form-label">Kontoinhaber (falls abweichend)</label><div class="form-field"><input type="text" id="account-holder" name="account-holder" class="form-input" maxlength="100" aria-label="Kontoinhaber" placeholder=""></div></div>
                         </div>
 
                         <!-- Privacy Notice -->
@@ -1124,10 +1102,28 @@
                 // Update progress bar
                 updateProgressBar();
 
+                // Update aria-live announcement
+                updateAriaAnnouncement();
+
                 // Update buttons
                 prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
                 nextBtn.style.display = currentStep < totalSteps ? 'block' : 'none';
                 submitBtn.style.display = currentStep === totalSteps ? 'flex' : 'none';
+            };
+
+            const updateAriaAnnouncement = () => {
+                const stepTitles = [
+                    'Persönliche Daten',
+                    'Kontaktdaten',
+                    'Adresse',
+                    'Beruf und Engagement',
+                    'Vereinigungen',
+                    'Finanzen und Bestätigung'
+                ];
+                const announcement = document.getElementById(`step-${currentStep}-announcement`);
+                if (announcement) {
+                    announcement.textContent = `Schritt ${currentStep} von ${totalSteps}: ${stepTitles[currentStep - 1]}`;
+                }
             };
 
             const updateProgressBar = () => {

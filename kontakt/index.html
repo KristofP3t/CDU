@@ -161,44 +161,10 @@
             box-shadow: 0 0 0 3px rgba(82, 183, 193, 0.1);
         }
 
-        /* Floating Labels */
-        .form-label {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--color-text-light);
-            pointer-events: none;
-            transition: all 0.2s ease;
-            transform-origin: left top;
-        }
-
-        .form-input:focus ~ .form-label,
-        .form-input:not(:placeholder-shown) ~ .form-label {
-            top: -8px;
-            left: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-primary);
-            background-color: var(--color-white);
-            padding: 0 4px;
-        }
-
         /* Textarea */
         .form-textarea {
             resize: vertical;
             min-height: 120px;
-            padding-top: 16px;
-        }
-
-        .form-textarea ~ .form-label {
-            top: 16px;
-        }
-
-        .form-textarea:focus ~ .form-label,
-        .form-textarea:not(:placeholder-shown) ~ .form-label {
-            top: -8px;
         }
 
         /* Character Count */
@@ -461,6 +427,7 @@
 
                     <!-- Name Field -->
                     <div class="form-group">
+                        <label for="name" class="form-label">Name <span class="required">*</span></label>
                         <div class="form-field">
                             <input
                                 type="text"
@@ -470,15 +437,17 @@
                                 required
                                 maxlength="100"
                                 aria-required="true"
+                                aria-label="Name"
                                 autocomplete="name"
+                                placeholder=""
                             >
-                            <label for="name" class="form-label">Name <span class="required">*</span></label>
                         </div>
                         <span class="form-hint">Ihr vollständiger Name</span>
                     </div>
 
                     <!-- Email Field -->
                     <div class="form-group">
+                        <label for="email" class="form-label">E-Mail <span class="required">*</span></label>
                         <div class="form-field">
                             <input
                                 type="email"
@@ -488,15 +457,17 @@
                                 required
                                 maxlength="100"
                                 aria-required="true"
+                                aria-label="E-Mail"
                                 autocomplete="email"
+                                placeholder=""
                             >
-                            <label for="email" class="form-label">E-Mail <span class="required">*</span></label>
                         </div>
                         <span class="form-hint">Ihre E-Mail-Adresse</span>
                     </div>
 
                     <!-- Phone Field -->
                     <div class="form-group">
+                        <label for="phone" class="form-label">Telefonnummer</label>
                         <div class="form-field">
                             <input
                                 type="tel"
@@ -504,16 +475,18 @@
                                 name="phone"
                                 class="form-input"
                                 maxlength="20"
+                                aria-label="Telefonnummer"
                                 autocomplete="tel"
                                 inputmode="tel"
+                                placeholder=""
                             >
-                            <label for="phone" class="form-label">Telefonnummer</label>
                         </div>
                         <span class="form-hint">Optional – damit wir Sie ggf. anrufen können</span>
                     </div>
 
                     <!-- Subject Field -->
                     <div class="form-group">
+                        <label for="subject" class="form-label">Betreff <span class="required">*</span></label>
                         <div class="form-field">
                             <input
                                 type="text"
@@ -523,14 +496,16 @@
                                 required
                                 maxlength="100"
                                 aria-required="true"
+                                aria-label="Betreff"
+                                placeholder=""
                             >
-                            <label for="subject" class="form-label">Betreff <span class="required">*</span></label>
                         </div>
                         <span class="form-hint">Worum geht es in Ihrer Anfrage?</span>
                     </div>
 
                     <!-- Message Field -->
                     <div class="form-group">
+                        <label for="message" class="form-label">Nachricht <span class="required">*</span></label>
                         <div class="form-field">
                             <textarea
                                 id="message"
@@ -539,8 +514,9 @@
                                 required
                                 maxlength="2000"
                                 aria-required="true"
+                                aria-label="Nachricht"
+                                placeholder=""
                             ></textarea>
-                            <label for="message" class="form-label">Nachricht <span class="required">*</span></label>
                             <span class="char-count">0 / 2000</span>
                         </div>
                         <span class="form-hint">Max. 2000 Zeichen</span>

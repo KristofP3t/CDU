@@ -67,6 +67,22 @@ body {
 }
 
 /* ==========================================================================
+   Accessibility: Screen Reader Only Content
+   ========================================================================== */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ==========================================================================
    Skip Link (Keyboard Navigation)
    ========================================================================== */
 
@@ -83,7 +99,7 @@ body {
     font-weight: bold;
 }
 
-.skip-link:focus {
+.skip-link:focus-visible {
     top: 0;
     outline: 3px solid var(--color-accent);
     outline-offset: 2px;
@@ -191,7 +207,7 @@ body {
 }
 
 .top-bar-item:hover,
-.top-bar-item:focus {
+.top-bar-item:focus-visible {
     opacity: 0.8;
     text-decoration: underline;
 }
@@ -208,7 +224,7 @@ body {
 }
 
 .top-bar-social a:hover,
-.top-bar-social a:focus {
+.top-bar-social a:focus-visible {
     opacity: 0.8;
     text-decoration: underline;
 }
@@ -230,7 +246,7 @@ body {
 }
 
 .social-icon:hover,
-.social-icon:focus {
+.social-icon:focus-visible {
     background-color: rgba(255,255,255,0.2);
 }
 
@@ -323,7 +339,7 @@ body {
 }
 
 .nav-link:hover,
-.nav-link:focus {
+.nav-link:focus-visible {
     color: var(--color-primary);
     background-color: rgba(82, 183, 193, 0.1);
     outline: 2px solid transparent;
@@ -389,7 +405,7 @@ body {
 }
 
 .submenu a:hover,
-.submenu a:focus {
+.submenu a:focus-visible {
     background-color: var(--color-text);
     color: var(--color-white);
 }
@@ -560,7 +576,7 @@ body {
 }
 
 .btn-primary:hover,
-.btn-primary:focus {
+.btn-primary:focus-visible {
     background-color: #3a9fa7;
 }
 
@@ -571,7 +587,7 @@ body {
 }
 
 .btn-secondary:hover,
-.btn-secondary:focus {
+.btn-secondary:focus-visible {
     background-color: rgba(82, 183, 193, 0.1);
 }
 
@@ -653,7 +669,7 @@ body {
 }
 
 .slider-btn:hover,
-.slider-btn:focus {
+.slider-btn:focus-visible {
     background-color: var(--color-white);
 }
 
@@ -711,9 +727,11 @@ body {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.pdf-link:hover,
-.pdf-link:focus {
-    transform: scale(1.02);
+@media (prefers-reduced-motion: no-preference) {
+    .pdf-link:hover,
+    .pdf-link:focus-visible {
+        transform: scale(1.02);
+    }
 }
 
 .pdf-link:focus-visible {
@@ -914,7 +932,7 @@ body {
 }
 
 .feature-card h3 a:hover,
-.feature-card h3 a:focus {
+.feature-card h3 a:focus-visible {
     color: var(--color-primary);
 }
 
@@ -938,7 +956,7 @@ body {
 }
 
 .feature-link:hover,
-.feature-link:focus {
+.feature-link:focus-visible {
     color: var(--color-accent);
     text-decoration: underline;
 }
@@ -993,10 +1011,12 @@ body {
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.news-card:hover,
-.news-card:focus-within {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    transform: translateY(-2px);
+@media (prefers-reduced-motion: no-preference) {
+    .news-card:hover,
+    .news-card:focus-within {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+    }
 }
 
 .news-link {
@@ -1095,7 +1115,7 @@ body {
 }
 
 .footer-section address a:hover,
-.footer-section address a:focus {
+.footer-section address a:focus-visible {
     color: var(--color-white);
     text-decoration: underline;
 }
@@ -1119,7 +1139,7 @@ body {
 }
 
 .footer-links a:hover,
-.footer-links a:focus {
+.footer-links a:focus-visible {
     color: var(--color-white);
     text-decoration: underline;
 }
@@ -1136,9 +1156,11 @@ body {
     transition: transform 0.2s ease;
 }
 
-.social-image:hover,
-.social-image:focus {
-    transform: scale(1.02);
+@media (prefers-reduced-motion: no-preference) {
+    .social-image:hover,
+    .social-image:focus-visible {
+        transform: scale(1.02);
+    }
 }
 
 .social-image:focus-visible {
@@ -1170,7 +1192,7 @@ body {
 }
 
 .copyright a:hover,
-.copyright a:focus {
+.copyright a:focus-visible {
     color: var(--color-white);
     text-decoration: underline;
 }
@@ -1411,4 +1433,37 @@ body {
     .member-email {
         font-size: 10px;
     }
+}
+
+/* ==========================================================================
+   Form Elements - Labels & Groups
+   ========================================================================== */
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+.form-label .required {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.required {
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-left: 2px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
 }
