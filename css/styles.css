@@ -499,7 +499,12 @@ body {
         top: 0;
         left: 0;
         width: 100%;
+        /* 100vh rechnet auf Mobilgeraeten mit der groessten Viewport-Hoehe,
+           sodass die untersten Eintraege hinter der ein- und ausfahrenden
+           Browserleiste liegen koennen. dvh folgt der tatsaechlichen Hoehe;
+           die vh-Zeile bleibt als Rueckfall fuer aeltere Browser. */
         height: 100vh;
+        height: 100dvh;
         flex-direction: column;
         background-color: var(--color-white);
         overflow-y: auto;
