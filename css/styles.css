@@ -181,6 +181,7 @@ body {
 .top-bar-left {
     display: flex;
     gap: var(--spacing-md);
+    padding-left: var(--spacing-lg);
 }
 
 .top-bar-item {
@@ -843,8 +844,13 @@ body {
 }
 
 .feature-icon {
-    font-size: 48px;
     margin-bottom: var(--spacing-md);
+}
+
+.feature-icon svg {
+    width: 48px;
+    height: 48px;
+    color: var(--color-primary);
 }
 
 .feature-card h3 {
