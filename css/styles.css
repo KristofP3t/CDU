@@ -473,8 +473,13 @@ body {
 
 /* Mobile Navigation */
 @media (max-width: 768px) {
+    /* Muss ueber dem geoeffneten Vollbild-Menue liegen, sonst ist der
+       Button von ihm verdeckt und das Menue laesst sich nicht schliessen.
+       Im geoeffneten Zustand wird er per CSS zum X (siehe oben). */
     .menu-toggle {
         display: flex;
+        position: relative;
+        z-index: 1000;
     }
 
     .nav-menu {
@@ -486,6 +491,7 @@ body {
         flex-direction: column;
         background-color: var(--color-white);
         overflow-y: auto;
+        overscroll-behavior: contain;
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.3s ease, visibility 0.3s ease;

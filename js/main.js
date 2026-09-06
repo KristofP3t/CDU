@@ -90,6 +90,7 @@ const Navigation = (() => {
         const menuToggle = document.getElementById('menu-toggle');
         const navMenu = document.getElementById('nav-menu');
         menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Navigation öffnen');
         navMenu.classList.remove('show');
     };
 
@@ -104,6 +105,7 @@ const Navigation = (() => {
         menuToggle.addEventListener('click', () => {
             const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
             menuToggle.setAttribute('aria-expanded', !isExpanded);
+            menuToggle.setAttribute('aria-label', isExpanded ? 'Navigation öffnen' : 'Navigation schließen');
             navMenu.classList.toggle('show');
 
             if (!isExpanded) {
@@ -111,6 +113,15 @@ const Navigation = (() => {
                 const firstItem = navMenu.querySelector('a');
                 if (firstItem) firstItem.focus();
             }
+        });
+
+        // Close the fullscreen menu when a link actually navigates. Submenu
+        // parents only expand their submenu on mobile, so they must keep it open.
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (link.matches('.has-submenu > .nav-link')) return;
+                closeMenu();
+            });
         });
 
         // Close menu on escape key
