@@ -475,11 +475,23 @@ body {
 @media (max-width: 768px) {
     /* Muss ueber dem geoeffneten Vollbild-Menue liegen, sonst ist der
        Button von ihm verdeckt und das Menue laesst sich nicht schliessen.
-       Im geoeffneten Zustand wird er per CSS zum X (siehe oben). */
+       margin-left:auto schiebt den Hamburger an den rechten Rand der
+       Kopfzeile – ohne das steht er am linken Rand des Navigationsblocks
+       und landet damit optisch in der Bildschirmmitte. */
     .menu-toggle {
         display: flex;
         position: relative;
         z-index: 1000;
+        margin-left: auto;
+    }
+
+    /* Bei geoeffnetem Menue loest sich das X aus der Kopfzeile und sitzt
+       fest oben rechts im Viewport – dort, wo man es erwartet, und ausser
+       Reichweite des Menue-Scrollens. */
+    .menu-toggle[aria-expanded="true"] {
+        position: fixed;
+        top: calc(var(--spacing-xs) + env(safe-area-inset-top, 0px));
+        right: calc(var(--spacing-xs) + env(safe-area-inset-right, 0px));
     }
 
     .nav-menu {
@@ -496,7 +508,9 @@ body {
         visibility: hidden;
         transition: opacity 0.3s ease, visibility 0.3s ease;
         z-index: 999;
-        padding: var(--spacing-xl) 0;
+        /* Oben Platz fuer den X-Button, damit er nicht ueber dem ersten
+           Menuepunkt liegt. */
+        padding: calc(var(--spacing-xl) + var(--spacing-md) + env(safe-area-inset-top, 0px)) 0 var(--spacing-xl);
     }
 
     .nav-menu.show {
