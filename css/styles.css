@@ -454,7 +454,7 @@ body {
 }
 
 /* Mobile Navigation */
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: var(--breakpoint-md)) {
     .menu-toggle {
         display: flex;
     }
