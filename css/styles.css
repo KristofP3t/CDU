@@ -273,29 +273,16 @@ body {
 @media (max-width: 768px) {
     .top-bar {
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-end;
         gap: var(--spacing-xs);
         padding: var(--spacing-xs);
     }
 
+    /* Telefon und E-Mail entfallen auf Mobilgeraeten – oben bleiben nur
+       die Social-Icons, rechtsbuendig. Beide Kontaktwege stehen weiterhin
+       im Footer und auf der Kontaktseite. */
     .top-bar-left {
-        display: flex;
-        gap: var(--spacing-xs);
-        padding-left: 0;
-    }
-
-    .top-bar-item {
-        width: 32px;
-        height: 32px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        border-radius: 4px;
-        background-color: rgba(255, 255, 255, 0.1);
-        overflow: hidden;
-        text-indent: -9999px;
-        white-space: nowrap;
+        display: none;
     }
 
     .top-bar-social {
@@ -509,18 +496,6 @@ body {
     .nav-menu.show {
         opacity: 1;
         visibility: visible;
-    }
-
-    /* Overlay/Scrim for Fullscreen Menu */
-    .nav-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.3);
-        z-index: 998;
-        animation: fadeIn 0.3s ease;
     }
 
     .nav-link {

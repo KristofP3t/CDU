@@ -86,30 +86,11 @@ const ConsentManager = (() => {
 // ============================================================================
 
 const Navigation = (() => {
-    let overlay = null;
-
-    const createOverlay = () => {
-        if (overlay) return overlay;
-        overlay = document.createElement('div');
-        overlay.className = 'nav-overlay';
-        overlay.addEventListener('click', closeMenu);
-        document.body.appendChild(overlay);
-        return overlay;
-    };
-
-    const removeOverlay = () => {
-        if (overlay) {
-            overlay.remove();
-            overlay = null;
-        }
-    };
-
     const closeMenu = () => {
         const menuToggle = document.getElementById('menu-toggle');
         const navMenu = document.getElementById('nav-menu');
         menuToggle.setAttribute('aria-expanded', 'false');
         navMenu.classList.remove('show');
-        removeOverlay();
     };
 
     const init = () => {
@@ -126,14 +107,9 @@ const Navigation = (() => {
             navMenu.classList.toggle('show');
 
             if (!isExpanded) {
-                // Show overlay when menu opens
-                createOverlay();
                 // Focus first menu item when opening
                 const firstItem = navMenu.querySelector('a');
                 if (firstItem) firstItem.focus();
-            } else {
-                // Remove overlay when menu closes
-                removeOverlay();
             }
         });
 
