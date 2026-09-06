@@ -189,9 +189,17 @@ body {
 }
 
 /* Top Bar: Contact & Social */
-.top-bar {
+
+/* Traegt den Hintergrund und liegt ausserhalb des .container, damit der
+   Balken ueber die volle Viewport-Breite laeuft. Der .container darin
+   haelt den Inhalt weiterhin auf 1400px begrenzt und buendig zum Rest
+   der Seite. */
+.top-bar-outer {
     background-color: var(--color-primary);
     color: var(--color-white);
+}
+
+.top-bar {
     padding: var(--spacing-sm) 0;
     display: flex;
     justify-content: space-between;
