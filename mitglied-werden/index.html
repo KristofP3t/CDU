@@ -780,33 +780,6 @@
                 <p>Wir gestalten Politik für die Landeshauptstadt Schwerin. Wenn Sie etwas bewegen wollen – machen Sie mit!</p>
             </section>
 
-            <!-- Why Join Section -->
-            <section class="membership-content">
-                <div class="membership-section">
-                    <h2>🎯 Warum Mitglied werden?</h2>
-                    <p>Der CDU Kreisverband Schwerin freut sich über jedes neue Mitglied. Gemeinsam können wir mehr erreichen:</p>
-                    <ul>
-                        <li>Gestalten Sie Politik in Ihrer Stadt mit</li>
-                        <li>Treffen Sie Gleichgesinnte mit gemeinsamen Werten</li>
-                        <li>Nutzen Sie Ihr Mitspracherrecht in der Partei</li>
-                        <li>Profitieren Sie von Fortbildungen und Veranstaltungen</li>
-                        <li>Seien Sie Teil einer starken Bewegung</li>
-                    </ul>
-                </div>
-
-                <div class="membership-section">
-                    <h2>💪 Was Sie bewirken können</h2>
-                    <p>Als Mitglied der CDU tragen Sie dazu bei, dass unsere Stadt und unser Land besser werden:</p>
-                    <ul>
-                        <li>Beeinflussen Sie Parteibeschlüsse</li>
-                        <li>Engagieren Sie sich in Arbeitskreisen</li>
-                        <li>Unterstützen Sie unsere Kandidaten</li>
-                        <li>Bilden Sie sich fort und wachsen Sie</li>
-                        <li>Verbessern Sie Ihre Heimatstadt</li>
-                    </ul>
-                </div>
-            </section>
-
             <!-- Online Membership Form Section -->
             <section class="membership-form-section">
                 <h2>Jetzt anmelden – Online-Formular</h2>
@@ -831,7 +804,7 @@
                         <span class="message-icon">✓</span>
                         <div>
                             <strong>Antrag eingegangen!</strong>
-                            <p>Vielen Dank für Ihren Mitgliedsantrag. Wir werden uns schnellstmöglich mit Ihnen in Verbindung setzen.</p>
+                            <p>Vielen Dank für Ihren Mitgliedsantrag. Eine PDF-Zusammenfassung wurde automatisch heruntergeladen. Bitte bestätigen Sie außerdem die E-Mail, die wir Ihnen soeben gesendet haben – erst danach ist Ihr Antrag vollständig und wir setzen uns mit Ihnen in Verbindung.</p>
                         </div>
                     </div>
 
@@ -990,6 +963,33 @@
                 </div>
             </section>
 
+            <!-- Why Join Section -->
+            <section class="membership-content">
+                <div class="membership-section">
+                    <h2>🎯 Warum Mitglied werden?</h2>
+                    <p>Der CDU Kreisverband Schwerin freut sich über jedes neue Mitglied. Gemeinsam können wir mehr erreichen:</p>
+                    <ul>
+                        <li>Gestalten Sie Politik in Ihrer Stadt mit</li>
+                        <li>Treffen Sie Gleichgesinnte mit gemeinsamen Werten</li>
+                        <li>Nutzen Sie Ihr Mitspracherrecht in der Partei</li>
+                        <li>Profitieren Sie von Fortbildungen und Veranstaltungen</li>
+                        <li>Seien Sie Teil einer starken Bewegung</li>
+                    </ul>
+                </div>
+
+                <div class="membership-section">
+                    <h2>💪 Was Sie bewirken können</h2>
+                    <p>Als Mitglied der CDU tragen Sie dazu bei, dass unsere Stadt und unser Land besser werden:</p>
+                    <ul>
+                        <li>Beeinflussen Sie Parteibeschlüsse</li>
+                        <li>Engagieren Sie sich in Arbeitskreisen</li>
+                        <li>Unterstützen Sie unsere Kandidaten</li>
+                        <li>Bilden Sie sich fort und wachsen Sie</li>
+                        <li>Verbessern Sie Ihre Heimatstadt</li>
+                    </ul>
+                </div>
+            </section>
+
             <!-- Contact Section -->
             <section class="contact-section">
                 <h2>📬 Wo können Sie Ihren Antrag einreichen?</h2>
@@ -1031,7 +1031,183 @@
 
     <script src="../js/main.js"></script>
 
+    <!-- PDF-Erzeugung für die Antrags-Zusammenfassung -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Versand der Bestätigungs-E-Mail (Double-Opt-in) ohne eigenes Backend -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
     <script>
+        // EmailJS-Zugangsdaten: Bitte im EmailJS-Dashboard (emailjs.com) einen Service
+        // und eine Vorlage für die Bestätigungs-E-Mail anlegen und hier eintragen.
+        const EMAILJS_PUBLIC_KEY = 'EMAILJS_PUBLIC_KEY_EINFUEGEN';
+        const EMAILJS_SERVICE_ID = 'EMAILJS_SERVICE_ID_EINFUEGEN';
+        const EMAILJS_CONFIRMATION_TEMPLATE_ID = 'EMAILJS_TEMPLATE_ID_EINFUEGEN';
+
+        if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'EMAILJS_PUBLIC_KEY_EINFUEGEN') {
+            emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+        }
+
+        // Erzeugt eine PDF-Zusammenfassung des Mitgliedsantrags und bietet sie zum Download an
+        const buildMembershipPdf = (formData) => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const marginX = 15;
+            const labelX = marginX + 55;
+            const pageBottom = 275;
+            let y = 20;
+
+            const ensureSpace = (needed) => {
+                if (y + needed > pageBottom) {
+                    doc.addPage();
+                    y = 20;
+                }
+            };
+
+            doc.setFontSize(16);
+            doc.setTextColor(45, 60, 75);
+            doc.text('CDU Kreisverband Landeshauptstadt Schwerin', marginX, y);
+            y += 8;
+            doc.setFontSize(13);
+            doc.text('Mitgliedsantrag – Zusammenfassung', marginX, y);
+            y += 8;
+
+            doc.setFontSize(10);
+            doc.setTextColor(127, 142, 157);
+            doc.text(`Erstellt am: ${new Date().toLocaleDateString('de-DE')}`, marginX, y);
+            y += 10;
+
+            const sections = [
+                {
+                    title: 'Persönliche Daten',
+                    rows: [
+                        ['Anrede', formData.get('salutation')],
+                        ['Vorname', formData.get('first-name')],
+                        ['Nachname', formData.get('last-name')],
+                        ['Geburtsdatum', formData.get('birthdate')],
+                        ['Geburtsort', formData.get('birthplace')],
+                        ['Staatsangehörigkeit', formData.get('nationality')],
+                        ['Religion/Konfession', formData.get('religion')]
+                    ]
+                },
+                {
+                    title: 'Kontaktdaten',
+                    rows: [
+                        ['E-Mail', formData.get('email')],
+                        ['Telefon/Mobil', formData.get('phone')],
+                        ['Geworben durch', formData.get('recruited-by')]
+                    ]
+                },
+                {
+                    title: 'Adresse',
+                    rows: [
+                        ['Straße', formData.get('street')],
+                        ['Hausnummer', formData.get('house-number')],
+                        ['PLZ', formData.get('postal-code')],
+                        ['Stadt', formData.get('city')]
+                    ]
+                },
+                {
+                    title: 'Beruf & Engagement',
+                    rows: [
+                        ['Beruf', formData.get('profession')],
+                        ['Funktionen/Ämter', formData.get('functions')]
+                    ]
+                },
+                {
+                    title: 'Vereinigungen',
+                    rows: [
+                        ['Ausgewählt', formData.getAll('organizations').join(', ') || 'Keine']
+                    ]
+                },
+                {
+                    title: 'Finanzen & Bankverbindung',
+                    rows: [
+                        ['Monatsbeitrag', formData.get('monthly-fee') ? `${formData.get('monthly-fee')} €` : ''],
+                        ['Zahlweise', formData.get('payment-frequency')],
+                        ['Aufnahmespende', formData.get('startup-fee') ? `${formData.get('startup-fee')} €` : ''],
+                        ['IBAN', formData.get('iban')],
+                        ['Geldinstitut', formData.get('bank-name')],
+                        ['BIC', formData.get('bic')],
+                        ['Kontoinhaber (abw.)', formData.get('account-holder')]
+                    ]
+                }
+            ];
+
+            sections.forEach(section => {
+                ensureSpace(14);
+                doc.setFontSize(12);
+                doc.setTextColor(82, 183, 193);
+                doc.text(section.title, marginX, y);
+                y += 2;
+                doc.setDrawColor(82, 183, 193);
+                doc.line(marginX, y, 195, y);
+                y += 6;
+
+                doc.setFontSize(10);
+                section.rows.forEach(([label, value]) => {
+                    const displayValue = value ? String(value) : '–';
+                    const lines = doc.splitTextToSize(displayValue, 120);
+                    ensureSpace(lines.length * 5 + 1);
+                    doc.setTextColor(45, 60, 75);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(`${label}:`, marginX, y);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(lines, labelX, y);
+                    y += Math.max(6, lines.length * 5);
+                });
+                y += 4;
+            });
+
+            ensureSpace(12);
+            doc.setFontSize(9);
+            doc.setTextColor(127, 142, 157);
+            doc.text('Dieser Antrag wurde über das Online-Formular auf cdu-schwerin.com eingereicht.', marginX, y);
+            y += 5;
+            doc.text('Er ist erst gültig, sobald die per E-Mail zugesandte Bestätigung angeklickt wurde.', marginX, y);
+
+            return doc;
+        };
+
+        const downloadMembershipPdf = (formData) => {
+            if (typeof window.jspdf === 'undefined') return;
+            try {
+                const doc = buildMembershipPdf(formData);
+                const lastName = (formData.get('last-name') || 'CDU').toString().replace(/[^a-zA-Z0-9äöüÄÖÜß]+/g, '_');
+                doc.save(`Mitgliedsantrag-${lastName}.pdf`);
+            } catch (error) {
+                console.error('PDF konnte nicht erzeugt werden:', error);
+            }
+        };
+
+        // Erzeugt einen einfachen Bestätigungslink-Token (keine kryptografische Prüfung,
+        // dient nur dazu, den Link eindeutig und nicht erratbar zu machen)
+        const createConfirmationToken = (email) => {
+            const raw = `${email}|${Date.now()}|${Math.random().toString(36).slice(2)}`;
+            return typeof btoa === 'function' ? btoa(unescape(encodeURIComponent(raw))) : encodeURIComponent(raw);
+        };
+
+        // Sendet die Bestätigungs-E-Mail (Double-Opt-in) an das neue Mitglied
+        const sendConfirmationEmail = (formData) => {
+            if (typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'EMAILJS_PUBLIC_KEY_EINFUEGEN') {
+                console.warn('EmailJS ist nicht konfiguriert – Bestätigungs-E-Mail wurde nicht gesendet.');
+                return;
+            }
+
+            const email = formData.get('email');
+            if (!email) return;
+
+            const token = createConfirmationToken(email);
+            const confirmUrl = `${new URL('bestaetigung/', window.location.href).href}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
+
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONFIRMATION_TEMPLATE_ID, {
+                to_email: email,
+                to_name: `${formData.get('first-name') || ''} ${formData.get('last-name') || ''}`.trim(),
+                confirm_link: confirmUrl
+            }).catch(error => {
+                console.error('Bestätigungs-E-Mail konnte nicht gesendet werden:', error);
+            });
+        };
+
         // Multi-Step Membership Form Wizard
         const MembershipWizard = (() => {
             let currentStep = 1;
@@ -1168,6 +1344,8 @@
                     });
 
                     if (response.ok) {
+                        downloadMembershipPdf(formData);
+                        sendConfirmationEmail(formData);
                         showSuccess();
                         form.reset();
                         currentStep = 1;
