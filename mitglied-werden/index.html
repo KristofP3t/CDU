@@ -1336,6 +1336,10 @@
                 showLoading();
                 const formData = new FormData(form);
 
+                // PDF-Zusammenfassung wird unabhängig vom Versand an die Geschäftsstelle
+                // erzeugt, damit der Antragsteller sie in jedem Fall erhält.
+                downloadMembershipPdf(formData);
+
                 try {
                     const response = await fetch(form.action, {
                         method: 'POST',
@@ -1344,7 +1348,6 @@
                     });
 
                     if (response.ok) {
-                        downloadMembershipPdf(formData);
                         sendConfirmationEmail(formData);
                         showSuccess();
                         form.reset();
