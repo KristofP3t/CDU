@@ -472,13 +472,15 @@ body {
 }
 
 /* Mobile Navigation
-   Bricht bei 1024px um, nicht erst bei 768px: main.js behandelt Klicks
-   auf Dropdown-Eltern schon ab 1024px als "mobil" (siehe dropdownItems
-   Handler). Blieb die CSS-Grenze bei 768px, zeigte sie auf Tablets
-   zwischen 769px und 1024px weiterhin das volle Desktop-Menue in einer
-   Zeile – das dort nicht mehr passte und ueber den rechten Rand hinaus
-   lief. */
-@media (max-width: 1024px) {
+   Die Grenze liegt bei 1199px, weil das Desktop-Menue darunter schlicht
+   nicht mehr in eine Zeile passt: gemessen braucht die Menuezeile neben
+   dem Logo rund 1110px, und das breiteste Dropdown ("Service", min-width
+   250px) ragt bis zu einer Viewport-Breite von 1180px ueber den rechten
+   Rand hinaus – auch zugeklappt, denn es ist nur visibility:hidden und
+   zaehlt weiter zur Dokumentbreite. Ab 1200px passt beides.
+   main.js liest exakt dieselbe Query, damit CSS-Umbruch und die
+   Klick-Logik der Dropdowns nicht auseinanderlaufen. */
+@media (max-width: 1199px) {
     /* Muss ueber dem geoeffneten Vollbild-Menue liegen, sonst ist der
        Button von ihm verdeckt und das Menue laesst sich nicht schliessen.
        margin-left:auto schiebt den Hamburger an den rechten Rand der

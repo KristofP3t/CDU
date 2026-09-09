@@ -133,11 +133,15 @@ const Navigation = (() => {
         });
 
         // Handle dropdown menus
+        // Muss dieselbe Grenze sein wie die Media Query fuers Hamburger-Menue
+        // in styles.css. Laufen beide auseinander, klappt das Menue in einer
+        // Breite als Desktop-Zeile um, waehrend die Klick-Logik es schon als
+        // mobil behandelt.
+        const isMobileNav = window.matchMedia('(max-width: 1199px)');
         const dropdownItems = navMenu.querySelectorAll('.has-submenu > .nav-link');
         dropdownItems.forEach(item => {
             item.addEventListener('click', (e) => {
-                // Only handle if on mobile
-                if (window.innerWidth <= 1024) {
+                if (isMobileNav.matches) {
                     e.preventDefault();
                     const parent = item.closest('.has-submenu');
                     const submenu = parent.querySelector('.submenu');
