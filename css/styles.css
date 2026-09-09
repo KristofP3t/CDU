@@ -471,8 +471,14 @@ body {
     transform: rotate(-45deg) translate(7px, -7px);
 }
 
-/* Mobile Navigation */
-@media (max-width: 768px) {
+/* Mobile Navigation
+   Bricht bei 1024px um, nicht erst bei 768px: main.js behandelt Klicks
+   auf Dropdown-Eltern schon ab 1024px als "mobil" (siehe dropdownItems
+   Handler). Blieb die CSS-Grenze bei 768px, zeigte sie auf Tablets
+   zwischen 769px und 1024px weiterhin das volle Desktop-Menue in einer
+   Zeile – das dort nicht mehr passte und ueber den rechten Rand hinaus
+   lief. */
+@media (max-width: 1024px) {
     /* Muss ueber dem geoeffneten Vollbild-Menue liegen, sonst ist der
        Button von ihm verdeckt und das Menue laesst sich nicht schliessen.
        margin-left:auto schiebt den Hamburger an den rechten Rand der
