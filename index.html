@@ -180,7 +180,6 @@
     <!-- Main Content -->
     <main id="main" class="site-main" role="main">
 
-        <!-- Image Slider -->
         <section class="slider-section" aria-label="Bildergalerie der Landeshauptstadt Schwerin">
             <div class="slider-container">
                 <div class="slider-wrapper">
@@ -197,109 +196,20 @@
             </div>
         </section>
 
-        <!-- Hero Content Sections -->
         <div class="container">
 
-            <!-- Campaign Hero Section -->
-            <section class="hero-section">
-                <div class="hero-grid">
-                    <div class="hero-item">
-                        <img src="assets/images/hero-wahlkampf.jpg" alt="Wahlkampf-Sujet: GEMEINSAM. BESSER. JASCHA & DORIN FÜR SCHWERIN." width="1400" height="1007" loading="lazy">
-                    </div>
-                    <div class="hero-item">
-                        <a href="https://danielpeters-mv.de/wp-content/uploads/2026/06/Wahlprogramm-CDU-MV-2026.pdf" target="_blank" rel="noopener" class="pdf-link">
-                            <img src="assets/images/wahlprogramm-cover.jpg" alt="CDU Wahlprogramm 2026" width="486" height="717" loading="lazy">
-                            <span class="pdf-label">PDF herunterladen</span>
-                        </a>
-                        <!-- Wahlprogramm-PDF: derzeit auf danielpeters-mv.de (externe Quelle, funktioniert) -->
-                    </div>
+            <!-- Naechste Termine -->
+            <section class="events-highlight" aria-labelledby="events-highlight-title">
+                <div class="section-head">
+                    <h2 id="events-highlight-title">Unsere nächsten Termine</h2>
+                    <a href="termine/" class="section-link">Alle Termine anzeigen <span aria-hidden="true">→</span></a>
                 </div>
+                <!-- Wird aus js/events-data.js befuellt. Die Auswahl "naechste drei"
+                     haengt vom Tagesdatum ab und kann deshalb nicht fest im Markup
+                     stehen, ohne beim naechsten Termin zu veralten. -->
+                <div id="home-events" class="home-events"></div>
             </section>
 
-            <!-- Landtagswahl Banner -->
-            <section class="banner-section">
-                <img src="assets/images/ltw-2026-banner.jpg" alt="Landtagswahl 2026 – CDU Schwerin" width="2400" height="1169" loading="lazy">
-            </section>
-
-            <!-- Membership Video Section -->
-            <section class="video-section">
-                <div class="video-container">
-                    <!-- Video element without autoplay attribute for accessibility,
-                         autoplay is added via JS based on prefers-reduced-motion -->
-                    <video muted loop playsinline controls class="membership-video" aria-label="CDU Mitglieder-Werbevideo">
-                        <source src="assets/video/mitglieder-werbung.mp4" type="video/mp4">
-                        Ihr Browser unterstützt das Video-Format nicht.
-                    </video>
-                </div>
-                <div class="membership-cta">
-                    <a href="mitglied-werden/" class="btn btn-large">
-                        <img src="assets/images/btn-mitglied.png" alt="" width="200" height="200" loading="lazy">
-                        Jetzt Mitglied werden
-                    </a>
-                </div>
-            </section>
-
-            <!-- Welcome Section -->
-            <section class="welcome-section">
-                <h1>Herzlich Willkommen bei der CDU der Landeshauptstadt Schwerin</h1>
-
-                <div class="welcome-content">
-                    <div class="welcome-image">
-                        <img src="assets/images/jascha-dopp.png" alt="Jascha Rainer Dopp, Vorsitzender des CDU Kreisverbandes Schwerin" width="291" height="291" loading="lazy">
-                    </div>
-                    <div class="welcome-text">
-                        <p>Als Vorsitzender des CDU Kreisverbandes der Landeshauptstadt Schwerin begrüße ich Sie ganz herzlich auf unseren Internetseiten und wünsche Ihnen viel Spaß beim „Surfen". Neben aktuellen Informationen über unsere Arbeit wollen wir die Gelegenheit nutzen uns bei Ihnen auch persönlich vorzustellen. Falls Sie noch Fragen haben, Anregungen oder auch Kritik geben wollen, sind wir gerne für Sie da. Viele Schweriner aus den verschiedensten Bereichen engagieren sich in unserem Kreisverband.</p>
-
-                        <p>Ich würde mich freuen auch Sie in unseren Reihen begrüßen zu können.<br>
-                        Mischen Sie sich ein, denn nur wer mitmacht kann etwas für unsere Stadt und unser Land erreichen.</p>
-
-                        <p>Herzliche Grüße Ihr<br>
-                        <strong>Jascha Rainer Dopp</strong><br>
-                        Vorsitzender des CDU Kreisverbandes Schwerin</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Feature Cards Section -->
-            <section class="features-section">
-                <h2>Unsere Angebote</h2>
-                <div class="features-grid">
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2"/><polyline points="16 2 16 6 8 6 8 2"/><line x1="3" y1="10" x2="21" y2="10"/>
-                            </svg>
-                        </div>
-                        <h3><a href="termine/">Termine CDU Schwerin</a></h3>
-                        <p>Hier finden Sie die wichtigsten Termine des CDU Kreisverbandes und unserer Vereinigungen für das aktuelle Jahr als Übersicht.</p>
-                        <a href="termine/" class="feature-link">zu den Terminen →</a>
-                    </article>
-
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                            </svg>
-                        </div>
-                        <h3><a href="spenden/">Unterstützen Sie uns</a></h3>
-                        <p>Nur ein kleinerer Teil unserer Mittel wird durch die staatliche Parteienfinanzierung bereitgestellt. Ein großer Teil stammt aus den Beiträgen und Spenden unserer Mitglieder und Freunde.</p>
-                        <a href="spenden/" class="feature-link">weitere Informationen →</a>
-                    </article>
-
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-                            </svg>
-                        </div>
-                        <h3><a href="https://cdu-schwerin.de">CDU Fraktion Schwerin</a></h3>
-                        <p>Hier kommen Sie zur Website der Stadtfraktion der CDU in der Stadtvertretung Schwerin. (externer Link öffnet in neuem Fenster)</p>
-                        <a href="https://cdu-schwerin.de" rel="external" class="feature-link">Zur Stadtfraktion →</a>
-                    </article>
-                </div>
-            </section>
-
-            <!-- Latest News Section -->
             <section class="news-section">
                 <h2>Letzte Meldungen</h2>
                 <div class="news-grid">
@@ -333,6 +243,23 @@
                 </div>
                 <div class="news-all">
                     <a href="https://cdu-schwerin.com/newsarchiv/" class="btn btn-secondary">Alle Meldungen anzeigen</a>
+                </div>
+            </section>
+
+            <section class="video-section">
+                <div class="video-container">
+                    <!-- Video element without autoplay attribute for accessibility,
+                         autoplay is added via JS based on prefers-reduced-motion -->
+                    <video muted loop playsinline controls class="membership-video" aria-label="CDU Mitglieder-Werbevideo">
+                        <source src="assets/video/mitglieder-werbung.mp4" type="video/mp4">
+                        Ihr Browser unterstützt das Video-Format nicht.
+                    </video>
+                </div>
+                <div class="membership-cta">
+                    <a href="mitglied-werden/" class="btn btn-large">
+                        <img src="assets/images/btn-mitglied.png" alt="" width="200" height="200" loading="lazy">
+                        Jetzt Mitglied werden
+                    </a>
                 </div>
             </section>
 
@@ -388,6 +315,7 @@
     </footer>
 
     <!-- Google Analytics (loaded conditionally based on consent) -->
+    <script src="js/events-data.js"></script>
     <script src="js/search-index.js"></script>
     <script src="js/main.js"></script>
     <script id="ga-script"></script>

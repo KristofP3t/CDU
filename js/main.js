@@ -440,6 +440,98 @@ const SearchManager = (() => {
 })();
 
 // ============================================================================
+// Terminvorschau auf der Startseite
+// ============================================================================
+
+const HomeEvents = (() => {
+    const MAX = 3;
+
+    const dayFormat = new Intl.DateTimeFormat('de-DE', { day: '2-digit' });
+    const monthFormat = new Intl.DateTimeFormat('de-DE', { month: 'short' });
+
+    const parse = (iso) => {
+        // Ortszeit-Mitternacht statt UTC – sonst kippt das Datum in
+        // westlichen Zeitzonen auf den Vortag.
+        const d = new Date(`${iso}T00:00:00`);
+        return Number.isNaN(d.getTime()) ? null : d;
+    };
+
+    const upcoming = () => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return (window.CDU_EVENTS || [])
+            .map(ev => ({ ...ev, date: parse(ev.datum) }))
+            .filter(ev => ev.date && ev.date >= today)
+            .sort((a, b) => a.date - b.date)
+            .slice(0, MAX);
+    };
+
+    const card = (ev) => {
+        const article = document.createElement('article');
+        article.className = 'home-event';
+
+        const date = document.createElement('div');
+        date.className = 'home-event-date';
+        const day = document.createElement('span');
+        day.className = 'home-event-day';
+        day.textContent = dayFormat.format(ev.date);
+        const month = document.createElement('span');
+        month.className = 'home-event-month';
+        month.textContent = monthFormat.format(ev.date).replace('.', '');
+        date.append(day, month);
+
+        const details = document.createElement('div');
+        details.className = 'home-event-details';
+
+        if (ev.kategorieLabel) {
+            const badge = document.createElement('span');
+            badge.className = 'home-event-badge';
+            badge.textContent = ev.kategorieLabel;
+            details.append(badge);
+        }
+
+        const title = document.createElement('h3');
+        title.className = 'home-event-title';
+        title.textContent = ev.titel;
+        details.append(title);
+
+        // Uhrzeit und Ort nur zeigen, wenn gepflegt – nicht jeder Termin hat beides.
+        const meta = [ev.zeit, ev.ort].filter(Boolean).join(' · ');
+        if (meta) {
+            const p = document.createElement('p');
+            p.className = 'home-event-meta';
+            p.textContent = meta;
+            details.append(p);
+        }
+
+        article.append(date, details);
+        return article;
+    };
+
+    const init = () => {
+        const container = document.getElementById('home-events');
+        if (!container) return;
+
+        const events = upcoming();
+        container.textContent = '';
+
+        if (!events.length) {
+            const p = document.createElement('p');
+            p.className = 'home-events-empty';
+            p.textContent = 'Zurzeit sind keine Termine angekündigt.';
+            container.append(p);
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        events.forEach(ev => fragment.append(card(ev)));
+        container.append(fragment);
+    };
+
+    return { init };
+})();
+
+// ============================================================================
 // Initialize All Modules on DOM Ready
 // ============================================================================
 
@@ -447,6 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ConsentManager.init();
     Navigation.init();
     SearchManager.init();
+    HomeEvents.init();
     ImageSlider.init();
     VideoManager.init();
 });
