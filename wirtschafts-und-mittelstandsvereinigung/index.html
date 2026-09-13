@@ -47,9 +47,23 @@
                 </div>
 
                 <nav id="main-nav" class="main-navigation" role="navigation" aria-label="Hauptnavigation">
-                    <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Navigation öffnen">
-                        <span></span><span></span><span></span>
-                    </button>
+                    <div class="header-actions">
+                        <button id="search-toggle" class="header-action" type="button" aria-expanded="false" aria-controls="search-overlay">
+                            <svg class="header-action-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>
+                            </svg>
+                            <span class="header-action-label">Suche</span>
+                        </button>
+
+                        <button id="menu-toggle" class="menu-toggle header-action" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Navigation öffnen">
+                            <span class="menu-toggle-bars" aria-hidden="true">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                            <span class="header-action-label">Menü</span>
+                        </button>
+                    </div>
                     <ul id="nav-menu" class="nav-menu">
                         <li class="nav-item"><a href="../" class="nav-link">Startseite</a></li>
                         <li class="nav-item has-submenu">
@@ -180,6 +194,24 @@
         </div>
     </footer>
 
+    <script src="../js/search-index.js"></script>
     <script src="../js/main.js"></script>
+    <!-- Such-Overlay -->
+    <div id="search-overlay" class="search-overlay" role="dialog" aria-modal="true" aria-label="Suche" hidden>
+        <div class="search-overlay-inner">
+            <div class="search-bar">
+                <label for="search-input" class="sr-only">Suchbegriff</label>
+                <input type="search" id="search-input" class="search-input" placeholder="Wonach suchen Sie?" autocomplete="off" spellcheck="false">
+                <button type="button" id="search-close" class="search-close" aria-label="Suche schließen">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>
+                    </svg>
+                </button>
+            </div>
+            <p id="search-status" class="search-status" aria-live="polite">Mindestens zwei Zeichen eingeben.</p>
+            <ul id="search-results" class="search-results"></ul>
+        </div>
+    </div>
+
 </body>
 </html>

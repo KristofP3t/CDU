@@ -381,9 +381,10 @@ body {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.submenu.show,
-.nav-item.has-submenu:hover > .submenu,
-.nav-item.has-submenu:focus-within > .submenu {
+/* Das Menue ist durchgehend klickgesteuert – Hover-Regeln gibt es
+   bewusst nicht mehr, sie oeffneten im Overlay ohnehin nichts, weil die
+   Untermenues dort ueber max-height auf- und zuklappen. */
+.submenu.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -428,30 +429,19 @@ body {
     border-left: none;
 }
 
-.submenu-parent:hover > .submenu,
-.submenu-parent:focus-within > .submenu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
 /* Mobile Menu Toggle */
-.menu-toggle {
-    display: none;
+.menu-toggle-bars {
+    display: flex;
     flex-direction: column;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: var(--spacing-sm);
     gap: 6px;
 }
 
-.menu-toggle span {
+.menu-toggle-bars span {
     width: 25px;
     height: 3px;
-    background-color: var(--color-text);
+    background-color: currentColor;
     border-radius: 2px;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .menu-toggle:focus-visible {
@@ -459,114 +449,108 @@ body {
     outline-offset: 2px;
 }
 
-.menu-toggle[aria-expanded="true"] span:nth-child(1) {
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars span:nth-child(1) {
     transform: rotate(45deg) translate(8px, 8px);
 }
 
-.menu-toggle[aria-expanded="true"] span:nth-child(2) {
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars span:nth-child(2) {
     opacity: 0;
 }
 
-.menu-toggle[aria-expanded="true"] span:nth-child(3) {
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars span:nth-child(3) {
     transform: rotate(-45deg) translate(7px, -7px);
 }
 
-/* Mobile Navigation
-   Die Grenze liegt bei 1199px, weil das Desktop-Menue darunter schlicht
-   nicht mehr in eine Zeile passt: gemessen braucht die Menuezeile neben
-   dem Logo rund 1110px, und das breiteste Dropdown ("Service", min-width
-   250px) ragt bis zu einer Viewport-Breite von 1180px ueber den rechten
-   Rand hinaus – auch zugeklappt, denn es ist nur visibility:hidden und
-   zaehlt weiter zur Dokumentbreite. Ab 1200px passt beides.
-   main.js liest exakt dieselbe Query, damit CSS-Umbruch und die
-   Klick-Logik der Dropdowns nicht auseinanderlaufen. */
-@media (max-width: 1199px) {
-    /* Muss ueber dem geoeffneten Vollbild-Menue liegen, sonst ist der
-       Button von ihm verdeckt und das Menue laesst sich nicht schliessen.
-       margin-left:auto schiebt den Hamburger an den rechten Rand der
-       Kopfzeile – ohne das steht er am linken Rand des Navigationsblocks
-       und landet damit optisch in der Bildschirmmitte. */
-    .menu-toggle {
-        display: flex;
-        position: relative;
-        z-index: 1000;
-        margin-left: auto;
-    }
+/* Hauptnavigation – Overlay-Menue
+   Die Navigation folgt durchgehend dem Burger-Muster: In jeder
+   Viewport-Breite gibt es nur den Menue-Button, der ein Vollbild-Overlay
+   oeffnet. Es gibt bewusst keine horizontale Menuezeile mehr – die passte
+   unterhalb von 1200px ohnehin nicht neben das Logo und liess das
+   breiteste Dropdown ueber den rechten Rand ragen.
+   main.js behandelt die Dropdowns entsprechend immer als Klick-Menues. */
+/* Muss ueber dem geoeffneten Vollbild-Menue liegen, sonst ist der
+   Button von ihm verdeckt und das Menue laesst sich nicht schliessen.
+   margin-left:auto schiebt den Hamburger an den rechten Rand der
+   Kopfzeile – ohne das steht er am linken Rand des Navigationsblocks
+   und landet damit optisch in der Bildschirmmitte. */
+.menu-toggle {
+    position: relative;
+    z-index: 1000;
+}
 
-    /* Bei geoeffnetem Menue loest sich das X aus der Kopfzeile und sitzt
-       fest oben rechts im Viewport – dort, wo man es erwartet, und ausser
-       Reichweite des Menue-Scrollens. */
-    .menu-toggle[aria-expanded="true"] {
-        position: fixed;
-        top: calc(var(--spacing-xs) + env(safe-area-inset-top, 0px));
-        right: calc(var(--spacing-xs) + env(safe-area-inset-right, 0px));
-    }
+/* Bei geoeffnetem Menue loest sich das X aus der Kopfzeile und sitzt
+   fest oben rechts im Viewport – dort, wo man es erwartet, und ausser
+   Reichweite des Menue-Scrollens. */
+.menu-toggle[aria-expanded="true"] {
+    position: fixed;
+    top: calc(var(--spacing-xs) + env(safe-area-inset-top, 0px));
+    right: calc(var(--spacing-xs) + env(safe-area-inset-right, 0px));
+}
 
-    .nav-menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        /* 100vh rechnet auf Mobilgeraeten mit der groessten Viewport-Hoehe,
-           sodass die untersten Eintraege hinter der ein- und ausfahrenden
-           Browserleiste liegen koennen. dvh folgt der tatsaechlichen Hoehe;
-           die vh-Zeile bleibt als Rueckfall fuer aeltere Browser. */
-        height: 100vh;
-        height: 100dvh;
-        flex-direction: column;
-        background-color: var(--color-white);
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-        z-index: 999;
-        /* Oben Platz fuer den X-Button, damit er nicht ueber dem ersten
-           Menuepunkt liegt. */
-        padding: calc(var(--spacing-xl) + var(--spacing-md) + env(safe-area-inset-top, 0px)) 0 var(--spacing-xl);
-    }
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* 100vh rechnet auf Mobilgeraeten mit der groessten Viewport-Hoehe,
+       sodass die untersten Eintraege hinter der ein- und ausfahrenden
+       Browserleiste liegen koennen. dvh folgt der tatsaechlichen Hoehe;
+       die vh-Zeile bleibt als Rueckfall fuer aeltere Browser. */
+    height: 100vh;
+    height: 100dvh;
+    flex-direction: column;
+    background-color: var(--color-white);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 999;
+    /* Oben Platz fuer den X-Button, damit er nicht ueber dem ersten
+       Menuepunkt liegt. */
+    padding: calc(var(--spacing-xl) + var(--spacing-md) + env(safe-area-inset-top, 0px)) 0 var(--spacing-xl);
+}
 
-    .nav-menu.show {
-        opacity: 1;
-        visibility: visible;
-    }
+.nav-menu.show {
+    opacity: 1;
+    visibility: visible;
+}
 
-    .nav-link {
-        border-bottom: 1px solid var(--color-border);
-        padding: var(--spacing-md) var(--spacing-lg);
-        font-size: 18px;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+.nav-link {
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    .submenu {
-        position: static;
-        max-height: 0;
-        overflow: hidden;
-        opacity: 1;
-        visibility: visible;
-        background-color: rgba(167, 213, 220, 0.5);
-        transform: none;
-        border: none;
-        border-left: 3px solid var(--color-primary);
-        transition: max-height 0.3s ease;
-    }
+.submenu {
+    position: static;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 1;
+    visibility: visible;
+    background-color: rgba(167, 213, 220, 0.5);
+    transform: none;
+    border: none;
+    border-left: 3px solid var(--color-primary);
+    transition: max-height 0.3s ease;
+}
 
-    .submenu.show {
-        max-height: 500px;
-    }
+.submenu.show {
+    max-height: 500px;
+}
 
-    .submenu-parent > .submenu {
-        left: 0;
-        top: auto;
-    }
+.submenu-parent > .submenu {
+    left: 0;
+    top: auto;
+}
 
-    .header-main {
-        flex-wrap: wrap;
-        gap: var(--spacing-sm);
-    }
+.header-main {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
 }
 
 /* ==========================================================================
@@ -1489,4 +1473,210 @@ body {
 .form-field {
     display: flex;
     flex-direction: column;
+}
+
+/* ==========================================================================
+   Kopfzeilen-Aktionen: Menue & Suche
+   Beide Buttons stehen rechts neben dem Logo und oeffnen jeweils ein
+   Vollbild-Overlay. Eine horizontale Menuezeile gibt es nicht mehr.
+   ========================================================================== */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-left: auto;
+}
+
+.header-action {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--color-text);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    /* Verhindert die Verzoegerung durch Doppeltipp-Zoom auf Touchgeraeten. */
+    touch-action: manipulation;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.header-action:hover {
+    color: var(--color-primary);
+    background-color: rgba(82, 183, 193, 0.1);
+}
+
+.header-action:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.header-action-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+/* Im geoeffneten Zustand bleibt nur das X stehen – eine Beschriftung
+   neben einem Schliessen-Kreuz liest sich widerspruechlich. */
+.menu-toggle[aria-expanded="true"] .header-action-label {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    .header-action-label {
+        /* Auf sehr schmalen Geraeten tragen die Icons allein; die
+           Beschriftung bleibt fuer Screenreader ueber aria-label erhalten. */
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+}
+
+/* ==========================================================================
+   Such-Overlay
+   ========================================================================== */
+
+.search-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    background-color: var(--color-white);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: calc(var(--spacing-lg) + env(safe-area-inset-top, 0px)) var(--spacing-sm) var(--spacing-xl);
+}
+
+/* .search-overlay setzt display:flex und wuerde das hidden-Attribut sonst
+   ueberstimmen – deshalb hier ausdruecklich. */
+.search-overlay[hidden] {
+    display: none;
+}
+
+.search-overlay-inner {
+    width: 100%;
+    max-width: 720px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: var(--spacing-xs);
+}
+
+.search-input {
+    flex: 1;
+    /* min-width:0 erlaubt dem Flex-Kind zu schrumpfen, sonst sprengen
+       lange Suchbegriffe die Zeile. */
+    min-width: 0;
+    border: none;
+    background: none;
+    padding: var(--spacing-xs) 0;
+    font-family: var(--font-primary);
+    font-size: 24px;
+    color: var(--color-text);
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.search-bar:focus-within {
+    border-bottom-color: var(--color-accent);
+}
+
+.search-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--color-text);
+    touch-action: manipulation;
+}
+
+.search-close svg {
+    width: 24px;
+    height: 24px;
+}
+
+.search-close:hover {
+    background-color: rgba(82, 183, 193, 0.1);
+    color: var(--color-primary);
+}
+
+.search-close:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.search-status {
+    margin-top: var(--spacing-md);
+    color: var(--color-text-light);
+    font-size: 14px;
+}
+
+.search-results {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--spacing-md);
+}
+
+.search-results li {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.search-results a {
+    display: block;
+    padding: var(--spacing-md) var(--spacing-xs);
+    text-decoration: none;
+    color: var(--color-text);
+}
+
+.search-results a:hover,
+.search-results a:focus-visible {
+    background-color: rgba(82, 183, 193, 0.1);
+}
+
+.search-results a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+}
+
+.search-result-title {
+    display: block;
+    font-weight: 600;
+    font-size: 17px;
+    margin-bottom: 2px;
+}
+
+.search-result-text {
+    display: block;
+    font-size: 14px;
+    color: var(--color-text-light);
+    /* Lange Beschreibungen auf zwei Zeilen begrenzen. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

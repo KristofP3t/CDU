@@ -109,6 +109,9 @@ const Navigation = (() => {
             navMenu.classList.toggle('show');
 
             if (!isExpanded) {
+                // Menue und Suche sind beide Vollbild-Overlays und duerfen
+                // sich nicht ueberlagern.
+                SearchManager.close();
                 // Focus first menu item when opening
                 const firstItem = navMenu.querySelector('a');
                 if (firstItem) firstItem.focus();
@@ -133,23 +136,19 @@ const Navigation = (() => {
         });
 
         // Handle dropdown menus
-        // Muss dieselbe Grenze sein wie die Media Query fuers Hamburger-Menue
-        // in styles.css. Laufen beide auseinander, klappt das Menue in einer
-        // Breite als Desktop-Zeile um, waehrend die Klick-Logik es schon als
-        // mobil behandelt.
-        const isMobileNav = window.matchMedia('(max-width: 1199px)');
+        // Die Navigation ist in jeder Breite ein Overlay-Menue, deshalb
+        // klappen die Untermenues immer per Klick auf – es gibt keine
+        // Breite mehr, in der sie als Hover-Dropdown erscheinen.
         const dropdownItems = navMenu.querySelectorAll('.has-submenu > .nav-link');
         dropdownItems.forEach(item => {
             item.addEventListener('click', (e) => {
-                if (isMobileNav.matches) {
-                    e.preventDefault();
-                    const parent = item.closest('.has-submenu');
-                    const submenu = parent.querySelector('.submenu');
-                    const isExpanded = item.getAttribute('aria-expanded') === 'true';
+                e.preventDefault();
+                const parent = item.closest('.has-submenu');
+                const submenu = parent.querySelector('.submenu');
+                const isExpanded = item.getAttribute('aria-expanded') === 'true';
 
-                    item.setAttribute('aria-expanded', !isExpanded);
-                    submenu.classList.toggle('show');
-                }
+                item.setAttribute('aria-expanded', !isExpanded);
+                submenu.classList.toggle('show');
             });
 
             // Keyboard navigation for dropdowns
@@ -187,7 +186,7 @@ const Navigation = (() => {
         });
     };
 
-    return { init };
+    return { init, closeMenu };
 })();
 
 // ============================================================================
@@ -305,12 +304,149 @@ const VideoManager = (() => {
 })();
 
 // ============================================================================
+// Suche (clientseitig)
+// ============================================================================
+
+const SearchManager = (() => {
+    let overlay, toggle, input, results, status, lastFocused;
+
+    // Der Index haelt wurzelrelative Pfade ("kontakt/"). Wie viele Ebenen
+    // vor die aktuelle Seite gehoeren, verraet der Pfad des Stylesheets –
+    // das ist zuverlaessiger als location.pathname, weil die Seite auf
+    // GitHub Pages unter /CDU/ liegt und lokal direkt im Wurzelverzeichnis.
+    const basePrefix = () => {
+        const link = document.querySelector('link[rel="stylesheet"][href*="css/styles.css"]');
+        return link ? link.getAttribute('href').replace(/css\/styles\.css$/, '') : '';
+    };
+
+    const shortTitle = (title) => title.split('–')[0].trim() || title;
+
+    const search = (query) => {
+        const index = window.CDU_SEARCH_INDEX || [];
+        const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+        if (!terms.length) return [];
+
+        return index
+            .map(entry => {
+                // Nur Treffer, die alle Suchbegriffe enthalten.
+                if (!terms.every(t => entry.k.includes(t))) return null;
+                const title = entry.t.toLowerCase();
+                let score = 0;
+                terms.forEach(t => {
+                    if (title.includes(t)) score += 10;
+                    score += entry.k.split(t).length - 1;
+                });
+                return { entry, score };
+            })
+            .filter(Boolean)
+            .sort((a, b) => b.score - a.score)
+            .map(hit => hit.entry);
+    };
+
+    const render = (query) => {
+        results.textContent = '';
+
+        if (query.trim().length < 2) {
+            status.textContent = 'Mindestens zwei Zeichen eingeben.';
+            return;
+        }
+
+        const hits = search(query);
+        if (!hits.length) {
+            status.textContent = `Keine Treffer für „${query}“.`;
+            return;
+        }
+
+        status.textContent = hits.length === 1 ? '1 Treffer' : `${hits.length} Treffer`;
+
+        const prefix = basePrefix();
+        const fragment = document.createDocumentFragment();
+        hits.forEach(entry => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            // href zusammensetzen statt innerHTML: Titel und Beschreibung
+            // stammen zwar aus eigenen Seiten, aber textContent macht
+            // Sonderzeichen ohnehin unschaedlich.
+            a.href = prefix + entry.u;
+
+            const title = document.createElement('span');
+            title.className = 'search-result-title';
+            title.textContent = shortTitle(entry.t);
+
+            const text = document.createElement('span');
+            text.className = 'search-result-text';
+            text.textContent = entry.d;
+
+            a.append(title, text);
+            li.append(a);
+            fragment.append(li);
+        });
+        results.append(fragment);
+    };
+
+    const open = () => {
+        if (!overlay) return;
+        lastFocused = document.activeElement;
+        overlay.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+        input.focus();
+        render(input.value);
+    };
+
+    const close = () => {
+        if (!overlay || overlay.hidden) return;
+        overlay.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+        if (lastFocused && document.contains(lastFocused)) lastFocused.focus();
+    };
+
+    const init = () => {
+        overlay = document.getElementById('search-overlay');
+        toggle = document.getElementById('search-toggle');
+        input = document.getElementById('search-input');
+        results = document.getElementById('search-results');
+        status = document.getElementById('search-status');
+        const closeBtn = document.getElementById('search-close');
+
+        if (!overlay || !toggle || !input || !results || !status) return;
+
+        toggle.addEventListener('click', () => {
+            if (overlay.hidden) {
+                Navigation.closeMenu();
+                open();
+            } else {
+                close();
+            }
+        });
+
+        if (closeBtn) closeBtn.addEventListener('click', close);
+
+        input.addEventListener('input', () => render(input.value));
+
+        // Enter soll nicht die Seite neu laden, sondern den ersten Treffer oeffnen.
+        input.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            const first = results.querySelector('a');
+            if (first) first.click();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !overlay.hidden) close();
+        });
+    };
+
+    return { init, close };
+})();
+
+// ============================================================================
 // Initialize All Modules on DOM Ready
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
     ConsentManager.init();
     Navigation.init();
+    SearchManager.init();
     ImageSlider.init();
     VideoManager.init();
 });
