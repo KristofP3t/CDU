@@ -1495,7 +1495,11 @@ body {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    margin-left: auto;
+    /* .header-actions ist ein Block und fuellt .main-navigation bereits in
+       voller Breite aus – margin-left:auto bliebe daher wirkungslos, weil
+       es keinen freien Raum zu verteilen gibt. Die Buttons werden deshalb
+       innerhalb des Containers nach rechts geschoben. */
+    justify-content: flex-end;
 }
 
 .header-action {
