@@ -1,0 +1,5 @@
+# Kalenderdateien duerfen nicht normalisiert werden: RFC 5545 schreibt CRLF
+# als Zeilenende vor. Ohne diese Regel wandelt Git sie beim Einchecken in LF
+# um, und GitHub Pages liefert anschliessend Dateien aus, die strenge
+# Kalenderprogramme ablehnen.
+*.ics -text
