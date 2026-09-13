@@ -3,6 +3,7 @@
 window.CDU_EVENTS = [
   {
     "datum": "2026-09-05",
+    "anker": "termin-2026-09-05",
     "kategorie": "wahlveranstaltung",
     "kategorieLabel": "Wahlveranstaltung",
     "titel": "Infostand zur Landtagswahl",
@@ -12,6 +13,7 @@ window.CDU_EVENTS = [
   },
   {
     "datum": "2026-09-12",
+    "anker": "termin-2026-09-12",
     "kategorie": "wahlveranstaltung",
     "kategorieLabel": "Wahlveranstaltung",
     "titel": "Infostand zur Landtagswahl",
@@ -21,6 +23,7 @@ window.CDU_EVENTS = [
   },
   {
     "datum": "2026-09-19",
+    "anker": "termin-2026-09-19",
     "kategorie": "wahlveranstaltung",
     "kategorieLabel": "Wahlveranstaltung",
     "titel": "Infostand zur Landtagswahl",
@@ -30,6 +33,7 @@ window.CDU_EVENTS = [
   },
   {
     "datum": "2026-09-21",
+    "anker": "termin-2026-09-21",
     "kategorie": "vorstand",
     "kategorieLabel": "Vorstand",
     "titel": "Vorsitzendenkonferenz CDU Schwerin",
@@ -39,6 +43,7 @@ window.CDU_EVENTS = [
   },
   {
     "datum": "2026-10-28",
+    "anker": "termin-2026-10-28",
     "kategorie": "vorstand",
     "kategorieLabel": "Vorstand",
     "titel": "Vorsitzendenkonferenz CDU Schwerin",
@@ -48,6 +53,7 @@ window.CDU_EVENTS = [
   },
   {
     "datum": "2026-11-15",
+    "anker": "termin-2026-11-15",
     "kategorie": "gedenkveranstaltung",
     "kategorieLabel": "Gedenkveranstaltung",
     "titel": "Kranzniederlegung Volkstrauertag",
@@ -57,6 +63,7 @@ window.CDU_EVENTS = [
   },
   {
     "datum": "2026-11-19",
+    "anker": "termin-2026-11-19",
     "kategorie": "vorstand",
     "kategorieLabel": "Vorstand",
     "titel": "Videokonferenz CDU Schwerin",
@@ -66,6 +73,7 @@ window.CDU_EVENTS = [
   },
   {
     "datum": "2026-11-27",
+    "anker": "termin-2026-11-27",
     "kategorie": "parteitag",
     "kategorieLabel": "Parteitag",
     "titel": "Kreisparteitag – Neuwahl Kreisvorstand",
@@ -75,6 +83,7 @@ window.CDU_EVENTS = [
   },
   {
     "datum": "2026-12-11",
+    "anker": "termin-2026-12-11",
     "kategorie": "vorstand",
     "kategorieLabel": "Vorstand",
     "titel": "Vorsitzendenkonferenz CDU Schwerin",

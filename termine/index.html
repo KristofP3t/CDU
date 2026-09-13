@@ -32,6 +32,12 @@
             animation: pulse 0.4s ease-out;
         }
 
+        /* Markiert den von der Startseite angesprungenen Termin. */
+        .event-card-target {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(255, 166, 0, 0.25);
+        }
+
         .event-card.animate-in {
             animation: fadeIn 0.4s ease-out forwards;
         }
@@ -174,7 +180,10 @@
             background: linear-gradient(to bottom, var(--color-primary), var(--color-accent));
         }
 
+        /* Der Kopfbereich klebt oben – ohne diesen Abstand verschwindet ein
+           angesprungener Termin darunter. */
         .event-card {
+            scroll-margin-top: 140px;
             background-color: var(--color-white);
             padding: var(--spacing-lg);
             border-radius: 8px;
@@ -717,16 +726,46 @@
                 });
             };
 
+
+            // Ankerpunkte fuer Verlinkung von der Startseite. Die ID wird aus
+            // data-date abgeleitet, damit kein zusaetzliches Feld von Hand
+            // gepflegt werden muss. Bei gleichem Datum zaehlt ein Suffix hoch;
+            // tools/build-site-data.py bildet dieselbe Regel in derselben
+            // Dokumentreihenfolge ab, damit beide Seiten dieselben IDs sehen.
+            const assignAnchors = () => {
+                const used = new Map();
+                document.querySelectorAll('.event-card').forEach(card => {
+                    const iso = card.getAttribute('data-date');
+                    if (!iso) return;
+                    const n = (used.get(iso) || 0) + 1;
+                    used.set(iso, n);
+                    card.id = n === 1 ? `termin-${iso}` : `termin-${iso}-${n}`;
+                });
+            };
+
+            // Ein Sprung aus der Startseite soll den Termin auch dann zeigen,
+            // wenn die IDs erst durch dieses Skript entstehen – der Browser
+            // hat den Anker beim Laden da noch nicht gefunden.
+            const revealHashTarget = () => {
+                if (!window.location.hash) return;
+                const target = document.getElementById(window.location.hash.slice(1));
+                if (!target) return;
+                target.scrollIntoView({ block: 'start' });
+                target.classList.add('event-card-target');
+            };
+
             const init = () => {
                 const filterButtons = document.querySelectorAll('.filter-btn');
                 const showPastToggle = document.getElementById('show-past-toggle');
 
                 // Datumsanzeige aus data-date erzeugen, vor der ersten Filterung
+                assignAnchors();
                 renderEventDates();
                 renderEventBadges();
 
                 // Initial visibility
                 updateEventVisibility();
+                revealHashTarget();
 
                 // Filter button click events
                 filterButtons.forEach(button => {

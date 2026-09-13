@@ -4,6 +4,19 @@
  */
 
 // ============================================================================
+// Gemeinsame Helfer
+// ============================================================================
+
+// Wie viele Ebenen liegen zwischen der aktuellen Seite und dem Wurzelverzeichnis?
+// Der Pfad des Stylesheets verraet es zuverlaessiger als location.pathname,
+// weil die Seite auf GitHub Pages unter /CDU/ liegt, lokal aber direkt im
+// Wurzelverzeichnis geoeffnet wird.
+const sitePrefix = () => {
+    const link = document.querySelector('link[rel="stylesheet"][href*="css/styles.css"]');
+    return link ? link.getAttribute('href').replace(/css\/styles\.css$/, '') : '';
+};
+
+// ============================================================================
 // Cookie Consent Management
 // ============================================================================
 
@@ -82,6 +95,79 @@ const ConsentManager = (() => {
 })();
 
 // ============================================================================
+// Fokusfalle fuer die Vollbild-Overlays
+// ============================================================================
+
+const FocusTrap = (() => {
+    const FOCUSABLE = [
+        'a[href]', 'button:not([disabled])', 'input:not([disabled])',
+        'select:not([disabled])', 'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])',
+    ].join(', ');
+
+    let container = null;
+    let inerted = [];
+
+    const reachable = () => Array.from(container.querySelectorAll(FOCUSABLE))
+        // offsetParent faellt bei visibility:hidden und display:none weg –
+        // ausgeklappte Untermenues sollen dagegen erreichbar bleiben.
+        .filter(el => el.offsetWidth > 0 || el.offsetHeight > 0);
+
+    const onKeydown = (e) => {
+        if (e.key !== 'Tab' || !container) return;
+        const items = reachable();
+        if (!items.length) return;
+
+        const first = items[0];
+        const last = items[items.length - 1];
+
+        if (!container.contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+        } else if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    };
+
+    const activate = (el) => {
+        if (!el) return;
+        release();
+        container = el;
+
+        // Von el aufwaerts auf jeder Ebene die Geschwister stilllegen. inert
+        // entzieht sie Fokus, Maus und Screenreader zugleich – genau das, was
+        // aria-modal verspricht. Browser ohne inert ignorieren die Zuweisung,
+        // dort greift weiterhin die Tab-Umlenkung unten.
+        let node = el;
+        while (node && node.parentElement && node !== document.body) {
+            Array.from(node.parentElement.children).forEach(sibling => {
+                if (sibling !== node && !sibling.inert) {
+                    sibling.inert = true;
+                    inerted.push(sibling);
+                }
+            });
+            node = node.parentElement;
+        }
+
+        document.addEventListener('keydown', onKeydown, true);
+    };
+
+    const release = () => {
+        if (!container) return;
+        inerted.forEach(el => { el.inert = false; });
+        inerted = [];
+        container = null;
+        document.removeEventListener('keydown', onKeydown, true);
+    };
+
+    return { activate, release };
+})();
+
+// ============================================================================
 // Navigation Menu Toggle & Keyboard Control
 // ============================================================================
 
@@ -92,6 +178,7 @@ const Navigation = (() => {
         menuToggle.setAttribute('aria-expanded', 'false');
         menuToggle.setAttribute('aria-label', 'Navigation öffnen');
         navMenu.classList.remove('show');
+        FocusTrap.release();
     };
 
     const init = () => {
@@ -112,6 +199,9 @@ const Navigation = (() => {
                 // Menue und Suche sind beide Vollbild-Overlays und duerfen
                 // sich nicht ueberlagern.
                 SearchManager.close();
+                // Der Schliessen-Button liegt ausserhalb von #nav-menu, aber
+                // innerhalb von #main-nav – deshalb faengt die Falle dort.
+                FocusTrap.activate(mainNav);
                 // Focus first menu item when opening
                 const firstItem = navMenu.querySelector('a');
                 if (firstItem) firstItem.focus();
@@ -310,15 +400,6 @@ const VideoManager = (() => {
 const SearchManager = (() => {
     let overlay, toggle, input, results, status, lastFocused;
 
-    // Der Index haelt wurzelrelative Pfade ("kontakt/"). Wie viele Ebenen
-    // vor die aktuelle Seite gehoeren, verraet der Pfad des Stylesheets –
-    // das ist zuverlaessiger als location.pathname, weil die Seite auf
-    // GitHub Pages unter /CDU/ liegt und lokal direkt im Wurzelverzeichnis.
-    const basePrefix = () => {
-        const link = document.querySelector('link[rel="stylesheet"][href*="css/styles.css"]');
-        return link ? link.getAttribute('href').replace(/css\/styles\.css$/, '') : '';
-    };
-
     const shortTitle = (title) => title.split('–')[0].trim() || title;
 
     const search = (query) => {
@@ -359,7 +440,7 @@ const SearchManager = (() => {
 
         status.textContent = hits.length === 1 ? '1 Treffer' : `${hits.length} Treffer`;
 
-        const prefix = basePrefix();
+        const prefix = sitePrefix();
         const fragment = document.createDocumentFragment();
         hits.forEach(entry => {
             const li = document.createElement('li');
@@ -389,6 +470,7 @@ const SearchManager = (() => {
         lastFocused = document.activeElement;
         overlay.hidden = false;
         toggle.setAttribute('aria-expanded', 'true');
+        FocusTrap.activate(overlay);
         input.focus();
         render(input.value);
     };
@@ -396,6 +478,7 @@ const SearchManager = (() => {
     const close = () => {
         if (!overlay || overlay.hidden) return;
         overlay.hidden = true;
+        FocusTrap.release();
         toggle.setAttribute('aria-expanded', 'false');
         if (lastFocused && document.contains(lastFocused)) lastFocused.focus();
     };
@@ -467,8 +550,11 @@ const HomeEvents = (() => {
     };
 
     const card = (ev) => {
-        const article = document.createElement('article');
-        article.className = 'home-event';
+        // Die ganze Flaeche ist der Link – so trifft man sie auch mit dem
+        // Daumen sicher, und das Hover-Bild entspricht der Funktion.
+        const link = document.createElement('a');
+        link.className = 'home-event';
+        link.href = `${sitePrefix()}termine/#${ev.anker}`;
 
         const date = document.createElement('div');
         date.className = 'home-event-date';
@@ -485,27 +571,32 @@ const HomeEvents = (() => {
 
         if (ev.kategorieLabel) {
             const badge = document.createElement('span');
-            badge.className = 'home-event-badge';
+            badge.className = `home-event-badge ${ev.kategorie}`;
             badge.textContent = ev.kategorieLabel;
             details.append(badge);
         }
 
+        // Ueberschrift statt span: Der Termin bleibt so in der
+        // Dokumentgliederung auffindbar. <a> hat ein transparentes
+        // Inhaltsmodell, Block-Elemente sind darin zulaessig.
         const title = document.createElement('h3');
         title.className = 'home-event-title';
         title.textContent = ev.titel;
         details.append(title);
 
-        // Uhrzeit und Ort nur zeigen, wenn gepflegt – nicht jeder Termin hat beides.
-        const meta = [ev.zeit, ev.ort].filter(Boolean).join(' · ');
-        if (meta) {
-            const p = document.createElement('p');
-            p.className = 'home-event-meta';
-            p.textContent = meta;
-            details.append(p);
-        }
+        // Uhrzeit, Ort und Veranstalter nur zeigen, wenn gepflegt –
+        // nicht jeder Termin hat alle drei Angaben.
+        [[ev.zeit, ev.ort].filter(Boolean).join(' · '), ev.veranstalter]
+            .filter(Boolean)
+            .forEach(text => {
+                const line = document.createElement('p');
+                line.className = 'home-event-meta';
+                line.textContent = text;
+                details.append(line);
+            });
 
-        article.append(date, details);
-        return article;
+        link.append(date, details);
+        return link;
     };
 
     const init = () => {

@@ -106,11 +106,17 @@ def build_events() -> None:
     labels = {s: clean(t) for s, t in FILTER_BTN.findall(html) if s != "all"}
 
     events = []
+    used: dict[str, int] = {}
     for category, date, body in CARD.findall(html):
         fields = {cls: clean(val) for cls, val in FIELD.findall(body)}
         title_m = H3.search(body)
+        # Muss der Regel in termine/index.html entsprechen (assignAnchors),
+        # sonst zeigen die Links der Startseite ins Leere.
+        used[date] = used.get(date, 0) + 1
+        anchor = f"termin-{date}" if used[date] == 1 else f"termin-{date}-{used[date]}"
         events.append({
             "datum": date,
+            "anker": anchor,
             "kategorie": category,
             "kategorieLabel": labels.get(category, category),
             "titel": clean(title_m.group(1)) if title_m else "",

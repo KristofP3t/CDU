@@ -1685,7 +1685,6 @@ body {
 }
 
 .search-result-text {
-    display: block;
     font-size: 14px;
     color: var(--color-text-light);
     /* Lange Beschreibungen auf zwei Zeilen begrenzen. */
@@ -1750,12 +1749,21 @@ body {
     border: 1px solid var(--color-border);
     border-radius: 8px;
     background-color: var(--color-white);
+    /* Die ganze Karte ist ein Link auf den Termin in der Uebersicht. */
+    text-decoration: none;
+    color: inherit;
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.home-event:hover {
+.home-event:hover,
+.home-event:focus-visible {
     border-color: var(--color-accent);
     box-shadow: 0 4px 12px rgba(82, 183, 193, 0.15);
+}
+
+.home-event:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
 }
 
 .home-event-date {
@@ -1792,13 +1800,23 @@ body {
 
 .home-event-badge {
     display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--color-primary);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    /* Farbwerte wie auf der Terminseite, damit eine Kategorie ueberall
+       gleich aussieht. */
+    background-color: var(--color-light-bg);
+    color: var(--color-dark);
 }
+
+.home-event-badge.vorstand { background-color: #e3f2fd; color: #1565c0; }
+.home-event-badge.wahlveranstaltung { background-color: #fff3e0; color: #e65100; }
+.home-event-badge.parteitag { background-color: #f3e5f5; color: #7b1fa2; }
+.home-event-badge.gedenkveranstaltung { background-color: #e8eaf6; color: #3f51b5; }
 
 .home-event-title {
     font-size: 16px;
@@ -1810,6 +1828,7 @@ body {
 }
 
 .home-event-meta {
+    margin: 0;
     font-size: 13px;
     color: var(--color-text-light);
     line-height: 1.5;
