@@ -306,6 +306,15 @@ body {
     justify-content: space-between;
     align-items: center;
     gap: var(--spacing-lg);
+    /* Bricht rechts aus dem .container aus, damit Menue und Suche am
+       Fensterrand sitzen statt am Rand der 1400px-Spalte. Nur die rechte
+       Kante wandert nach aussen – das Logo bleibt links in der Spalte.
+       50% meint die Containerbreite, 50vw die halbe Fensterbreite; die
+       Differenz ist genau der rechte Aussenabstand des Containers.
+       Da 50vw die Scrollleiste mitzaehlt, faengt padding-right den
+       Ueberhang ab und haelt die Buttons vom Rand frei. */
+    margin-right: calc(50% - 50vw);
+    padding-right: var(--spacing-sm);
 }
 
 .site-branding img {
@@ -1477,8 +1486,9 @@ body {
 
 /* ==========================================================================
    Kopfzeilen-Aktionen: Menue & Suche
-   Beide Buttons stehen rechts neben dem Logo und oeffnen jeweils ein
+   Beide Buttons sitzen am rechten Fensterrand und oeffnen jeweils ein
    Vollbild-Overlay. Eine horizontale Menuezeile gibt es nicht mehr.
+   Zur Ausrichtung siehe den Ausbruch in .header-main.
    ========================================================================== */
 
 .header-actions {
