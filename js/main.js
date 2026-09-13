@@ -595,7 +595,13 @@ const HomeEvents = (() => {
                 details.append(line);
             });
 
-        link.append(date, details);
+        // Richtungsanzeige: macht sichtbar, dass die Zeile irgendwohin fuehrt.
+        const arrow = document.createElement('span');
+        arrow.className = 'home-event-arrow';
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '→';
+
+        link.append(date, details, arrow);
         return link;
     };
 
