@@ -3,6 +3,7 @@
 
   js/search-index.js  – Suchindex ueber alle Seiten
   js/events-data.js   – Termine aus termine/index.html, fuer die Startseite
+  termine/ics/*.ics   – je Termin eine Kalenderdatei zum Herunterladen
 
 Die Seite ist statisch und liegt auf GitHub Pages – es gibt keinen Server,
 der suchen oder Termine ausliefern koennte. Beide Dateien werden deshalb
@@ -17,11 +18,23 @@ import json
 import pathlib
 import re
 import sys
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT_SEARCH = ROOT / "js" / "search-index.js"
 OUT_EVENTS = ROOT / "js" / "events-data.js"
 TERMINE = ROOT / "termine" / "index.html"
+OUT_ICS = ROOT / "termine" / "ics"
+
+# Ortszeit der Termine. Die Kalenderdateien speichern UTC, damit sie in
+# jeder Zeitzone dieselbe Sekunde meinen – die Umrechnung beachtet
+# ueber zoneinfo automatisch Sommer- und Winterzeit.
+TZ = ZoneInfo("Europe/Berlin")
+
+# Fuer die URL in den Kalendereintraegen. Bei einem Umzug auf eine eigene
+# Domain hier anpassen.
+SITE_URL = "https://kristofp3t.github.io/CDU/"
 
 # Bestaetigungsseite nach dem Absenden – kein sinnvolles Suchergebnis.
 EXCLUDE = {"mitglied-werden/bestaetigung/"}
@@ -134,6 +147,101 @@ def build_events() -> None:
         encoding="utf-8",
     )
     print(f"{len(events)} Termine uebernommen -> {OUT_EVENTS.relative_to(ROOT)}")
+    build_ics(events)
+
+
+def ics_escape(value: str) -> str:
+    """Maskiert Sonderzeichen nach RFC 5545."""
+    return (value.replace("\\", "\\\\")
+                 .replace(";", "\\;")
+                 .replace(",", "\\,")
+                 .replace("\n", "\\n"))
+
+
+def ics_fold(line: str) -> str:
+    """Bricht Zeilen auf 75 Oktette um, Folgezeilen beginnen mit Leerzeichen.
+
+    Gezaehlt wird in Bytes, nicht in Zeichen – Umlaute belegen in UTF-8 zwei.
+    """
+    raw = line.encode("utf-8")
+    if len(raw) <= 75:
+        return line
+    parts, rest = [], raw
+    parts.append(rest[:75])
+    rest = rest[75:]
+    while rest:
+        parts.append(rest[:74])
+        rest = rest[74:]
+    # An Byte-Grenzen kann ein Mehrbyte-Zeichen zerschnitten werden; die
+    # Teile werden vor dem Dekodieren wieder zusammengefuegt.
+    out = parts[0].decode("utf-8", "ignore")
+    for part in parts[1:]:
+        out += "\r\n " + part.decode("utf-8", "ignore")
+    return out
+
+
+def build_ics(events: list[dict]) -> None:
+    """Schreibt je Termin eine .ics-Datei.
+
+    Termine ohne Uhrzeit werden als ganztaegig eingetragen, Termine mit
+    Uhrzeit mit zwei Stunden Dauer – eine echte Endzeit pflegt die
+    Terminseite nicht.
+    """
+    OUT_ICS.mkdir(parents=True, exist_ok=True)
+    geschrieben = set()
+
+    for ev in events:
+        tag = datetime.strptime(ev["datum"], "%Y-%m-%d").date()
+        zeit = re.match(r"(\d{1,2}):(\d{2})", ev["zeit"] or "")
+
+        if zeit:
+            start = datetime(tag.year, tag.month, tag.day,
+                             int(zeit.group(1)), int(zeit.group(2)), tzinfo=TZ)
+            ende = start + timedelta(hours=2)
+            dt = [f"DTSTART:{start.astimezone(ZoneInfo('UTC')):%Y%m%dT%H%M%SZ}",
+                  f"DTEND:{ende.astimezone(ZoneInfo('UTC')):%Y%m%dT%H%M%SZ}"]
+        else:
+            dt = [f"DTSTART;VALUE=DATE:{tag:%Y%m%d}",
+                  f"DTEND;VALUE=DATE:{tag + timedelta(days=1):%Y%m%d}"]
+
+        beschreibung = " · ".join(filter(None, [
+            ev["kategorieLabel"],
+            f"Veranstalter: {ev['veranstalter']}" if ev["veranstalter"] else "",
+        ]))
+
+        zeilen = [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//CDU Kreisverband Schwerin//Termine//DE",
+            "CALSCALE:GREGORIAN",
+            "METHOD:PUBLISH",
+            "BEGIN:VEVENT",
+            f"UID:{ev['anker']}@cdu-schwerin.com",
+            # Fester Wert statt "jetzt": sonst aendert sich jede Datei bei
+            # jedem Build und der Verlauf laeuft mit Rauschen voll.
+            f"DTSTAMP:{tag:%Y%m%d}T000000Z",
+            *dt,
+            f"SUMMARY:{ics_escape(ev['titel'])}",
+            f"URL:{SITE_URL}termine/#{ev['anker']}",
+        ]
+        if ev["ort"]:
+            zeilen.append(f"LOCATION:{ics_escape(ev['ort'])}")
+        if beschreibung:
+            zeilen.append(f"DESCRIPTION:{ics_escape(beschreibung)}")
+        zeilen += ["END:VEVENT", "END:VCALENDAR"]
+
+        ziel = OUT_ICS / f"{ev['anker']}.ics"
+        # RFC 5545 schreibt CRLF vor.
+        ziel.write_bytes(("\r\n".join(ics_fold(z) for z in zeilen) + "\r\n").encode("utf-8"))
+        geschrieben.add(ziel.name)
+
+    # Dateien geloeschter Termine entfernen, sonst bleiben Leichen liegen.
+    for alt in OUT_ICS.glob("*.ics"):
+        if alt.name not in geschrieben:
+            alt.unlink()
+            print(f"  entfernt: {alt.relative_to(ROOT)}")
+
+    print(f"{len(geschrieben)} Kalenderdateien -> {OUT_ICS.relative_to(ROOT)}/")
 
 
 if __name__ == "__main__":

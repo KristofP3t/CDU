@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//CDU Kreisverband Schwerin//Termine//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:termin-2026-11-19@cdu-schwerin.com
+DTSTAMP:20261119T000000Z
+DTSTART:20261119T183000Z
+DTEND:20261119T203000Z
+SUMMARY:Videokonferenz CDU Schwerin
+URL:https://kristofp3t.github.io/CDU/termine/#termin-2026-11-19
+DESCRIPTION:Vorstand · Veranstalter: CDU Landeshauptstadt Schwerin
+END:VEVENT
+END:VCALENDAR

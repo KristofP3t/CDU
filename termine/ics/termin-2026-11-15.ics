@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//CDU Kreisverband Schwerin//Termine//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:termin-2026-11-15@cdu-schwerin.com
+DTSTAMP:20261115T000000Z
+DTSTART:20261115T090000Z
+DTEND:20261115T110000Z
+SUMMARY:Kranzniederlegung Volkstrauertag
+URL:https://kristofp3t.github.io/CDU/termine/#termin-2026-11-15
+LOCATION:Alter Friedhof\, Schwerin
+DESCRIPTION:Gedenkveranstaltung · Veranstalter: CDU Landeshauptstadt Schwe
+ rin
+END:VEVENT
+END:VCALENDAR

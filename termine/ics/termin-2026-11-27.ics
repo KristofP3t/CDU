@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//CDU Kreisverband Schwerin//Termine//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:termin-2026-11-27@cdu-schwerin.com
+DTSTAMP:20261127T000000Z
+DTSTART:20261127T170000Z
+DTEND:20261127T190000Z
+SUMMARY:Kreisparteitag – Neuwahl Kreisvorstand
+URL:https://kristofp3t.github.io/CDU/termine/#termin-2026-11-27
+DESCRIPTION:Parteitag · Veranstalter: CDU Landeshauptstadt Schwerin
+END:VEVENT
+END:VCALENDAR

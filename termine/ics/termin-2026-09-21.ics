@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//CDU Kreisverband Schwerin//Termine//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:termin-2026-09-21@cdu-schwerin.com
+DTSTAMP:20260921T000000Z
+DTSTART:20260921T173000Z
+DTEND:20260921T193000Z
+SUMMARY:Vorsitzendenkonferenz CDU Schwerin
+URL:https://kristofp3t.github.io/CDU/termine/#termin-2026-09-21
+LOCATION:Intercity Hotel\, Grunthalplatz 5\, 19053 Schwerin
+DESCRIPTION:Vorstand · Veranstalter: CDU Landeshauptstadt Schwerin
+END:VEVENT
+END:VCALENDAR

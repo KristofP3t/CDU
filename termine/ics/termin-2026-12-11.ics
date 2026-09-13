@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//CDU Kreisverband Schwerin//Termine//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:termin-2026-12-11@cdu-schwerin.com
+DTSTAMP:20261211T000000Z
+DTSTART:20261211T163000Z
+DTEND:20261211T183000Z
+SUMMARY:Vorsitzendenkonferenz CDU Schwerin
+URL:https://kristofp3t.github.io/CDU/termine/#termin-2026-12-11
+LOCATION:Weinhaus Wöhler\, Puschkinstr. 26\, 19055 Schwerin
+DESCRIPTION:Vorstand · Veranstalter: CDU Landeshauptstadt Schwerin
+END:VEVENT
+END:VCALENDAR

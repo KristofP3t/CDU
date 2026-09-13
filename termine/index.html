@@ -32,6 +32,26 @@
             animation: pulse 0.4s ease-out;
         }
 
+        /* Kalender-Download je Termin */
+        .event-ics {
+            display: inline-block;
+            margin-top: var(--spacing-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-primary);
+            text-decoration: none;
+            border-bottom: 1px solid currentColor;
+        }
+
+        .event-ics:hover {
+            color: var(--color-accent);
+        }
+
+        .event-ics:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
         /* Markiert den von der Startseite angesprungenen Termin. */
         .event-card-target {
             border-color: var(--color-accent);
@@ -754,6 +774,31 @@
                 target.classList.add('event-card-target');
             };
 
+
+            // Download-Link je Termin. Die Dateien liegen fertig unter
+            // termine/ics/ und werden von tools/build-site-data.py erzeugt;
+            // der Dateiname ist derselbe Anker wie die Sprungmarke.
+            // Bewusst ohne download-Attribut: So bieten Mobilgeraete an, den
+            // Termin direkt in den Kalender zu uebernehmen, statt ihn nur
+            // als Datei abzulegen.
+            const addCalendarLinks = () => {
+                document.querySelectorAll('.event-card').forEach(card => {
+                    if (!card.id || card.querySelector('.event-ics')) return;
+                    const details = card.querySelector('.event-details');
+                    if (!details) return;
+
+                    const link = document.createElement('a');
+                    link.className = 'event-ics';
+                    link.href = `ics/${card.id}.ics`;
+                    link.textContent = 'In den Kalender speichern (.ics)';
+                    // Ohne Zusatz waere im Screenreader neunmal derselbe
+                    // Linktext zu hoeren, ohne zu welchem Termin er gehoert.
+                    const titel = card.querySelector('h3');
+                    if (titel) link.setAttribute('aria-label', `${titel.textContent} in den Kalender speichern (ics-Datei)`);
+                    details.append(link);
+                });
+            };
+
             const init = () => {
                 const filterButtons = document.querySelectorAll('.filter-btn');
                 const showPastToggle = document.getElementById('show-past-toggle');
@@ -762,6 +807,7 @@
                 assignAnchors();
                 renderEventDates();
                 renderEventBadges();
+                addCalendarLinks();
 
                 // Initial visibility
                 updateEventVisibility();

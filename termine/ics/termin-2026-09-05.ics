@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//CDU Kreisverband Schwerin//Termine//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:termin-2026-09-05@cdu-schwerin.com
+DTSTAMP:20260905T000000Z
+DTSTART;VALUE=DATE:20260905
+DTEND;VALUE=DATE:20260906
+SUMMARY:Infostand zur Landtagswahl
+URL:https://kristofp3t.github.io/CDU/termine/#termin-2026-09-05
+LOCATION:Marienplatz\, Schwerin
+DESCRIPTION:Wahlveranstaltung · Veranstalter: CDU Landeshauptstadt Schweri
+ n
+END:VEVENT
+END:VCALENDAR
