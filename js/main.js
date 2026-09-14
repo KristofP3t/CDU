@@ -286,8 +286,33 @@ const Navigation = (() => {
 const ImageSlider = (() => {
     let currentIndex = 0;
     let slides = [];
+    let dots = [];
     let autoplayEnabled = true;
     let autoplayInterval = null;
+
+    // Die Punkte entstehen aus der Zahl der Bilder, damit Markup und Slider
+    // nicht auseinanderlaufen, wenn jemand ein Bild ergaenzt oder entfernt.
+    const buildDots = (container) => {
+        if (!container) return [];
+
+        const fragment = document.createDocumentFragment();
+        const buttons = slides.map((slide, index) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'slider-dot';
+            dot.setAttribute('aria-label', `Bild ${index + 1} von ${slides.length} anzeigen`);
+            dot.addEventListener('click', () => {
+                stopAutoplay();
+                showSlide(index);
+                if (autoplayEnabled) startAutoplay();
+            });
+            fragment.append(dot);
+            return dot;
+        });
+
+        container.append(fragment);
+        return buttons;
+    };
 
     const init = () => {
         const sliderWrapper = document.querySelector('.slider-wrapper');
@@ -298,6 +323,8 @@ const ImageSlider = (() => {
 
         slides = Array.from(sliderWrapper.querySelectorAll('img'));
         if (slides.length === 0) return;
+
+        dots = buildDots(document.getElementById('slider-dots'));
 
         // Check for reduced motion preference
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -335,6 +362,15 @@ const ImageSlider = (() => {
     const showSlide = (index) => {
         slides.forEach(slide => slide.classList.remove('active'));
         slides[index].classList.add('active');
+        // aria-current statt aria-selected: die Punkte sind Schaltflaechen,
+        // keine Tabs – es gibt keine zugehoerigen Tabpanels.
+        dots.forEach((dot, i) => {
+            if (i === index) {
+                dot.setAttribute('aria-current', 'true');
+            } else {
+                dot.removeAttribute('aria-current');
+            }
+        });
         currentIndex = index;
     };
 
@@ -359,35 +395,6 @@ const ImageSlider = (() => {
 
     const stopAutoplay = () => {
         if (autoplayInterval) clearInterval(autoplayInterval);
-    };
-
-    return { init };
-})();
-
-// ============================================================================
-// Video Autoplay Based on Motion Preference
-// ============================================================================
-
-const VideoManager = (() => {
-    const init = () => {
-        const video = document.querySelector('.membership-video');
-        if (!video) return;
-
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        // Only autoplay if user hasn't disabled motion
-        if (!prefersReducedMotion) {
-            video.autoplay = true;
-        }
-
-        // Listen for changes to motion preference
-        window.matchMedia('(prefers-reduced-motion: reduce)').addListener((e) => {
-            if (e.matches) {
-                video.autoplay = false;
-            } else {
-                video.autoplay = true;
-            }
-        });
     };
 
     return { init };
@@ -638,7 +645,10 @@ document.addEventListener('DOMContentLoaded', () => {
     SearchManager.init();
     HomeEvents.init();
     ImageSlider.init();
-    VideoManager.init();
+    // Kein VideoManager mehr: das Werbevideo startete per JS automatisch und
+    // zog dabei rund 84 MB, ohne dass jemand auf Abspielen geklickt hatte.
+    // Es laeuft jetzt mit Standbild, preload="none" und den Bedienelementen
+    // des Browsers – damit ist auch prefers-reduced-motion gegenstandslos.
 });
 
 // ============================================================================

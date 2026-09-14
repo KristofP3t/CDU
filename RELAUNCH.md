@@ -1,6 +1,59 @@
 # CDU Schwerin – Startseiten-Relaunch 2026
 ## Implementierungsstatus
 
+---
+
+## Umbau der Startseite (September 2026)
+
+Die Startseite ist neu gegliedert. Reihenfolge jetzt: **Hero → Aktuelles
+(Meldungen + Termine nebeneinander) → Mitmachen → Grußwort → Video → Footer.**
+
+- **Hero**: Der Bildslider trägt jetzt eine Textebene mit H1, Kurztext und den
+  beiden Handlungszielen (Mitglied werden, Termine). Vorher hatte die
+  Startseite als einzige Seite des Projekts **keine H1** und der erste
+  Bildschirm war ohne Aussage. Punktnavigation ergänzt die Pfeile; die Punkte
+  entstehen in `js/main.js` aus der Zahl der Bilder.
+- **Aktuelles**: Meldungen (2/3) und Termine (1/3) stehen nebeneinander statt
+  untereinander. Gestapelt (ab 1024px abwärts) stehen die Termine oben.
+- **Meldungen**: echte `<img>` statt Inline-`background-image`, dadurch
+  `width`/`height` und `loading="lazy"`. Gleich hohe Karten durch feste
+  Bildproportion und dreizeilig begrenzte Titel. Auf dem Telefon Querformat
+  statt Stapel – das spart dort rund 1000px Scrollstrecke.
+- **Mitmachen**: neues Farbband mit Mitglied werden / Spenden / Kontakt. Ersetzt
+  die in Commit `e740025` entfernte `features-section` und holt die
+  Conversion-Ziele aus dem Seitenfuß nach oben.
+- **Grußwort**: gekürzte Fassung des Textes von Jascha Rainer Dopp mit Porträt
+  und Link auf den Vorstand.
+- **Video**: mit Standbild (`assets/images/video-poster.jpg`, aus dem Video
+  extrahiert) und `preload="none"`. Das Autoplay per JS ist entfallen – es zog
+  bei jedem Aufruf der Startseite rund 84 MB, ohne dass jemand auf Abspielen
+  geklickt hatte.
+- **Footer**: statt zweier 250px-Social-Bilder jetzt Kontakt, zwei
+  Linklisten (Die Partei, Service) und eine Icon-Zeile. Das Raster nutzt
+  `auto-fit`, damit der schlankere Footer der Unterseiten davon unberührt bleibt.
+- **Meta**: `og:image` und `rel="canonical"` ergänzt. Das `twitter:card` stand
+  auf `summary_large_image`, ohne dass ein Bild hinterlegt war.
+- **Aufgeräumt**: totes CSS der entfernten Abschnitte (`hero-section`,
+  `banner-section`, `welcome-section`, `features-section`, `social-image`)
+  gelöscht; das `style`-Attribut am Menüpunkt „Mitglied werden" ist eine
+  Klasse geworden.
+
+### Weiterhin offen
+
+- **Meldungen ohne Datum**: `aktuelles/index.html` kennt Daten für zwei der vier
+  Meldungen, für die anderen beiden gibt es lokal keine. Erst wenn die
+  Meldungen in `newsarchiv/` liegen, lässt sich ein Datums-Kicker konsistent
+  füllen; bis dahin bleibt er bewusst weg, statt halb gefüllt zu sein.
+- **Meldungsbilder sind 272×182 Pixel** und werden im Raster auf rund 370px
+  Breite hochskaliert. Bei Gelegenheit in höherer Auflösung nachladen.
+- **Video weiterhin 84 MB** (43s, 1920×1080, 15,7 Mbit/s). Durch
+  `preload="none"` lädt es nur noch auf Klick, komprimiert ist es aber nicht.
+- **Unterseiten-Footer ohne Impressum/Datenschutz**: die 26 Unterseiten haben
+  einen verkürzten Footer ohne diese beiden Links. Für die Impressumspflicht
+  sollten sie auf jeder Seite erreichbar sein.
+
+---
+
 ### ✅ Abgeschlossen
 
 #### HTML-Struktur & Semantik
