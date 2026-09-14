@@ -57,14 +57,44 @@ Die Startseite ist neu gegliedert. Reihenfolge jetzt: **Hero → Aktuelles
   Seite erreichbar sein. Alle Seiten tragen jetzt denselben Footer, die
   internen Verweise sind je nach Ebenentiefe relativ gesetzt.
 
+### Blockiert: braucht Material von cdu-schwerin.com
+
+Beide Punkte hängen an Daten, die es nur auf der Live-Seite gibt. Aus der
+Entwicklungsumgebung ist `cdu-schwerin.com` nicht erreichbar – der
+Egress-Proxy weist die Verbindung mit 403 ab. Wer die Seite lokal vorliegen
+hat oder die Domain im Environment freischaltet, kann beides in einem Zug
+nachziehen.
+
+- **Meldungen ohne Datum.** Für einen Datums-Kicker auf den Meldungskacheln
+  fehlen die Veröffentlichungsdaten. Im Projekt gibt es sie nirgends: die
+  beiden Daten in `aktuelles/index.html` („25. Februar 2026", „November 2025")
+  sind **Veranstaltungs-, keine Veröffentlichungsdaten** und taugen deshalb
+  nicht als Kicker. Für die beiden übrigen Meldungen existiert lokal gar keine
+  Datumsangabe. Gebraucht wird je Meldung das Veröffentlichungsdatum der vier
+  in `index.html` verlinkten Beiträge.
+
+- **Meldungsbilder in höherer Auflösung.** Die vier Bilder liegen in 272×182
+  vor – auch in der Git-Historie gibt es keine größeren Fassungen. Gemessene
+  Skalierung der neuen Startseite:
+
+  | Ansicht | Darstellung | Gerätepixel | Faktor |
+  |---|---|---|---|
+  | 1440px @1x | 420px | 420px | 1,54× |
+  | 1440px @2x (Retina) | 420px | 840px | 3,09× |
+  | 390px @2x | 120px | 240px | 0,88× |
+  | 390px @3x | 120px | 360px | 1,32× |
+
+  Auf dem Telefon ist die Auflösung dank der Querformat-Karten ausreichend,
+  auf dem Desktop – besonders auf Retina-Displays – sind die Bilder sichtbar
+  weich. Gebraucht werden die Original-Beitragsbilder aus der
+  WordPress-Mediathek, sinnvoll wären rund 840px Breite.
+
 ### Weiterhin offen
 
-- **Meldungen ohne Datum**: `aktuelles/index.html` kennt Daten für zwei der vier
-  Meldungen, für die anderen beiden gibt es lokal keine. Erst wenn die
-  Meldungen in `newsarchiv/` liegen, lässt sich ein Datums-Kicker konsistent
-  füllen; bis dahin bleibt er bewusst weg, statt halb gefüllt zu sein.
-- **Meldungsbilder sind 272×182 Pixel** und werden im Raster auf rund 370px
-  Breite hochskaliert. Bei Gelegenheit in höherer Auflösung nachladen.
+- **Newsarchiv ohne Beiträge.** `newsarchiv/index.html` enthält nur Suchfeld,
+  Monatsliste und Kategorien; die Meldungen selbst liegen weiter auf der
+  Live-Seite. Solange das so ist, verweisen die Meldungen der Startseite und
+  die Kategorien des Newsarchivs dorthin.
 
 ---
 
