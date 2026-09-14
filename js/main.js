@@ -401,20 +401,40 @@ const ImageSlider = (() => {
 })();
 
 // ============================================================================
-// Meldungen: Punkte zur Bildkachel-Reihe
-// Das Wischen selbst macht scroll-snap im CSS. Hier kommen nur die Punkte
-// dazu: sie zeigen, wo man sich befindet, und springen auf Klick zur Kachel.
+// Meldungen: Punkte und Pfeile zur Bildkachel-Reihe
+// Das Wischen selbst macht scroll-snap im CSS. Hier kommt die Bedienung
+// dazu: Punkte fuer die Position und Pfeile zum Blaettern. Geblaettert wird
+// seitenweise, nicht kachelweise – wie in der Vorlage auf tk.de, wo vier
+// Meldungen bei drei sichtbaren Kacheln zwei Punkte ergeben.
 // ============================================================================
 
 const NewsCarousel = (() => {
     let track = null;
+    let dotBox = null;
     let cards = [];
     let dots = [];
+    let prevBtn = null;
+    let nextBtn = null;
+    let proSeite = 1;
     let aktiv = -1;
 
+    const PFEIL_LINKS = 'M15 5l-7 7 7 7';
+    const PFEIL_RECHTS = 'M9 5l7 7-7 7';
+
+    // Wie viele Kacheln nebeneinander in den sichtbaren Ausschnitt passen.
+    // Haengt an der Fensterbreite, deshalb bei jeder Groessenaenderung neu.
+    const kachelnProSeite = () => {
+        if (cards.length < 2) return 1;
+        const schritt = cards[1].offsetLeft - cards[0].offsetLeft;
+        if (schritt <= 0) return 1;
+        return Math.max(1, Math.round(track.clientWidth / schritt));
+    };
+
+    const seitenZahl = () => Math.ceil(cards.length / proSeite);
+
     // Die Kachel, deren linke Kante der linken Kante des sichtbaren
-    // Ausschnitts am naechsten liegt. Das deckt sich mit dem, was
-    // scroll-snap einrastet.
+    // Ausschnitts am naechsten liegt – das ist die, auf die scroll-snap
+    // einrastet.
     const sichtbareKachel = () => {
         let treffer = 0;
         let kleinsterAbstand = Infinity;
@@ -428,47 +448,97 @@ const NewsCarousel = (() => {
         return treffer;
     };
 
+    const zeigeSeite = (seite) => {
+        const ziel = cards[Math.min(seite * proSeite, cards.length - 1)];
+        if (ziel) track.scrollTo({ left: ziel.offsetLeft });
+    };
+
     const markiere = () => {
-        const index = sichtbareKachel();
-        if (index === aktiv) return;
-        aktiv = index;
+        const seite = Math.min(Math.floor(sichtbareKachel() / proSeite), seitenZahl() - 1);
+        if (seite === aktiv) return;
+        aktiv = seite;
+
         dots.forEach((dot, i) => {
-            if (i === index) {
+            if (i === seite) {
                 dot.setAttribute('aria-current', 'true');
             } else {
                 dot.removeAttribute('aria-current');
             }
         });
+
+        if (prevBtn) prevBtn.disabled = seite === 0;
+        if (nextBtn) nextBtn.disabled = seite >= seitenZahl() - 1;
     };
 
-    const init = () => {
-        track = document.getElementById('news-track');
-        const dotBox = document.getElementById('news-dots');
-        if (!track || !dotBox) return;
+    const bauePunkte = () => {
+        dotBox.textContent = '';
+        aktiv = -1;
 
-        cards = Array.from(track.querySelectorAll('.news-card'));
-        // Bei einer einzelnen Kachel gibt es nichts zu blaettern.
-        if (cards.length < 2) return;
+        const anzahl = seitenZahl();
+        // Bei nur einer Seite gibt es nichts zu blaettern.
+        if (anzahl < 2) {
+            dots = [];
+            markiere();
+            return;
+        }
 
         const fragment = document.createDocumentFragment();
-        dots = cards.map((card, i) => {
+        dots = Array.from({ length: anzahl }, (_, i) => {
             const dot = document.createElement('button');
             dot.type = 'button';
             dot.className = 'news-dot';
-            dot.setAttribute('aria-label', `Meldung ${i + 1} von ${cards.length} anzeigen`);
-            dot.addEventListener('click', () => {
-                track.scrollTo({ left: card.offsetLeft });
-            });
+            dot.setAttribute('aria-label', `Meldungen, Seite ${i + 1} von ${anzahl}`);
+            dot.addEventListener('click', () => zeigeSeite(i));
             fragment.append(dot);
             return dot;
         });
         dotBox.append(fragment);
+        markiere();
+    };
+
+    const baueseitePfeil = (richtung, beschriftung, pfad) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'news-arrow';
+        btn.setAttribute('aria-label', beschriftung);
+        btn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${pfad}"/></svg>`;
+        btn.addEventListener('click', () => {
+            zeigeSeite(Math.max(0, Math.min(aktiv + richtung, seitenZahl() - 1)));
+        });
+        return btn;
+    };
+
+    const init = () => {
+        track = document.getElementById('news-track');
+        dotBox = document.getElementById('news-dots');
+        const arrowBox = document.getElementById('news-arrows');
+        if (!track || !dotBox) return;
+
+        cards = Array.from(track.querySelectorAll('.news-card'));
+        if (cards.length < 2) return;
+
+        if (arrowBox) {
+            prevBtn = baueseitePfeil(-1, 'Vorherige Meldungen', PFEIL_LINKS);
+            nextBtn = baueseitePfeil(1, 'Weitere Meldungen', PFEIL_RECHTS);
+            arrowBox.append(prevBtn, nextBtn);
+        }
+
+        proSeite = kachelnProSeite();
+        bauePunkte();
 
         track.addEventListener('scroll', markiere, { passive: true });
-        // Auch beim Durchtabben durch die Kacheln scrollt der Browser – der
-        // Scroll-Handler oben faengt das mit ab.
-        window.addEventListener('resize', markiere);
-        markiere();
+
+        // Bei einer anderen Fensterbreite passen andere viele Kacheln
+        // nebeneinander – dann stimmt auch die Zahl der Punkte nicht mehr.
+        window.addEventListener('resize', () => {
+            const neu = kachelnProSeite();
+            if (neu !== proSeite) {
+                proSeite = neu;
+                bauePunkte();
+            } else {
+                markiere();
+            }
+        });
     };
 
     return { init };

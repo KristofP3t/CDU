@@ -17,11 +17,20 @@ Die Startseite ist neu gegliedert. Reihenfolge jetzt: **Hero → Aktuelles
   untereinander. Gestapelt (ab 1024px abwärts) stehen die Termine oben.
 - **Meldungen**: Bildkacheln zum Wischen, im Aufbau von „TK aktuell" auf
   tk.de übernommen – Bild, darauf unten ein Verlauf mit Kategorie und
-  Schlagzeile, darunter Punkte für die Position. Das Wischen macht
-  `scroll-snap` im CSS; JavaScript steuert nur die Punkte bei. Auf dem Telefon
-  füllt eine Kachel die Breite und die nächste schaut am Rand hervor, auf
-  breiten Geräten stehen zwei nebeneinander. Echte `<img>` statt
+  Schlagzeile, darunter mittig die Punkte und rechts die Blätterpfeile. Das
+  Wischen macht `scroll-snap` im CSS; JavaScript steuert nur die Bedienung
+  bei. Geblättert wird **seitenweise**: bei zwei sichtbaren Kacheln ergeben
+  vier Meldungen zwei Punkte, auf dem Telefon bei einer sichtbaren Kachel
+  vier. Die Zahl der Punkte passt sich der Fensterbreite an. Auf dem Telefon
+  füllt eine Kachel die Breite und die nächste schaut am Rand hervor, die
+  Pfeile entfallen dort – wie in der Vorlage. Echte `<img>` statt
   Inline-`background-image`, dadurch `width`/`height` und `loading="lazy"`.
+
+  Abweichung von der Vorlage: tk.de zeigt auf dem Desktop **drei** Kacheln,
+  wir zeigen **zwei**. Die Meldungen stehen bei uns in der 2/3-Spalte neben
+  den Terminen, nicht über die volle Seitenbreite. Zwei Kacheln sind dort
+  426px breit und damit ähnlich groß wie die 558px auf tk.de; drei wären je
+  280px, und die Schlagzeilen würden abgeschnitten.
 
   Die **Kategorien** („Veranstaltungen", „OB-Wahl", „Landespolitik") sind aus
   den Schlagzeilen abgeleitet und nutzen die Kategorieliste aus
