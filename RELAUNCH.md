@@ -38,6 +38,25 @@ Die Startseite ist neu gegliedert. Reihenfolge jetzt: **Hero → Aktuelles
   gelöscht; das `style`-Attribut am Menüpunkt „Mitglied werden" ist eine
   Klasse geworden.
 
+### Nachgezogen
+
+- **Video komprimiert**: 80,6 MB → 12,5 MB (84 % kleiner). H.264 High, 1280×720,
+  CRF 23, AAC 128 kbit/s, `+faststart`. Länge, Ton und Bildinhalt unverändert.
+  Zusammen mit `preload="none"` lädt die Startseite jetzt gar kein Video mehr,
+  bis jemand auf Abspielen klickt.
+
+  ```
+  ffmpeg -i mitglieder-werbung.mp4 -c:v libx264 -preset slow -crf 23 \
+    -profile:v high -level 4.0 -pix_fmt yuv420p -vf "scale=1280:-2" \
+    -c:a aac -b:a 128k -ac 2 -movflags +faststart out.mp4
+  ```
+
+- **Footer auf allen 28 Seiten vereinheitlicht**: die Unterseiten hatten einen
+  verkürzten Footer, auf 23 der 28 Seiten war weder Impressum noch
+  Datenschutz verlinkt – für die Impressumspflicht müssen beide von jeder
+  Seite erreichbar sein. Alle Seiten tragen jetzt denselben Footer, die
+  internen Verweise sind je nach Ebenentiefe relativ gesetzt.
+
 ### Weiterhin offen
 
 - **Meldungen ohne Datum**: `aktuelles/index.html` kennt Daten für zwei der vier
@@ -46,11 +65,6 @@ Die Startseite ist neu gegliedert. Reihenfolge jetzt: **Hero → Aktuelles
   füllen; bis dahin bleibt er bewusst weg, statt halb gefüllt zu sein.
 - **Meldungsbilder sind 272×182 Pixel** und werden im Raster auf rund 370px
   Breite hochskaliert. Bei Gelegenheit in höherer Auflösung nachladen.
-- **Video weiterhin 84 MB** (43s, 1920×1080, 15,7 Mbit/s). Durch
-  `preload="none"` lädt es nur noch auf Klick, komprimiert ist es aber nicht.
-- **Unterseiten-Footer ohne Impressum/Datenschutz**: die 26 Unterseiten haben
-  einen verkürzten Footer ohne diese beiden Links. Für die Impressumspflicht
-  sollten sie auf jeder Seite erreichbar sein.
 
 ---
 
