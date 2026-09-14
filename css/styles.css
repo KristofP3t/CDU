@@ -916,6 +916,10 @@ body {
 
 /* ==========================================================================
    News
+   Bildkacheln zum Wischen, Aufbau wie "TK aktuell" auf tk.de: Bild, darauf
+   unten ein Verlauf mit Kategorie und Schlagzeile, darunter Punkte fuer die
+   Position. Das Wischen uebernimmt scroll-snap, ganz ohne JavaScript – die
+   Punkte sind das einzige, was js/main.js dazu beisteuert.
    ========================================================================== */
 
 .news-section {
@@ -923,93 +927,155 @@ body {
     padding: 0;
 }
 
-.news-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-lg);
+.news-track {
+    list-style: none;
+    display: flex;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    /* Der Scrollbalken wuerde unter den Kacheln einen grauen Streifen ziehen;
+       die Position zeigen die Punkte darunter. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* Bezugspunkt fuer offsetLeft der Kacheln: das ist genau die Position,
+       auf die scroll-snap einrastet und auf die die Punkte springen. */
+    position: relative;
 }
 
-.news-card {
-    background-color: var(--color-white);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+.news-track::-webkit-scrollbar {
+    display: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    .news-card:hover,
-    .news-card:focus-within {
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        transform: translateY(-2px);
+    .news-track {
+        scroll-behavior: smooth;
     }
 }
 
-/* Flex-Spalte ueber die volle Kartenhoehe: dadurch sind alle Karten einer
-   Reihe gleich hoch, egal wie lang die Ueberschrift ist. */
+.news-card {
+    /* Zwei Kacheln je Ansicht, die zweite haelftig sichtbar bleibt beim
+       Wischen als Hinweis erhalten. */
+    flex: 0 0 calc(50% - var(--spacing-md) / 2);
+    scroll-snap-align: start;
+}
+
 .news-link {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    text-decoration: none;
-    color: var(--color-text);
+    position: relative;
+    display: block;
     border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--color-white);
 }
 
 .news-link:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+    /* Nach innen gesetzt: ein aeusserer Rahmen wuerde vom scrollenden
+       Element abgeschnitten. */
+    outline: 3px solid var(--color-accent);
+    outline-offset: -3px;
 }
 
 .news-image {
     display: block;
     width: 100%;
+    /* Ohne height:auto gewinnt das height-Attribut des img-Elements gegen
+       aspect-ratio, und die Kachel bleibt 182px flach. */
+    height: auto;
+    /* 3:2 wie die Bilddateien selbst – so wird nichts beschnitten. */
     aspect-ratio: 3 / 2;
     object-fit: cover;
     background-color: var(--color-light-bg);
+    transition: transform 0.4s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .news-link:hover .news-image,
+    .news-link:focus-visible .news-image {
+        transform: scale(1.04);
+    }
+}
+
+/* Der Verlauf traegt den Kontrast der Schrift, unabhaengig davon wie hell
+   das Bild an dieser Stelle ist. Oben laeuft er transparent aus, damit die
+   Kante nicht als Balken sichtbar wird. */
+.news-caption {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-md);
+    background: linear-gradient(to top,
+        rgba(20, 28, 36, 0.95) 0%,
+        rgba(20, 28, 36, 0.88) 55%,
+        rgba(20, 28, 36, 0.5) 80%,
+        rgba(20, 28, 36, 0) 100%);
+}
+
+.news-kicker {
+    display: block;
+    font-size: 14px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    color: var(--color-white);
 }
 
 .news-title {
-    padding: var(--spacing-md);
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.4;
-    color: var(--color-text);
-    /* Haelt die Karten auch bei sehr langen Schlagzeilen im Raster. */
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-white);
+    /* Haelt auch lange Schlagzeilen in der Kachel. */
     display: -webkit-box;
     -webkit-line-clamp: 3;
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    overflow-wrap: break-word;
 }
 
-.news-link:hover .news-title,
-.news-link:focus-visible .news-title {
-    color: var(--color-primary);
-    transition: color 0.2s ease;
+/* Punkte: kleiner Kreis, die aktuelle Kachel ein laengerer Balken. */
+.news-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-md);
+}
+
+.news-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background-color: #c2ccd4;
+    cursor: pointer;
+    transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.news-dot[aria-current="true"] {
+    width: 28px;
+    background-color: var(--color-dark);
+}
+
+.news-dot:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
 }
 
 @media (max-width: 768px) {
-    /* Querformat statt Stapel: vier gestapelte Bildkarten ergaben auf dem
-       Telefon rund 1500px Scrollstrecke fuer vier Schlagzeilen. */
-    .news-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-sm);
+    /* Wie auf tk.de: eine Kachel fuellt die Breite, die naechste schaut
+       am Rand hervor und zeigt damit, dass sich wischen laesst. */
+    .news-card {
+        flex: 0 0 85%;
     }
 
-    .news-link {
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .news-image {
-        width: 120px;
-        flex-shrink: 0;
+    .news-caption {
+        padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-sm);
     }
 
     .news-title {
-        padding: var(--spacing-sm);
-        font-size: 15px;
+        font-size: 18px;
     }
 }
 

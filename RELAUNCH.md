@@ -15,10 +15,19 @@ Die Startseite ist neu gegliedert. Reihenfolge jetzt: **Hero → Aktuelles
   entstehen in `js/main.js` aus der Zahl der Bilder.
 - **Aktuelles**: Meldungen (2/3) und Termine (1/3) stehen nebeneinander statt
   untereinander. Gestapelt (ab 1024px abwärts) stehen die Termine oben.
-- **Meldungen**: echte `<img>` statt Inline-`background-image`, dadurch
-  `width`/`height` und `loading="lazy"`. Gleich hohe Karten durch feste
-  Bildproportion und dreizeilig begrenzte Titel. Auf dem Telefon Querformat
-  statt Stapel – das spart dort rund 1000px Scrollstrecke.
+- **Meldungen**: Bildkacheln zum Wischen, im Aufbau von „TK aktuell" auf
+  tk.de übernommen – Bild, darauf unten ein Verlauf mit Kategorie und
+  Schlagzeile, darunter Punkte für die Position. Das Wischen macht
+  `scroll-snap` im CSS; JavaScript steuert nur die Punkte bei. Auf dem Telefon
+  füllt eine Kachel die Breite und die nächste schaut am Rand hervor, auf
+  breiten Geräten stehen zwei nebeneinander. Echte `<img>` statt
+  Inline-`background-image`, dadurch `width`/`height` und `loading="lazy"`.
+
+  Die **Kategorien** („Veranstaltungen", „OB-Wahl", „Landespolitik") sind aus
+  den Schlagzeilen abgeleitet und nutzen die Kategorieliste aus
+  `newsarchiv/index.html`. Sie stammen **nicht** aus der Live-Seite – dort
+  gepflegte Kategorien können abweichen. Sie stehen je einmal in
+  `index.html` und lassen sich dort direkt ändern.
 - **Mitmachen**: neues Farbband mit Mitglied werden / Spenden / Kontakt. Ersetzt
   die in Commit `e740025` entfernte `features-section` und holt die
   Conversion-Ziele aus dem Seitenfuß nach oben.

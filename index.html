@@ -237,36 +237,59 @@
                         <h2 id="news-title">Letzte Meldungen</h2>
                         <a href="https://cdu-schwerin.com/newsarchiv/" class="section-link">Alle Meldungen <span aria-hidden="true">→</span></a>
                     </div>
-                    <div class="news-grid">
-                        <!-- Die Meldungen verweisen noch auf die WordPress-Seite:
-                             newsarchiv/ ist im neuen Projekt bisher ohne Artikel. -->
-                        <article class="news-card">
-                            <a href="https://cdu-schwerin.com/einladung-wahlkampfauftakt/" class="news-link">
-                                <img class="news-image" src="assets/images/news-1.jpg" alt="" width="272" height="182" loading="lazy">
-                                <h3 class="news-title">Einladung Wahlkampfauftakt</h3>
-                            </a>
-                        </article>
 
-                        <article class="news-card">
-                            <a href="https://cdu-schwerin.com/cdu-schwerin-nominiert-sebastian-ehlers-einstimmig-als-kandidaten-fuer-die-ob-wahl/" class="news-link">
-                                <img class="news-image" src="assets/images/news-2.jpg" alt="" width="272" height="182" loading="lazy">
-                                <h3 class="news-title">CDU Schwerin nominiert Sebastian Ehlers einstimmig als Kandidaten für die OB-Wahl</h3>
-                            </a>
-                        </article>
+                    <!-- Bildkacheln zum Wischen, Aufbau wie "TK aktuell" auf tk.de:
+                         Bild, darauf unten ein Verlauf mit Kategorie und
+                         Schlagzeile, darunter Punkte fuer die Position. Das
+                         Wischen macht scroll-snap im CSS, die Punkte sind das
+                         einzige, wofuer es JavaScript braucht.
 
-                        <article class="news-card">
-                            <a href="https://cdu-schwerin.com/cdu-kreisvorstand-schlaegt-stadtpraesident-sebastian-ehlers-als-ob-kandidaten-vor/" class="news-link">
-                                <img class="news-image" src="assets/images/news-3.jpg" alt="" width="272" height="182" loading="lazy">
-                                <h3 class="news-title">CDU-Kreisvorstand schlägt Stadtpräsident Sebastian Ehlers als OB-Kandidaten vor</h3>
-                            </a>
-                        </article>
+                         Die Meldungen verweisen noch auf die WordPress-Seite:
+                         newsarchiv/ ist im neuen Projekt bisher ohne Artikel.
+                         Die Kategorien stammen aus der Liste in newsarchiv/. -->
+                    <div class="news-carousel">
+                        <ul class="news-track" id="news-track">
+                            <li class="news-card">
+                                <a href="https://cdu-schwerin.com/einladung-wahlkampfauftakt/" class="news-link">
+                                    <img class="news-image" src="assets/images/news-1.jpg" alt="" width="272" height="182" loading="lazy">
+                                    <div class="news-caption">
+                                        <span class="news-kicker">Veranstaltungen</span>
+                                        <h3 class="news-title">Einladung Wahlkampfauftakt</h3>
+                                    </div>
+                                </a>
+                            </li>
 
-                        <article class="news-card">
-                            <a href="https://cdu-schwerin.com/cdu-schwerin-geht-mit-sebastian-ehlers-und-dorin-muethel-brenncke-in-den-landtagswahlkampf/" class="news-link">
-                                <img class="news-image" src="assets/images/news-4.jpg" alt="" width="272" height="182" loading="lazy">
-                                <h3 class="news-title">CDU Schwerin geht mit Sebastian Ehlers und Dorin Müthel-Brenncke in den Landtagswahlkampf</h3>
-                            </a>
-                        </article>
+                            <li class="news-card">
+                                <a href="https://cdu-schwerin.com/cdu-schwerin-nominiert-sebastian-ehlers-einstimmig-als-kandidaten-fuer-die-ob-wahl/" class="news-link">
+                                    <img class="news-image" src="assets/images/news-2.jpg" alt="" width="272" height="182" loading="lazy">
+                                    <div class="news-caption">
+                                        <span class="news-kicker">OB-Wahl</span>
+                                        <h3 class="news-title">Sebastian Ehlers einstimmig als OB-Kandidat nominiert</h3>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <li class="news-card">
+                                <a href="https://cdu-schwerin.com/cdu-kreisvorstand-schlaegt-stadtpraesident-sebastian-ehlers-als-ob-kandidaten-vor/" class="news-link">
+                                    <img class="news-image" src="assets/images/news-3.jpg" alt="" width="272" height="182" loading="lazy">
+                                    <div class="news-caption">
+                                        <span class="news-kicker">OB-Wahl</span>
+                                        <h3 class="news-title">Kreisvorstand schlägt Sebastian Ehlers als OB-Kandidaten vor</h3>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <li class="news-card">
+                                <a href="https://cdu-schwerin.com/cdu-schwerin-geht-mit-sebastian-ehlers-und-dorin-muethel-brenncke-in-den-landtagswahlkampf/" class="news-link">
+                                    <img class="news-image" src="assets/images/news-4.jpg" alt="" width="272" height="182" loading="lazy">
+                                    <div class="news-caption">
+                                        <span class="news-kicker">Landespolitik</span>
+                                        <h3 class="news-title">Mit Sebastian Ehlers und Dorin Müthel-Brenncke in den Landtagswahlkampf</h3>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <div id="news-dots" class="news-dots"></div>
                     </div>
                 </section>
 

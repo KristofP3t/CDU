@@ -401,6 +401,80 @@ const ImageSlider = (() => {
 })();
 
 // ============================================================================
+// Meldungen: Punkte zur Bildkachel-Reihe
+// Das Wischen selbst macht scroll-snap im CSS. Hier kommen nur die Punkte
+// dazu: sie zeigen, wo man sich befindet, und springen auf Klick zur Kachel.
+// ============================================================================
+
+const NewsCarousel = (() => {
+    let track = null;
+    let cards = [];
+    let dots = [];
+    let aktiv = -1;
+
+    // Die Kachel, deren linke Kante der linken Kante des sichtbaren
+    // Ausschnitts am naechsten liegt. Das deckt sich mit dem, was
+    // scroll-snap einrastet.
+    const sichtbareKachel = () => {
+        let treffer = 0;
+        let kleinsterAbstand = Infinity;
+        cards.forEach((card, i) => {
+            const abstand = Math.abs(card.offsetLeft - track.scrollLeft);
+            if (abstand < kleinsterAbstand) {
+                kleinsterAbstand = abstand;
+                treffer = i;
+            }
+        });
+        return treffer;
+    };
+
+    const markiere = () => {
+        const index = sichtbareKachel();
+        if (index === aktiv) return;
+        aktiv = index;
+        dots.forEach((dot, i) => {
+            if (i === index) {
+                dot.setAttribute('aria-current', 'true');
+            } else {
+                dot.removeAttribute('aria-current');
+            }
+        });
+    };
+
+    const init = () => {
+        track = document.getElementById('news-track');
+        const dotBox = document.getElementById('news-dots');
+        if (!track || !dotBox) return;
+
+        cards = Array.from(track.querySelectorAll('.news-card'));
+        // Bei einer einzelnen Kachel gibt es nichts zu blaettern.
+        if (cards.length < 2) return;
+
+        const fragment = document.createDocumentFragment();
+        dots = cards.map((card, i) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'news-dot';
+            dot.setAttribute('aria-label', `Meldung ${i + 1} von ${cards.length} anzeigen`);
+            dot.addEventListener('click', () => {
+                track.scrollTo({ left: card.offsetLeft });
+            });
+            fragment.append(dot);
+            return dot;
+        });
+        dotBox.append(fragment);
+
+        track.addEventListener('scroll', markiere, { passive: true });
+        // Auch beim Durchtabben durch die Kacheln scrollt der Browser – der
+        // Scroll-Handler oben faengt das mit ab.
+        window.addEventListener('resize', markiere);
+        markiere();
+    };
+
+    return { init };
+})();
+
+// ============================================================================
 // Suche (clientseitig)
 // ============================================================================
 
@@ -644,6 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Navigation.init();
     SearchManager.init();
     HomeEvents.init();
+    NewsCarousel.init();
     ImageSlider.init();
     // Kein VideoManager mehr: das Werbevideo startete per JS automatisch und
     // zog dabei rund 84 MB, ohne dass jemand auf Abspielen geklickt hatte.
