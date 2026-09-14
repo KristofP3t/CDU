@@ -1,6 +1,121 @@
 # CDU Schwerin – Startseiten-Relaunch 2026
 ## Implementierungsstatus
 
+---
+
+## Umbau der Startseite (September 2026)
+
+Die Startseite ist neu gegliedert. Reihenfolge jetzt: **Hero → Aktuelles
+(Meldungen + Termine nebeneinander) → Mitmachen → Grußwort → Video → Footer.**
+
+- **Hero**: Der Bildslider trägt jetzt eine Textebene mit H1, Kurztext und den
+  beiden Handlungszielen (Mitglied werden, Termine). Vorher hatte die
+  Startseite als einzige Seite des Projekts **keine H1** und der erste
+  Bildschirm war ohne Aussage. Punktnavigation ergänzt die Pfeile; die Punkte
+  entstehen in `js/main.js` aus der Zahl der Bilder.
+- **Aktuelles**: Meldungen (2/3) und Termine (1/3) stehen nebeneinander statt
+  untereinander. Gestapelt (ab 1024px abwärts) stehen die Termine oben.
+- **Meldungen**: Bildkacheln zum Wischen, im Aufbau von „TK aktuell" auf
+  tk.de übernommen – Bild, darauf unten ein Verlauf mit Kategorie und
+  Schlagzeile, darunter mittig die Punkte und rechts die Blätterpfeile. Das
+  Wischen macht `scroll-snap` im CSS; JavaScript steuert nur die Bedienung
+  bei. Geblättert wird **seitenweise**: bei zwei sichtbaren Kacheln ergeben
+  vier Meldungen zwei Punkte, auf dem Telefon bei einer sichtbaren Kachel
+  vier. Die Zahl der Punkte passt sich der Fensterbreite an. Auf dem Telefon
+  füllt eine Kachel die Breite und die nächste schaut am Rand hervor, die
+  Pfeile entfallen dort – wie in der Vorlage. Echte `<img>` statt
+  Inline-`background-image`, dadurch `width`/`height` und `loading="lazy"`.
+
+  Abweichung von der Vorlage: tk.de zeigt auf dem Desktop **drei** Kacheln,
+  wir zeigen **zwei**. Die Meldungen stehen bei uns in der 2/3-Spalte neben
+  den Terminen, nicht über die volle Seitenbreite. Zwei Kacheln sind dort
+  426px breit und damit ähnlich groß wie die 558px auf tk.de; drei wären je
+  280px, und die Schlagzeilen würden abgeschnitten.
+
+  Die **Kategorien** („Veranstaltungen", „OB-Wahl", „Landespolitik") sind aus
+  den Schlagzeilen abgeleitet und nutzen die Kategorieliste aus
+  `newsarchiv/index.html`. Sie stammen **nicht** aus der Live-Seite – dort
+  gepflegte Kategorien können abweichen. Sie stehen je einmal in
+  `index.html` und lassen sich dort direkt ändern.
+- **Mitmachen**: neues Farbband mit Mitglied werden / Spenden / Kontakt. Ersetzt
+  die in Commit `e740025` entfernte `features-section` und holt die
+  Conversion-Ziele aus dem Seitenfuß nach oben.
+- **Grußwort**: gekürzte Fassung des Textes von Jascha Rainer Dopp mit Porträt
+  und Link auf den Vorstand.
+- **Video**: mit Standbild (`assets/images/video-poster.jpg`, aus dem Video
+  extrahiert) und `preload="none"`. Das Autoplay per JS ist entfallen – es zog
+  bei jedem Aufruf der Startseite rund 84 MB, ohne dass jemand auf Abspielen
+  geklickt hatte.
+- **Footer**: statt zweier 250px-Social-Bilder jetzt Kontakt, zwei
+  Linklisten (Die Partei, Service) und eine Icon-Zeile. Das Raster nutzt
+  `auto-fit`, damit der schlankere Footer der Unterseiten davon unberührt bleibt.
+- **Meta**: `og:image` und `rel="canonical"` ergänzt. Das `twitter:card` stand
+  auf `summary_large_image`, ohne dass ein Bild hinterlegt war.
+- **Aufgeräumt**: totes CSS der entfernten Abschnitte (`hero-section`,
+  `banner-section`, `welcome-section`, `features-section`, `social-image`)
+  gelöscht; das `style`-Attribut am Menüpunkt „Mitglied werden" ist eine
+  Klasse geworden.
+
+### Nachgezogen
+
+- **Video komprimiert**: 80,6 MB → 12,5 MB (84 % kleiner). H.264 High, 1280×720,
+  CRF 23, AAC 128 kbit/s, `+faststart`. Länge, Ton und Bildinhalt unverändert.
+  Zusammen mit `preload="none"` lädt die Startseite jetzt gar kein Video mehr,
+  bis jemand auf Abspielen klickt.
+
+  ```
+  ffmpeg -i mitglieder-werbung.mp4 -c:v libx264 -preset slow -crf 23 \
+    -profile:v high -level 4.0 -pix_fmt yuv420p -vf "scale=1280:-2" \
+    -c:a aac -b:a 128k -ac 2 -movflags +faststart out.mp4
+  ```
+
+- **Footer auf allen 28 Seiten vereinheitlicht**: die Unterseiten hatten einen
+  verkürzten Footer, auf 23 der 28 Seiten war weder Impressum noch
+  Datenschutz verlinkt – für die Impressumspflicht müssen beide von jeder
+  Seite erreichbar sein. Alle Seiten tragen jetzt denselben Footer, die
+  internen Verweise sind je nach Ebenentiefe relativ gesetzt.
+
+### Blockiert: braucht Material von cdu-schwerin.com
+
+Beide Punkte hängen an Daten, die es nur auf der Live-Seite gibt. Aus der
+Entwicklungsumgebung ist `cdu-schwerin.com` nicht erreichbar – der
+Egress-Proxy weist die Verbindung mit 403 ab. Wer die Seite lokal vorliegen
+hat oder die Domain im Environment freischaltet, kann beides in einem Zug
+nachziehen.
+
+- **Meldungen ohne Datum.** Für einen Datums-Kicker auf den Meldungskacheln
+  fehlen die Veröffentlichungsdaten. Im Projekt gibt es sie nirgends: die
+  beiden Daten in `aktuelles/index.html` („25. Februar 2026", „November 2025")
+  sind **Veranstaltungs-, keine Veröffentlichungsdaten** und taugen deshalb
+  nicht als Kicker. Für die beiden übrigen Meldungen existiert lokal gar keine
+  Datumsangabe. Gebraucht wird je Meldung das Veröffentlichungsdatum der vier
+  in `index.html` verlinkten Beiträge.
+
+- **Meldungsbilder in höherer Auflösung.** Die vier Bilder liegen in 272×182
+  vor – auch in der Git-Historie gibt es keine größeren Fassungen. Gemessene
+  Skalierung der neuen Startseite:
+
+  | Ansicht | Darstellung | Gerätepixel | Faktor |
+  |---|---|---|---|
+  | 1440px @1x | 420px | 420px | 1,54× |
+  | 1440px @2x (Retina) | 420px | 840px | 3,09× |
+  | 390px @2x | 120px | 240px | 0,88× |
+  | 390px @3x | 120px | 360px | 1,32× |
+
+  Auf dem Telefon ist die Auflösung dank der Querformat-Karten ausreichend,
+  auf dem Desktop – besonders auf Retina-Displays – sind die Bilder sichtbar
+  weich. Gebraucht werden die Original-Beitragsbilder aus der
+  WordPress-Mediathek, sinnvoll wären rund 840px Breite.
+
+### Weiterhin offen
+
+- **Newsarchiv ohne Beiträge.** `newsarchiv/index.html` enthält nur Suchfeld,
+  Monatsliste und Kategorien; die Meldungen selbst liegen weiter auf der
+  Live-Seite. Solange das so ist, verweisen die Meldungen der Startseite und
+  die Kategorien des Newsarchivs dorthin.
+
+---
+
 ### ✅ Abgeschlossen
 
 #### HTML-Struktur & Semantik

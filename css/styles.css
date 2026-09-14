@@ -349,6 +349,11 @@ body {
     border-radius: 4px;
 }
 
+.nav-link-highlight {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
 .nav-link:hover,
 .nav-link:focus-visible {
     color: var(--color-primary);
@@ -607,8 +612,39 @@ body {
     background-color: rgba(82, 183, 193, 0.1);
 }
 
+/* Fuer Flaechen mit dunklem Grund (Hero, Videoabschnitt). Beide Varianten
+   haben denselben 2px-Rahmen wie .btn-secondary, damit nebeneinander
+   stehende Schaltflaechen gleich hoch sind. */
+.btn-accent {
+    background-color: var(--color-accent);
+    color: var(--color-dark);
+    border: 2px solid var(--color-accent);
+    font-weight: 700;
+}
+
+.btn-accent:hover,
+.btn-accent:focus-visible {
+    background-color: #e69500;
+    border-color: #e69500;
+    color: var(--color-dark);
+}
+
+.btn-on-dark {
+    background-color: transparent;
+    color: var(--color-white);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+}
+
+.btn-on-dark:hover,
+.btn-on-dark:focus-visible {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--color-white);
+    color: var(--color-white);
+}
+
 .btn-large {
-    padding: var(--spacing-lg) var(--spacing-xl);
+    padding: var(--spacing-sm) var(--spacing-lg);
     font-size: 18px;
 }
 
@@ -616,28 +652,135 @@ body {
    Sections & Main Content
    ========================================================================== */
 
+/* Die Startseite setzt den vertikalen Abstand pro Abschnitt selbst, damit
+   Hero und Farbbaender ueber die volle Fensterbreite laufen koennen. Alle
+   anderen Seiten behalten den Innenabstand von .site-main. */
 .site-main {
     padding: var(--spacing-xl) 0;
 }
 
-/* Slider Section */
-.slider-section {
-    background-color: var(--color-text);
-    position: relative;
-    width: 100%;
+.site-main-home {
+    padding: 0;
 }
 
-.slider-container {
-    max-width: 100%;
-    margin: 0 auto;
+/* Gemeinsamer Rhythmus: jeder Abschnitt der Startseite bringt denselben
+   vertikalen Abstand mit, unabhaengig davon ob er weiss oder farbig ist. */
+.section-plain,
+.engage,
+.greeting {
+    padding: var(--spacing-xl) 0;
+}
+
+/* ==========================================================================
+   Hero
+   Bildbuehne mit Textebene. Die Bilder liegen als absolute Ebene hinter dem
+   Text; der dunkle Grund von .hero traegt den Kontrast auch dann, wenn ein
+   Bild einmal nicht laedt.
+   ========================================================================== */
+
+.hero {
     position: relative;
+    background-color: var(--color-dark);
     overflow: hidden;
 }
 
+.hero-media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.hero-inner {
+    position: relative;
+    z-index: 2;
+    /* Nur die Blockrichtung setzen – die seitlichen Abstaende kommen von
+       .container und duerfen nicht ueberschrieben werden. */
+    padding-block: var(--spacing-xl);
+}
+
+.hero-panel {
+    max-width: 640px;
+    /* Deckender Kasten statt Text direkt auf dem Foto: der Kontrast haengt
+       so nicht davon ab, welches der fuenf Bilder gerade zu sehen ist. */
+    background-color: rgba(45, 60, 75, 0.92);
+    color: var(--color-white);
+    padding: var(--spacing-lg);
+    border-radius: 8px;
+}
+
+.hero-kicker {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-xs);
+}
+
+.hero-panel h1 {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: var(--spacing-sm);
+}
+
+.hero-claim {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #dce6ec;
+    margin-bottom: var(--spacing-lg);
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+@media (max-width: 1024px) {
+    .hero-panel h1 {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Auf schmalen Geraeten steht der Text unter dem Bild statt darauf:
+       ein 640px-Kasten laesst von einem 390px breiten Foto nichts uebrig. */
+    .hero-media {
+        position: relative;
+        height: 220px;
+    }
+
+    .hero-inner {
+        padding-block: var(--spacing-lg);
+    }
+
+    .hero-panel {
+        max-width: none;
+        background-color: transparent;
+        padding: 0;
+    }
+
+    .hero-panel h1 {
+        font-size: 26px;
+    }
+
+    .hero-claim {
+        font-size: 16px;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .hero-actions .btn {
+        flex: 1 1 auto;
+    }
+}
+
+/* Slider (Bildebene des Hero) */
 .slider-wrapper {
     position: relative;
     width: 100%;
-    height: 500px;
+    height: 100%;
+    min-height: 220px;
     overflow: hidden;
 }
 
@@ -665,8 +808,48 @@ body {
     bottom: var(--spacing-md);
     right: var(--spacing-md);
     display: flex;
-    gap: var(--spacing-sm);
+    align-items: center;
+    gap: var(--spacing-xs);
     z-index: 10;
+}
+
+.slider-dots {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-right: var(--spacing-xs);
+}
+
+/* Der Knopf ist 24px gross, der sichtbare Punkt nur 12px: genug Flaeche
+   zum Antippen, ohne dass die Leiste dominiert. */
+.slider-dot {
+    width: 24px;
+    height: 24px;
+    padding: 6px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider-dot::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.2s ease;
+}
+
+.slider-dot[aria-current="true"]::before {
+    background-color: var(--color-white);
+}
+
+.slider-dot:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 0;
 }
 
 .slider-btn {
@@ -695,13 +878,9 @@ body {
 }
 
 @media (max-width: 768px) {
-    .slider-wrapper {
-        height: 300px;
-    }
-
     .slider-nav {
-        bottom: var(--spacing-sm);
-        right: var(--spacing-sm);
+        bottom: var(--spacing-xs);
+        right: var(--spacing-xs);
     }
 
     .slider-btn {
@@ -711,97 +890,469 @@ body {
     }
 }
 
-/* Hero Section */
-.hero-section {
-    padding: var(--spacing-lg) 0;
-}
+/* ==========================================================================
+   Aktuelles: Meldungen (breit) und Termine (schmal) nebeneinander
+   ========================================================================== */
 
-.hero-grid {
+.aktuelles-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-lg);
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--spacing-xl);
     align-items: start;
 }
 
-.hero-item {
-    width: 100%;
-}
+@media (max-width: 1024px) {
+    .aktuelles-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
 
-.hero-item img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 4px;
-}
-
-.pdf-link {
-    display: block;
-    position: relative;
-    text-decoration: none;
-    border-radius: 4px;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .pdf-link:hover,
-    .pdf-link:focus-visible {
-        transform: scale(1.02);
+    /* Gestapelt stehen die Termine oben: sie sind die zeitkritische
+       Information, die Meldungen bleiben auch weiter unten aktuell. */
+    .aktuelles-grid .events-highlight {
+        order: -1;
     }
 }
 
-.pdf-link:focus-visible {
+/* ==========================================================================
+   News
+   Bildkacheln zum Wischen, Aufbau wie "TK aktuell" auf tk.de: Bild, darauf
+   unten ein Verlauf mit Kategorie und Schlagzeile, darunter Punkte fuer die
+   Position. Das Wischen uebernimmt scroll-snap, ganz ohne JavaScript – die
+   Punkte sind das einzige, was js/main.js dazu beisteuert.
+   ========================================================================== */
+
+.news-section {
+    /* Abstand kommt vom umgebenden .section-plain. */
+    padding: 0;
+}
+
+.news-track {
+    list-style: none;
+    display: flex;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    /* Der Scrollbalken wuerde unter den Kacheln einen grauen Streifen ziehen;
+       die Position zeigen die Punkte darunter. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* Bezugspunkt fuer offsetLeft der Kacheln: das ist genau die Position,
+       auf die scroll-snap einrastet und auf die die Punkte springen. */
+    position: relative;
+}
+
+.news-track::-webkit-scrollbar {
+    display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .news-track {
+        scroll-behavior: smooth;
+    }
+}
+
+.news-card {
+    /* Zwei Kacheln je Ansicht, die zweite haelftig sichtbar bleibt beim
+       Wischen als Hinweis erhalten. */
+    flex: 0 0 calc(50% - var(--spacing-md) / 2);
+    scroll-snap-align: start;
+}
+
+.news-link {
+    position: relative;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--color-white);
+}
+
+.news-link:focus-visible {
+    /* Nach innen gesetzt: ein aeusserer Rahmen wuerde vom scrollenden
+       Element abgeschnitten. */
+    outline: 3px solid var(--color-accent);
+    outline-offset: -3px;
+}
+
+.news-image {
+    display: block;
+    width: 100%;
+    /* Ohne height:auto gewinnt das height-Attribut des img-Elements gegen
+       aspect-ratio, und die Kachel bleibt 182px flach. */
+    height: auto;
+    /* 3:2 wie die Bilddateien selbst – so wird nichts beschnitten. */
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    background-color: var(--color-light-bg);
+    transition: transform 0.4s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .news-link:hover .news-image,
+    .news-link:focus-visible .news-image {
+        transform: scale(1.04);
+    }
+}
+
+/* Der Verlauf traegt den Kontrast der Schrift, unabhaengig davon wie hell
+   das Bild an dieser Stelle ist. Oben laeuft er transparent aus, damit die
+   Kante nicht als Balken sichtbar wird. */
+.news-caption {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-md);
+    background: linear-gradient(to top,
+        rgba(20, 28, 36, 0.95) 0%,
+        rgba(20, 28, 36, 0.88) 55%,
+        rgba(20, 28, 36, 0.5) 80%,
+        rgba(20, 28, 36, 0) 100%);
+}
+
+.news-kicker {
+    display: block;
+    font-size: 14px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    color: var(--color-white);
+}
+
+.news-title {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-white);
+    /* Haelt auch lange Schlagzeilen in der Kachel. */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: break-word;
+}
+
+/* Bedienzeile wie auf tk.de: Punkte mittig, Pfeile rechtsbuendig. Die
+   aeusseren Spalten sind gleich breit, damit die Punkte zur Reihe mittig
+   stehen und nicht zu den Pfeilen verrutschen. */
+.news-controls {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    margin-top: var(--spacing-md);
+}
+
+/* Punkte: kleiner Kreis, die aktuelle Seite ein laengerer Balken. */
+.news-dots {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.news-arrows {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.news-arrow {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #c2ccd4;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--color-dark);
+    cursor: pointer;
+    transition: var(--transition-color);
+}
+
+.news-arrow:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.news-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.news-arrow:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
 }
 
-.pdf-label {
-    position: absolute;
-    bottom: var(--spacing-md);
-    left: var(--spacing-md);
+.news-arrow svg {
+    width: 20px;
+    height: 20px;
+}
+
+.news-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background-color: #c2ccd4;
+    cursor: pointer;
+    transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.news-dot[aria-current="true"] {
+    width: 28px;
     background-color: var(--color-dark);
-    color: var(--color-white);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: 4px;
-    font-weight: bold;
-    font-size: 14px;
+}
+
+.news-dot:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+    /* Wie auf tk.de: eine Kachel fuellt die Breite, die naechste schaut
+       am Rand hervor und zeigt damit, dass sich wischen laesst. */
+    .news-card {
+        flex: 0 0 85%;
+    }
+
+    /* Auf dem Telefon wird gewischt – die Vorlage zeigt dort ebenfalls
+       nur die Punkte. */
+    .news-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .news-dots {
+        grid-column: 1;
+    }
+
+    .news-arrows {
+        display: none;
+    }
+
+    .news-caption {
+        padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-sm);
+    }
+
+    .news-title {
+        font-size: 18px;
+    }
+}
+
+/* ==========================================================================
+   Mitmachen
+   ========================================================================== */
+
+.engage {
+    background-color: var(--color-light-bg);
+}
+
+.section-head.section-head-center {
+    justify-content: center;
+    text-align: center;
+}
+
+.engage-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.engage-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-white);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.engage-card:hover,
+.engage-card:focus-within {
+    border-color: var(--color-accent);
+    box-shadow: 0 4px 12px rgba(82, 183, 193, 0.2);
+}
+
+.engage-icon {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-primary);
+}
+
+.engage-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.engage-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.engage-card h3 a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.engage-card h3 a:hover,
+.engage-card h3 a:focus-visible {
+    color: var(--color-primary);
+}
+
+.engage-card h3 a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Schiebt den Link ans Kartenende, damit die Links aller drei Karten auf
+   einer Linie stehen. */
+.engage-card p {
+    flex: 1;
+    color: var(--color-text-light);
+    font-size: 15px;
+    margin-bottom: var(--spacing-md);
+}
+
+.engage-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    align-self: start;
+}
+
+.engage-link:hover,
+.engage-link:focus-visible {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+.engage-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
 }
 
 @media (max-width: 1024px) {
-    .hero-grid {
+    .engage-grid {
         grid-template-columns: 1fr;
     }
 }
 
-/* Banner Section */
-.banner-section {
-    padding: var(--spacing-lg) 0;
+@media (max-width: 768px) {
+    .engage-grid {
+        gap: var(--spacing-sm);
+    }
+
+    .engage-card {
+        padding: var(--spacing-md);
+    }
+
+    .engage-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .engage-card h3 {
+        font-size: 18px;
+    }
 }
 
-.banner-section img {
+/* ==========================================================================
+   Grusswort
+   ========================================================================== */
+
+.greeting-inner {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: var(--spacing-xl);
+    align-items: center;
+    max-width: 1040px;
+}
+
+.greeting-media img {
     width: 100%;
     height: auto;
+    border-radius: 50%;
     display: block;
-    border-radius: 4px;
 }
 
-/* Video Section */
+.greeting-body h2 {
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: var(--spacing-md);
+}
+
+.greeting-text {
+    font-family: var(--font-secondary);
+    font-size: 19px;
+    line-height: 1.75;
+    margin-bottom: var(--spacing-md);
+}
+
+.greeting-signature {
+    font-size: 15px;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-md);
+}
+
+.greeting-signature strong {
+    color: var(--color-text);
+}
+
+@media (max-width: 768px) {
+    .greeting-inner {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        justify-items: center;
+        text-align: center;
+    }
+
+    .greeting-media {
+        max-width: 160px;
+    }
+
+    .greeting-body h2 {
+        font-size: 24px;
+    }
+
+    .greeting-text {
+        font-size: 17px;
+        text-align: left;
+    }
+}
+
+/* ==========================================================================
+   Video
+   ========================================================================== */
+
 .video-section {
-    padding: var(--spacing-xl) 0;
     background-color: var(--color-dark);
     color: var(--color-white);
     text-align: center;
     border-radius: 8px;
-    overflow: hidden;
+    padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.video-title {
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: var(--spacing-lg);
 }
 
 .video-container {
-    position: relative;
     width: 100%;
     max-width: 800px;
-    margin: 0 auto var(--spacing-xl) auto;
+    margin: 0 auto var(--spacing-lg) auto;
     aspect-ratio: 16 / 9;
-    background-color: var(--color-text);
+    background-color: #000;
+    border-radius: 4px;
+    overflow: hidden;
 }
 
 .membership-video {
@@ -811,283 +1362,13 @@ body {
     display: block;
 }
 
-.membership-cta {
-    display: flex;
-    justify-content: center;
-}
-
-.membership-cta .btn {
-    background-color: var(--color-white);
-    color: var(--color-dark);
-    font-weight: bold;
-}
-
-.membership-cta .btn:hover,
-.membership-cta .btn:focus {
-    background-color: var(--color-accent);
-    color: var(--color-white);
-}
-
-/* Welcome Section */
-.welcome-section {
-    padding: var(--spacing-xl) 0;
-    background-color: #ddeef1;
-    border-radius: 8px;
-    padding: var(--spacing-xl);
-}
-
-.welcome-section h1 {
-    font-size: 32px;
-    font-weight: 400;
-    text-align: center;
-    margin-bottom: var(--spacing-lg);
-    color: var(--color-text);
-}
-
-.welcome-content {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: var(--spacing-lg);
-    align-items: start;
-}
-
-.welcome-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 50%;
-}
-
-.welcome-text {
-    font-family: var(--font-secondary);
-    font-size: 18px;
-    line-height: 1.8;
-}
-
-.welcome-text p {
-    margin-bottom: var(--spacing-md);
-}
-
-.welcome-text p:last-child {
-    margin-bottom: 0;
-}
-
 @media (max-width: 768px) {
-    .welcome-section h1 {
-        font-size: 24px;
+    .video-section {
+        padding: var(--spacing-lg) var(--spacing-sm);
     }
 
-    .welcome-content {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-
-    .welcome-image {
-        max-width: 200px;
-        margin: 0 auto;
-    }
-
-    .welcome-text {
-        font-size: 16px;
-    }
-}
-
-/* Features Section */
-.features-section {
-    padding: var(--spacing-xl) 0;
-}
-
-.features-section h2 {
-    font-size: 28px;
-    font-weight: 400;
-    margin-bottom: var(--spacing-lg);
-    text-align: center;
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-lg);
-}
-
-.feature-card {
-    background-color: var(--color-white);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: var(--spacing-lg);
-    text-align: center;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.feature-card:hover,
-.feature-card:focus-within {
-    border-color: var(--color-accent);
-    box-shadow: 0 4px 12px rgba(82, 183, 193, 0.15);
-}
-
-.feature-icon {
-    margin-bottom: var(--spacing-md);
-}
-
-.feature-icon svg {
-    width: 48px;
-    height: 48px;
-    color: var(--color-primary);
-}
-
-.feature-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: var(--spacing-sm);
-    color: var(--color-text);
-}
-
-.feature-card h3 a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.feature-card h3 a:hover,
-.feature-card h3 a:focus-visible {
-    color: var(--color-primary);
-}
-
-.feature-card h3 a:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-}
-
-.feature-card p {
-    color: var(--color-text-light);
-    font-size: 14px;
-    margin-bottom: var(--spacing-md);
-}
-
-.feature-link {
-    color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: color 0.2s ease, text-decoration 0.2s ease;
-}
-
-.feature-link:hover,
-.feature-link:focus-visible {
-    color: var(--color-accent);
-    text-decoration: underline;
-}
-
-.feature-link:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-}
-
-@media (max-width: 1024px) {
-    .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .feature-card {
-        padding: var(--spacing-md);
-    }
-
-    .features-section h2 {
-        font-size: 24px;
-    }
-}
-
-/* News Section */
-.news-section {
-    padding: var(--spacing-xl) 0;
-}
-
-.news-section h2 {
-    font-size: 28px;
-    font-weight: 400;
-    margin-bottom: var(--spacing-lg);
-}
-
-.news-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
-}
-
-.news-card {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .news-card:hover,
-    .news-card:focus-within {
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        transform: translateY(-2px);
-    }
-}
-
-.news-link {
-    display: block;
-    text-decoration: none;
-    color: var(--color-text);
-    border-radius: 8px;
-}
-
-.news-link:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-}
-
-.news-image {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background-size: cover;
-    background-position: center;
-}
-
-.news-card h3 {
-    padding: var(--spacing-md);
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.4;
-    color: var(--color-text);
-}
-
-.news-link:hover h3,
-.news-link:focus h3 {
-    color: var(--color-primary);
-    transition: color 0.2s ease;
-}
-
-.news-all {
-    text-align: center;
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--color-border);
-}
-
-@media (max-width: 1024px) {
-    .news-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .news-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .news-section h2 {
-        font-size: 24px;
+    .video-title {
+        font-size: 22px;
     }
 }
 
@@ -1101,9 +1382,12 @@ body {
     padding: var(--spacing-xl) 0 0 0;
 }
 
+/* auto-fit statt fester Spaltenzahl: die Startseite hat vier Abschnitte,
+   die Unterseiten nur den Kontaktblock – beides bricht damit von selbst
+   richtig um. */
 .footer-main {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: var(--spacing-lg);
     padding-bottom: var(--spacing-xl);
     border-bottom: 1px solid rgba(255,255,255,0.2);
@@ -1165,29 +1449,68 @@ body {
     outline-offset: 2px;
 }
 
-.social-image {
-    display: block;
-    border-radius: 4px;
-    overflow: hidden;
-    transition: transform 0.2s ease;
+.footer-sitemap ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .social-image:hover,
-    .social-image:focus-visible {
-        transform: scale(1.02);
-    }
+.footer-sitemap a {
+    color: #b0d4da;
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.2s;
 }
 
-.social-image:focus-visible {
+.footer-sitemap a:hover,
+.footer-sitemap a:focus-visible {
+    color: var(--color-white);
+    text-decoration: underline;
+}
+
+.footer-sitemap a:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
 }
 
-.social-image img {
-    width: 100%;
-    height: auto;
-    display: block;
+.footer-social-text {
+    font-size: 15px;
+    color: #b0d4da;
+    margin-bottom: var(--spacing-md);
+}
+
+.footer-social {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: #b0d4da;
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.2s;
+}
+
+.footer-social-link:hover,
+.footer-social-link:focus-visible {
+    color: var(--color-white);
+    text-decoration: underline;
+}
+
+.footer-social-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.footer-cta {
+    display: inline-block;
+    margin-top: var(--spacing-md);
+    align-self: start;
 }
 
 .footer-bottom {
@@ -1218,17 +1541,7 @@ body {
     outline-offset: 2px;
 }
 
-@media (max-width: 1024px) {
-    .footer-main {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
 @media (max-width: 768px) {
-    .footer-main {
-        grid-template-columns: 1fr;
-    }
-
     .site-footer {
         padding: var(--spacing-lg) 0 0 0;
     }
@@ -1702,7 +2015,22 @@ body {
    ========================================================================== */
 
 .events-highlight {
-    padding: var(--spacing-xl) 0;
+    /* Abstand kommt vom umgebenden .section-plain. */
+    padding: 0;
+}
+
+/* In der schmalen Spalte neben den Meldungen ist weniger Platz als in der
+   fruehereren Variante ueber die volle Seitenbreite. */
+.aktuelles-grid .home-event {
+    gap: var(--spacing-md);
+}
+
+.aktuelles-grid .home-event-arrow {
+    display: none;
+}
+
+.aktuelles-grid .home-event-title {
+    font-size: 17px;
 }
 
 .section-head {

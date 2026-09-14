@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Willkommen beim CDU Kreisverband Schwerin</title>
     <meta name="description" content="Wir informieren Sie über die Arbeit und die Ziele der CDU in der Landeshauptstadt Schwerin.">
+    <link rel="canonical" href="https://cdu-schwerin.com/">
 
     <!-- Open Graph / Social Sharing -->
     <meta property="og:locale" content="de_DE">
@@ -13,6 +14,12 @@
     <meta property="og:description" content="Wir informieren Sie über die Arbeit und die Ziele der CDU in der Landeshauptstadt Schwerin.">
     <meta property="og:url" content="https://cdu-schwerin.com/">
     <meta property="og:site_name" content="CDU Kreisverband Landeshauptstadt Schwerin">
+    <!-- Absolute URL, weil Facebook/WhatsApp relative Pfade nicht aufloesen.
+         Greift, sobald die Seite unter cdu-schwerin.com ausgeliefert wird. -->
+    <meta property="og:image" content="https://cdu-schwerin.com/assets/images/slider-1-schloss.jpg">
+    <meta property="og:image:width" content="1400">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Das Schweriner Schloss">
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- Preconnect to GA (optional) -->
@@ -38,36 +45,36 @@
 
     <!-- Header -->
     <header id="header" class="site-header" role="banner">
+
+        <!-- Top Bar with Contact & Social -->
         <div class="top-bar-outer">
-        <div class="container">
-            <!-- Top Bar with Contact & Social -->
-            <div class="top-bar">
-                <div class="top-bar-left">
-                    <a href="tel:+493855900426" class="top-bar-item">☎ 0385 - 59 00 426</a>
-                    <a href="mailto:kreisverband@cdu-schwerin.com" class="top-bar-item">✉ kreisverband@cdu-schwerin.com</a>
-                </div>
-                <nav class="top-bar-social" role="navigation" aria-label="Soziale Netzwerke">
-                    <a href="https://www.facebook.com/CduKreisverbandSchwerin" rel="external" aria-label="Facebook" class="social-icon">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                        </svg>
-                    </a>
-                    <a href="https://www.instagram.com/schwerin_cdu/" rel="external" aria-label="Instagram" class="social-icon">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <circle cx="12" cy="12" r="3" fill="currentColor"/>
-                            <circle cx="18" cy="6" r="0.9" fill="currentColor"/>
-                        </svg>
-                    </a>
-                    <!-- Instagram-Handle: schwerin_cdu (aktuell, prüfen ob cduschwerin richtig ist) -->
-                </nav>
-            </div>
-
-            <!-- Branding & Navigation -->
-            </div>
-            </div>
-
             <div class="container">
+                <div class="top-bar">
+                    <div class="top-bar-left">
+                        <a href="tel:+493855900426" class="top-bar-item">☎ 0385 - 59 00 426</a>
+                        <a href="mailto:kreisverband@cdu-schwerin.com" class="top-bar-item">✉ kreisverband@cdu-schwerin.com</a>
+                    </div>
+                    <nav class="top-bar-social" role="navigation" aria-label="Soziale Netzwerke">
+                        <a href="https://www.facebook.com/CduKreisverbandSchwerin" rel="external" aria-label="Facebook" class="social-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/schwerin_cdu/" rel="external" aria-label="Instagram" class="social-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                                <circle cx="18" cy="6" r="0.9" fill="currentColor"/>
+                            </svg>
+                        </a>
+                        <!-- Instagram-Handle: schwerin_cdu (aktuell, prüfen ob cduschwerin richtig ist) -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Branding & Navigation -->
+        <div class="container">
             <div class="header-main">
                 <div class="site-branding">
                     <a href="./" rel="home" class="logo-link">
@@ -169,7 +176,7 @@
                             <a href="spenden/" class="nav-link">Spenden</a>
                         </li>
                         <li class="nav-item">
-                            <a href="mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a>
+                            <a href="mitglied-werden/" class="nav-link nav-link-highlight">Mitglied werden</a>
                         </li>
                     </ul>
                 </nav>
@@ -178,10 +185,16 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main" class="site-main" role="main">
+    <main id="main" class="site-main site-main-home" role="main">
 
-        <section class="slider-section" aria-label="Bildergalerie der Landeshauptstadt Schwerin">
-            <div class="slider-container">
+        <!-- ==================================================================
+             1. Hero: Bildbuehne mit Uberschrift, Kurztext und den beiden
+             wichtigsten Handlungszielen. Die Bilder laufen weiter als Slider,
+             tragen jetzt aber eine Aussage – vorher war der erste Bildschirm
+             textlos.
+             ================================================================== -->
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-media" role="group" aria-label="Bildergalerie der Landeshauptstadt Schwerin">
                 <div class="slider-wrapper">
                     <img src="assets/images/slider-1-schloss.jpg" alt="Schweriner Schloss" width="1400" height="500" loading="eager" fetchpriority="high">
                     <img src="assets/images/slider-2-marstall.jpg" alt="Marstall Schwerin" width="1400" height="500" loading="lazy">
@@ -190,80 +203,206 @@
                     <img src="assets/images/slider-5-pfaffenteich.jpg" alt="Pfaffenteich Schwerin" width="1400" height="500" loading="lazy">
                 </div>
                 <div class="slider-nav">
-                    <button class="slider-btn prev" aria-label="Vorheriges Bild">‹</button>
-                    <button class="slider-btn next" aria-label="Nächstes Bild">›</button>
+                    <!-- Punkte werden in js/main.js aus der Zahl der Bilder erzeugt,
+                         damit Markup und Slider nicht auseinanderlaufen. -->
+                    <div id="slider-dots" class="slider-dots"></div>
+                    <button class="slider-btn prev" type="button" aria-label="Vorheriges Bild">‹</button>
+                    <button class="slider-btn next" type="button" aria-label="Nächstes Bild">›</button>
+                </div>
+            </div>
+
+            <div class="hero-inner container">
+                <div class="hero-panel">
+                    <p class="hero-kicker">Herzlich willkommen</p>
+                    <h1 id="hero-title">CDU Kreisverband Landeshauptstadt Schwerin</h1>
+                    <p class="hero-claim">Wir informieren Sie über die Arbeit und die Ziele der CDU in der Landeshauptstadt Schwerin.</p>
+                    <div class="hero-actions">
+                        <a href="mitglied-werden/" class="btn btn-accent">Mitglied werden</a>
+                        <a href="termine/" class="btn btn-on-dark">Unsere Termine</a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <div class="container">
+        <!-- ==================================================================
+             2. Aktuelles: Meldungen und Termine nebeneinander statt
+             untereinander. Auf schmalen Geraeten stapeln sie, die Termine
+             stehen dann oben (siehe .aktuelles-grid im CSS).
+             ================================================================== -->
+        <div class="section-plain">
+            <div class="container aktuelles-grid">
 
-            <!-- Naechste Termine -->
-            <section class="events-highlight" aria-labelledby="events-highlight-title">
-                <div class="section-head">
-                    <h2 id="events-highlight-title">Unsere nächsten Termine</h2>
-                    <a href="termine/" class="section-link">Alle Termine anzeigen <span aria-hidden="true">→</span></a>
-                </div>
-                <!-- Wird aus js/events-data.js befuellt. Die Auswahl "naechste drei"
-                     haengt vom Tagesdatum ab und kann deshalb nicht fest im Markup
-                     stehen, ohne beim naechsten Termin zu veralten. -->
-                <div id="home-events" class="home-events"></div>
-            </section>
+                <section class="news-section" aria-labelledby="news-title">
+                    <div class="section-head">
+                        <h2 id="news-title">Letzte Meldungen</h2>
+                        <a href="https://cdu-schwerin.com/newsarchiv/" class="section-link">Alle Meldungen <span aria-hidden="true">→</span></a>
+                    </div>
 
-            <section class="news-section">
-                <h2>Letzte Meldungen</h2>
-                <div class="news-grid">
-                    <article class="news-card">
-                        <h3><a href="https://cdu-schwerin.com/einladung-wahlkampfauftakt/" class="news-link">
-                            <span class="news-image" style="background-image: url('assets/images/news-1.jpg')"></span>
-                            Einladung Wahlkampfauftakt
-                        </a></h3>
-                    </article>
+                    <!-- Bildkacheln zum Wischen, Aufbau wie "TK aktuell" auf tk.de:
+                         Bild, darauf unten ein Verlauf mit Kategorie und
+                         Schlagzeile, darunter Punkte fuer die Position. Das
+                         Wischen macht scroll-snap im CSS, die Punkte sind das
+                         einzige, wofuer es JavaScript braucht.
 
-                    <article class="news-card">
-                        <h3><a href="https://cdu-schwerin.com/cdu-schwerin-nominiert-sebastian-ehlers-einstimmig-als-kandidaten-fuer-die-ob-wahl/" class="news-link">
-                            <span class="news-image" style="background-image: url('assets/images/news-2.jpg')"></span>
-                            CDU Schwerin nominiert Sebastian Ehlers einstimmig als Kandidaten für die OB-Wahl
-                        </a></h3>
-                    </article>
+                         Die Meldungen verweisen noch auf die WordPress-Seite:
+                         newsarchiv/ ist im neuen Projekt bisher ohne Artikel.
+                         Die Kategorien stammen aus der Liste in newsarchiv/. -->
+                    <div class="news-carousel">
+                        <ul class="news-track" id="news-track">
+                            <li class="news-card">
+                                <a href="https://cdu-schwerin.com/einladung-wahlkampfauftakt/" class="news-link">
+                                    <img class="news-image" src="assets/images/news-1.jpg" alt="" width="272" height="182" loading="lazy">
+                                    <div class="news-caption">
+                                        <span class="news-kicker">Veranstaltungen</span>
+                                        <h3 class="news-title">Einladung Wahlkampfauftakt</h3>
+                                    </div>
+                                </a>
+                            </li>
 
-                    <article class="news-card">
-                        <h3><a href="https://cdu-schwerin.com/cdu-kreisvorstand-schlaegt-stadtpraesident-sebastian-ehlers-als-ob-kandidaten-vor/" class="news-link">
-                            <span class="news-image" style="background-image: url('assets/images/news-3.jpg')"></span>
-                            CDU-Kreisvorstand schlägt Stadtpräsident Sebastian Ehlers als OB-Kandidaten vor
-                        </a></h3>
-                    </article>
+                            <li class="news-card">
+                                <a href="https://cdu-schwerin.com/cdu-schwerin-nominiert-sebastian-ehlers-einstimmig-als-kandidaten-fuer-die-ob-wahl/" class="news-link">
+                                    <img class="news-image" src="assets/images/news-2.jpg" alt="" width="272" height="182" loading="lazy">
+                                    <div class="news-caption">
+                                        <span class="news-kicker">OB-Wahl</span>
+                                        <h3 class="news-title">Sebastian Ehlers einstimmig als OB-Kandidat nominiert</h3>
+                                    </div>
+                                </a>
+                            </li>
 
-                    <article class="news-card">
-                        <h3><a href="https://cdu-schwerin.com/cdu-schwerin-geht-mit-sebastian-ehlers-und-dorin-muethel-brenncke-in-den-landtagswahlkampf/" class="news-link">
-                            <span class="news-image" style="background-image: url('assets/images/news-4.jpg')"></span>
-                            CDU Schwerin geht mit Sebastian Ehlers und Dorin Müthel-Brenncke in den Landtagswahlkampf
-                        </a></h3>
-                    </article>
-                </div>
-                <div class="news-all">
-                    <a href="https://cdu-schwerin.com/newsarchiv/" class="btn btn-secondary">Alle Meldungen anzeigen</a>
-                </div>
-            </section>
+                            <li class="news-card">
+                                <a href="https://cdu-schwerin.com/cdu-kreisvorstand-schlaegt-stadtpraesident-sebastian-ehlers-als-ob-kandidaten-vor/" class="news-link">
+                                    <img class="news-image" src="assets/images/news-3.jpg" alt="" width="272" height="182" loading="lazy">
+                                    <div class="news-caption">
+                                        <span class="news-kicker">OB-Wahl</span>
+                                        <h3 class="news-title">Kreisvorstand schlägt Sebastian Ehlers als OB-Kandidaten vor</h3>
+                                    </div>
+                                </a>
+                            </li>
 
-            <section class="video-section">
-                <div class="video-container">
-                    <!-- Video element without autoplay attribute for accessibility,
-                         autoplay is added via JS based on prefers-reduced-motion -->
-                    <video muted loop playsinline controls class="membership-video" aria-label="CDU Mitglieder-Werbevideo">
-                        <source src="assets/video/mitglieder-werbung.mp4" type="video/mp4">
-                        Ihr Browser unterstützt das Video-Format nicht.
-                    </video>
-                </div>
-                <div class="membership-cta">
-                    <a href="mitglied-werden/" class="btn btn-large">
-                        <img src="assets/images/btn-mitglied.png" alt="" width="200" height="200" loading="lazy">
-                        Jetzt Mitglied werden
-                    </a>
-                </div>
-            </section>
+                            <li class="news-card">
+                                <a href="https://cdu-schwerin.com/cdu-schwerin-geht-mit-sebastian-ehlers-und-dorin-muethel-brenncke-in-den-landtagswahlkampf/" class="news-link">
+                                    <img class="news-image" src="assets/images/news-4.jpg" alt="" width="272" height="182" loading="lazy">
+                                    <div class="news-caption">
+                                        <span class="news-kicker">Landespolitik</span>
+                                        <h3 class="news-title">Mit Sebastian Ehlers und Dorin Müthel-Brenncke in den Landtagswahlkampf</h3>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="news-controls">
+                            <div id="news-dots" class="news-dots"></div>
+                            <div id="news-arrows" class="news-arrows"></div>
+                        </div>
+                    </div>
+                </section>
 
+                <section class="events-highlight" aria-labelledby="events-highlight-title">
+                    <div class="section-head">
+                        <h2 id="events-highlight-title">Nächste Termine</h2>
+                        <a href="termine/" class="section-link">Alle Termine <span aria-hidden="true">→</span></a>
+                    </div>
+                    <!-- Wird aus js/events-data.js befuellt. Die Auswahl "naechste drei"
+                         haengt vom Tagesdatum ab und kann deshalb nicht fest im Markup
+                         stehen, ohne beim naechsten Termin zu veralten. -->
+                    <div id="home-events" class="home-events"></div>
+                </section>
+
+            </div>
         </div>
+
+        <!-- ==================================================================
+             3. Mitmachen: der erste Farbwechsel der Seite und zugleich die
+             Stelle, an der Mitgliedschaft, Spende und Kontakt nicht mehr nur
+             im Burger-Menue stehen.
+             ================================================================== -->
+        <section class="engage" aria-labelledby="engage-title">
+            <div class="container">
+                <div class="section-head section-head-center">
+                    <h2 id="engage-title">Mitmachen</h2>
+                </div>
+                <div class="engage-grid">
+
+                    <article class="engage-card">
+                        <div class="engage-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+                            </svg>
+                        </div>
+                        <h3><a href="mitglied-werden/">Mitglied werden</a></h3>
+                        <p>Wir gestalten Politik für die Landeshauptstadt Schwerin. Wenn Sie etwas bewegen wollen – machen Sie mit! In sechs Schritten zur Mitgliedschaft.</p>
+                        <a href="mitglied-werden/" class="engage-link">Zum Online-Antrag <span aria-hidden="true">→</span></a>
+                    </article>
+
+                    <article class="engage-card">
+                        <div class="engage-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </div>
+                        <h3><a href="spenden/">Spenden</a></h3>
+                        <p>Nur ein kleinerer Teil unserer Mittel wird durch die staatliche Parteienfinanzierung bereitgestellt. Ein großer Teil stammt aus den Beiträgen und Spenden unserer Mitglieder und Freunde.</p>
+                        <a href="spenden/" class="engage-link">Bankverbindung ansehen <span aria-hidden="true">→</span></a>
+                    </article>
+
+                    <article class="engage-card">
+                        <div class="engage-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <h3><a href="kontakt/">Kontakt</a></h3>
+                        <p>Sie haben eine Frage, eine Anregung oder Kritik? Der schnellste Weg, mit uns in Kontakt zu treten, ist unser Formular oder ein Anruf in der Geschäftsstelle.</p>
+                        <a href="kontakt/" class="engage-link">Nachricht schreiben <span aria-hidden="true">→</span></a>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             4. Grusswort: gibt der Seite ein Gesicht. Gekuerzte Fassung des
+             Textes, der bis Commit e740025 auf der Startseite stand; der
+             vollstaendige Vorstand steht unter der-vorstand/.
+             ================================================================== -->
+        <section class="greeting" aria-labelledby="greeting-title">
+            <div class="container greeting-inner">
+                <div class="greeting-media">
+                    <img src="assets/images/jascha-dopp.png" alt="Jascha Rainer Dopp, Vorsitzender des CDU Kreisverbandes Schwerin" width="600" height="600" loading="lazy">
+                </div>
+                <div class="greeting-body">
+                    <h2 id="greeting-title">Ein Wort des Kreisvorsitzenden</h2>
+                    <p class="greeting-text">„Als Vorsitzender des CDU Kreisverbandes der Landeshauptstadt Schwerin begrüße ich Sie ganz herzlich auf unseren Internetseiten. Viele Schweriner aus den verschiedensten Bereichen engagieren sich in unserem Kreisverband. Mischen Sie sich ein, denn nur wer mitmacht kann etwas für unsere Stadt und unser Land erreichen."</p>
+                    <p class="greeting-signature">
+                        <strong>Jascha Rainer Dopp</strong><br>
+                        Vorsitzender des CDU Kreisverbandes Schwerin
+                    </p>
+                    <a href="der-vorstand/" class="section-link">Der gesamte Vorstand <span aria-hidden="true">→</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             5. Video: mit Standbild und preload="none". Die Datei ist rund
+             84 MB gross – ohne diese beiden Angaben beginnt der Download bei
+             jedem Aufruf der Startseite, auch wenn niemand abspielt.
+             ================================================================== -->
+        <div class="section-plain">
+            <div class="container">
+                <section class="video-section" aria-labelledby="video-title">
+                    <h2 id="video-title" class="video-title">Warum sich Mitmachen lohnt</h2>
+                    <div class="video-container">
+                        <video class="membership-video" controls muted playsinline preload="none"
+                               poster="assets/images/video-poster.jpg"
+                               aria-label="CDU Mitglieder-Werbevideo">
+                            <source src="assets/video/mitglieder-werbung.mp4" type="video/mp4">
+                            Ihr Browser unterstützt das Video-Format nicht.
+                        </video>
+                    </div>
+                    <a href="mitglied-werden/" class="btn btn-accent btn-large">Jetzt Mitglied werden</a>
+                </section>
+            </div>
+        </div>
+
     </main>
 
     <!-- Footer -->
@@ -281,26 +420,56 @@
                         Fax: (0385) 59 00 421<br>
                         E-Mail: <a href="mailto:kreisverband@cdu-schwerin.com">kreisverband@cdu-schwerin.com</a>
                     </address>
-                    <nav class="footer-links">
+                    <nav class="footer-links" aria-label="Rechtliches">
                         <a href="impressum/">Impressum</a>
                         <a href="datenschutz/">Datenschutz</a>
                     </nav>
                 </section>
 
+                <!-- Sitemap: zweiter Weg in die Seite, ohne das Burger-Menue -->
+                <nav class="footer-section footer-sitemap" aria-label="Übersicht">
+                    <h3>Die Partei</h3>
+                    <ul>
+                        <li><a href="der-vorstand/">Der Vorstand</a></li>
+                        <li><a href="geschaeftsstelle-der-cdu-schwerin/">Geschäftsstelle</a></li>
+                        <li><a href="stadtbezirksverbaende/">Stadtbezirksverbände</a></li>
+                        <li><a href="vereinigungen/">Vereinigungen</a></li>
+                    </ul>
+                </nav>
+
+                <nav class="footer-section footer-sitemap" aria-label="Service und Aktuelles">
+                    <h3>Service</h3>
+                    <ul>
+                        <li><a href="termine/">Termine</a></li>
+                        <li><a href="newsarchiv/">Newsarchiv</a></li>
+                        <li><a href="kontakt/">Kontakt</a></li>
+                        <li><a href="links/">Links &amp; Downloads</a></li>
+                        <li><a href="wahlarchiv/">Wahlarchiv</a></li>
+                    </ul>
+                </nav>
+
                 <!-- Social Media -->
                 <section class="footer-section">
-                    <h3>Unsere Facebook-Seite</h3>
-                    <a href="https://www.facebook.com/CduKreisverbandSchwerin" rel="external" class="social-image">
-                        <img src="assets/images/footer-facebook.jpg" alt="Facebook-Seite der CDU Schwerin" width="250" height="250" loading="lazy">
-                    </a>
-                </section>
-
-                <section class="footer-section">
-                    <h3>Unser Instagram-Account</h3>
-                    <a href="https://www.instagram.com/schwerin_cdu/" rel="external" class="social-image">
-                        <img src="assets/images/footer-instagram.jpg" alt="Instagram-Account der CDU Schwerin" width="250" height="250" loading="lazy">
-                    </a>
-                    <!-- Instagram-Handle: schwerin_cdu (aktuell, prüfen ob cduschwerin richtig ist) -->
+                    <h3>Folgen Sie uns</h3>
+                    <p class="footer-social-text">Aktuelles aus dem Kreisverband gibt es auch auf Facebook und Instagram.</p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/CduKreisverbandSchwerin" rel="external" class="footer-social-link">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Facebook
+                        </a>
+                        <a href="https://www.instagram.com/schwerin_cdu/" rel="external" class="footer-social-link">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                                <circle cx="18" cy="6" r="0.9" fill="currentColor"/>
+                            </svg>
+                            Instagram
+                        </a>
+                        <!-- Instagram-Handle: schwerin_cdu (aktuell, prüfen ob cduschwerin richtig ist) -->
+                    </div>
+                    <a href="mitglied-werden/" class="btn btn-accent footer-cta">Mitglied werden</a>
                 </section>
 
             </div>

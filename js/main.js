@@ -286,8 +286,33 @@ const Navigation = (() => {
 const ImageSlider = (() => {
     let currentIndex = 0;
     let slides = [];
+    let dots = [];
     let autoplayEnabled = true;
     let autoplayInterval = null;
+
+    // Die Punkte entstehen aus der Zahl der Bilder, damit Markup und Slider
+    // nicht auseinanderlaufen, wenn jemand ein Bild ergaenzt oder entfernt.
+    const buildDots = (container) => {
+        if (!container) return [];
+
+        const fragment = document.createDocumentFragment();
+        const buttons = slides.map((slide, index) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'slider-dot';
+            dot.setAttribute('aria-label', `Bild ${index + 1} von ${slides.length} anzeigen`);
+            dot.addEventListener('click', () => {
+                stopAutoplay();
+                showSlide(index);
+                if (autoplayEnabled) startAutoplay();
+            });
+            fragment.append(dot);
+            return dot;
+        });
+
+        container.append(fragment);
+        return buttons;
+    };
 
     const init = () => {
         const sliderWrapper = document.querySelector('.slider-wrapper');
@@ -298,6 +323,8 @@ const ImageSlider = (() => {
 
         slides = Array.from(sliderWrapper.querySelectorAll('img'));
         if (slides.length === 0) return;
+
+        dots = buildDots(document.getElementById('slider-dots'));
 
         // Check for reduced motion preference
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -335,6 +362,15 @@ const ImageSlider = (() => {
     const showSlide = (index) => {
         slides.forEach(slide => slide.classList.remove('active'));
         slides[index].classList.add('active');
+        // aria-current statt aria-selected: die Punkte sind Schaltflaechen,
+        // keine Tabs – es gibt keine zugehoerigen Tabpanels.
+        dots.forEach((dot, i) => {
+            if (i === index) {
+                dot.setAttribute('aria-current', 'true');
+            } else {
+                dot.removeAttribute('aria-current');
+            }
+        });
         currentIndex = index;
     };
 
@@ -365,27 +401,142 @@ const ImageSlider = (() => {
 })();
 
 // ============================================================================
-// Video Autoplay Based on Motion Preference
+// Meldungen: Punkte und Pfeile zur Bildkachel-Reihe
+// Das Wischen selbst macht scroll-snap im CSS. Hier kommt die Bedienung
+// dazu: Punkte fuer die Position und Pfeile zum Blaettern. Geblaettert wird
+// seitenweise, nicht kachelweise – wie in der Vorlage auf tk.de, wo vier
+// Meldungen bei drei sichtbaren Kacheln zwei Punkte ergeben.
 // ============================================================================
 
-const VideoManager = (() => {
-    const init = () => {
-        const video = document.querySelector('.membership-video');
-        if (!video) return;
+const NewsCarousel = (() => {
+    let track = null;
+    let dotBox = null;
+    let cards = [];
+    let dots = [];
+    let prevBtn = null;
+    let nextBtn = null;
+    let proSeite = 1;
+    let aktiv = -1;
 
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const PFEIL_LINKS = 'M15 5l-7 7 7 7';
+    const PFEIL_RECHTS = 'M9 5l7 7-7 7';
 
-        // Only autoplay if user hasn't disabled motion
-        if (!prefersReducedMotion) {
-            video.autoplay = true;
+    // Wie viele Kacheln nebeneinander in den sichtbaren Ausschnitt passen.
+    // Haengt an der Fensterbreite, deshalb bei jeder Groessenaenderung neu.
+    const kachelnProSeite = () => {
+        if (cards.length < 2) return 1;
+        const schritt = cards[1].offsetLeft - cards[0].offsetLeft;
+        if (schritt <= 0) return 1;
+        return Math.max(1, Math.round(track.clientWidth / schritt));
+    };
+
+    const seitenZahl = () => Math.ceil(cards.length / proSeite);
+
+    // Die Kachel, deren linke Kante der linken Kante des sichtbaren
+    // Ausschnitts am naechsten liegt – das ist die, auf die scroll-snap
+    // einrastet.
+    const sichtbareKachel = () => {
+        let treffer = 0;
+        let kleinsterAbstand = Infinity;
+        cards.forEach((card, i) => {
+            const abstand = Math.abs(card.offsetLeft - track.scrollLeft);
+            if (abstand < kleinsterAbstand) {
+                kleinsterAbstand = abstand;
+                treffer = i;
+            }
+        });
+        return treffer;
+    };
+
+    const zeigeSeite = (seite) => {
+        const ziel = cards[Math.min(seite * proSeite, cards.length - 1)];
+        if (ziel) track.scrollTo({ left: ziel.offsetLeft });
+    };
+
+    const markiere = () => {
+        const seite = Math.min(Math.floor(sichtbareKachel() / proSeite), seitenZahl() - 1);
+        if (seite === aktiv) return;
+        aktiv = seite;
+
+        dots.forEach((dot, i) => {
+            if (i === seite) {
+                dot.setAttribute('aria-current', 'true');
+            } else {
+                dot.removeAttribute('aria-current');
+            }
+        });
+
+        if (prevBtn) prevBtn.disabled = seite === 0;
+        if (nextBtn) nextBtn.disabled = seite >= seitenZahl() - 1;
+    };
+
+    const bauePunkte = () => {
+        dotBox.textContent = '';
+        aktiv = -1;
+
+        const anzahl = seitenZahl();
+        // Bei nur einer Seite gibt es nichts zu blaettern.
+        if (anzahl < 2) {
+            dots = [];
+            markiere();
+            return;
         }
 
-        // Listen for changes to motion preference
-        window.matchMedia('(prefers-reduced-motion: reduce)').addListener((e) => {
-            if (e.matches) {
-                video.autoplay = false;
+        const fragment = document.createDocumentFragment();
+        dots = Array.from({ length: anzahl }, (_, i) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'news-dot';
+            dot.setAttribute('aria-label', `Meldungen, Seite ${i + 1} von ${anzahl}`);
+            dot.addEventListener('click', () => zeigeSeite(i));
+            fragment.append(dot);
+            return dot;
+        });
+        dotBox.append(fragment);
+        markiere();
+    };
+
+    const baueseitePfeil = (richtung, beschriftung, pfad) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'news-arrow';
+        btn.setAttribute('aria-label', beschriftung);
+        btn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${pfad}"/></svg>`;
+        btn.addEventListener('click', () => {
+            zeigeSeite(Math.max(0, Math.min(aktiv + richtung, seitenZahl() - 1)));
+        });
+        return btn;
+    };
+
+    const init = () => {
+        track = document.getElementById('news-track');
+        dotBox = document.getElementById('news-dots');
+        const arrowBox = document.getElementById('news-arrows');
+        if (!track || !dotBox) return;
+
+        cards = Array.from(track.querySelectorAll('.news-card'));
+        if (cards.length < 2) return;
+
+        if (arrowBox) {
+            prevBtn = baueseitePfeil(-1, 'Vorherige Meldungen', PFEIL_LINKS);
+            nextBtn = baueseitePfeil(1, 'Weitere Meldungen', PFEIL_RECHTS);
+            arrowBox.append(prevBtn, nextBtn);
+        }
+
+        proSeite = kachelnProSeite();
+        bauePunkte();
+
+        track.addEventListener('scroll', markiere, { passive: true });
+
+        // Bei einer anderen Fensterbreite passen andere viele Kacheln
+        // nebeneinander – dann stimmt auch die Zahl der Punkte nicht mehr.
+        window.addEventListener('resize', () => {
+            const neu = kachelnProSeite();
+            if (neu !== proSeite) {
+                proSeite = neu;
+                bauePunkte();
             } else {
-                video.autoplay = true;
+                markiere();
             }
         });
     };
@@ -637,8 +788,12 @@ document.addEventListener('DOMContentLoaded', () => {
     Navigation.init();
     SearchManager.init();
     HomeEvents.init();
+    NewsCarousel.init();
     ImageSlider.init();
-    VideoManager.init();
+    // Kein VideoManager mehr: das Werbevideo startete per JS automatisch und
+    // zog dabei rund 84 MB, ohne dass jemand auf Abspielen geklickt hatte.
+    // Es laeuft jetzt mit Standbild, preload="none" und den Bedienelementen
+    // des Browsers – damit ist auch prefers-reduced-motion gegenstandslos.
 });
 
 // ============================================================================
