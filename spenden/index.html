@@ -134,26 +134,45 @@
         <div class="container">
             <h1>Spenden – Unterstützen Sie uns</h1>
 
-            <section>
-                <h2>Vielen Dank für Ihre Unterstützung!</h2>
-                <p class="textseite-intro">
-                    Mit Ihrer Spende helfen Sie der CDU Schwerin, unsere Ziele zu verwirklichen und Schwerin weiter zu entwickeln.
-                </p>
-            </section>
+            <p class="textseite-intro">
+                Mit Ihrer Spende helfen Sie der CDU Schwerin, unsere Ziele zu verwirklichen und Schwerin weiter zu entwickeln.
+            </p>
 
             <section>
-                <h2>Bankverbindung</h2>
-                <article class="infokarte">
-                    <!-- TODO: Kontoinhaber gegen den Kontoauszug pruefen. Der Name stammt
-                         aus dem Impressum, nicht aus den Bankunterlagen. -->
-                    <p><strong>Kontoinhaber:</strong> Christlich Demokratische Union Deutschlands, Kreisverband Schwerin</p>
-                    <p><strong>IBAN:</strong> DE45 1404 0000 0204 2018 00</p>
-                    <!-- TODO: COBADEFFXXX ist der allgemeine Commerzbank-BIC und passt nicht
-                         zur konkret genannten Filiale - gegen den Kontoauszug pruefen. -->
-                    <p><strong>BIC:</strong> COBADEFFXXX</p>
-                    <p><strong>Bank:</strong> Commerzbank Schwerin</p>
-                    <p class="infokarte-zweck"><strong>Verwendungszweck:</strong> Spende, dazu Ihr Name und Ihre Anschrift</p>
-                </article>
+                <h2>So spenden Sie</h2>
+                <p>Scannen Sie den Code mit der Kamera Ihrer Banking-App: Empfänger, IBAN und Verwendungszweck sind darin hinterlegt, Sie bestätigen nur noch. Wer lieber selbst überweist, findet die Angaben daneben.</p>
+
+                <div class="spenden-aktion">
+                    <div class="spenden-qr">
+                        <!-- Ohne JavaScript bleibt die Betragswahl verborgen und es steht
+                             der Code ohne Betrag da - der funktioniert immer. -->
+                        <div class="spenden-betraege" role="group" aria-label="Betrag für den Code wählen" hidden>
+                            <button type="button" class="spenden-betrag" data-betrag="25">25 €</button>
+                            <button type="button" class="spenden-betrag" data-betrag="50">50 €</button>
+                            <button type="button" class="spenden-betrag" data-betrag="100">100 €</button>
+                            <button type="button" class="spenden-betrag is-aktiv" data-betrag="frei" aria-pressed="true">Eigener Betrag</button>
+                        </div>
+                        <img id="spenden-girocode"
+                             src="../assets/images/spenden-girocode-frei.svg"
+                             alt="GiroCode für eine Spende an die CDU Schwerin, Betrag frei wählbar. Die Kontodaten stehen daneben auch als Text."
+                             width="240" height="240">
+                        <p class="spenden-qr-hinweis">Bitte ergänzen Sie in der App Ihren Namen und Ihre Anschrift im Verwendungszweck – ohne sie können wir keine Spendenquittung ausstellen.</p>
+                    </div>
+
+                    <article class="infokarte">
+                        <h3>Bankverbindung</h3>
+                        <!-- TODO: Kontoinhaber gegen den Kontoauszug pruefen. Der Name stammt
+                             aus dem Impressum, nicht aus den Bankunterlagen. Der GiroCode
+                             wird beim Bauen aus genau diesen beiden Zeilen erzeugt. -->
+                        <p><strong>Kontoinhaber:</strong> Christlich Demokratische Union Deutschlands, Kreisverband Schwerin</p>
+                        <p><strong>IBAN:</strong> DE45 1404 0000 0204 2018 00</p>
+                        <!-- TODO: COBADEFFXXX ist der allgemeine Commerzbank-BIC und passt nicht
+                             zur konkret genannten Filiale - gegen den Kontoauszug pruefen. -->
+                        <p><strong>BIC:</strong> COBADEFFXXX</p>
+                        <p><strong>Bank:</strong> Commerzbank Schwerin</p>
+                        <p class="infokarte-zweck"><strong>Verwendungszweck:</strong> Spende, dazu Ihr Name und Ihre Anschrift</p>
+                    </article>
+                </div>
             </section>
 
             <section>

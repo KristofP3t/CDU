@@ -7,6 +7,7 @@
   js/news-data.js     – Meldungen aus inhalte/meldungen/, fuer die Startseite
   newsarchiv/**       – Meldungsseiten, Archivliste und Kategorieseiten
   aktuelles/index.html – die neuesten Meldungen
+  assets/images/spenden-girocode-*.svg – GiroCodes fuer die Spendenseite
 
 Gepflegt wird je Meldung genau eine Datei in inhalte/meldungen/<slug>.html:
 oben die Angaben als <meta>, darunter der Text. Alles unter newsarchiv/
@@ -19,6 +20,16 @@ der suchen oder Termine ausliefern koennte. Beide Dateien werden deshalb
 vorab erzeugt und als normale Skripte eingebunden (nicht per fetch), damit
 alles auch beim lokalen Oeffnen per Doppelklick funktioniert, wo fetch an
 file:// scheitert.
+
+Die GiroCodes entstehen aus Kontoinhaber und IBAN, die in
+spenden/index.html stehen – die Seite ist die einzige Quelle, Code und
+Text koennen also nicht auseinanderlaufen. Dafuer wird segno gebraucht:
+
+    pip install segno
+
+Fehlt es, bleiben die eingecheckten SVG liegen und der Lauf geht weiter;
+neu gebaut werden muessen sie ohnehin nur, wenn sich die Bankdaten
+aendern.
 
 Aufruf nach inhaltlichen Aenderungen:
     python3 tools/build-site-data.py
@@ -83,7 +94,110 @@ def main() -> int:
     # fehlen neue Meldungen in der Suche, bis der naechste Lauf kommt.
     build_news()
     build_events()
+    build_girocodes()
     return build_search()
+
+
+# ============================================================================
+# GiroCode (EPC-QR) fuer die Spendenseite
+# ============================================================================
+
+SPENDEN = ROOT / "spenden" / "index.html"
+OUT_QR = ROOT / "assets" / "images"
+# Vorgeschlagene Betraege plus ein Code ohne Betrag, bei dem der Spender
+# die Summe selbst eintraegt.
+QR_BETRAEGE = [None, 25, 50, 100]
+
+KONTOINHABER = re.compile(r"<strong>Kontoinhaber:</strong>\s*([^<]+)</p>")
+KONTO_IBAN = re.compile(r"<strong>IBAN:</strong>\s*([^<]+)</p>")
+
+
+def iban_gueltig(iban: str) -> bool:
+    """Prueft die Pruefsumme nach ISO 7064 (Modulo 97-10)."""
+    kompakt = iban.replace(" ", "").upper()
+    if not (15 <= len(kompakt) <= 34) or not kompakt[:2].isalpha():
+        return False
+    umgestellt = kompakt[4:] + kompakt[:4]
+    ziffern = "".join(str(ord(c) - 55) if c.isalpha() else c for c in umgestellt)
+    return ziffern.isdigit() and int(ziffern) % 97 == 1
+
+
+def epc_nutzlast(name: str, iban: str, betrag: int | None) -> str:
+    """Baut den Datensatz nach EPC069-12 (Version 002).
+
+    Die Zeilenfolge ist fest vorgegeben. Leere Felder bleiben leer, aber die
+    Zeile muss stehen – Banking-Apps lesen nach Position, nicht nach Namen.
+    """
+    return "\n".join([
+        "BCD",                                   # Service Tag
+        "002",                                   # Version
+        "1",                                     # Zeichensatz: UTF-8
+        "SCT",                                   # SEPA Credit Transfer
+        "",                                      # BIC – bei Version 002 entbehrlich
+        name,                                    # Empfaenger, hoechstens 70 Zeichen
+        iban.replace(" ", ""),
+        # Zwei Nachkommastellen: der Standard laesst sie zwar weg, aeltere
+        # Banking-Apps stolpern aber ueber Betraege ohne sie.
+        f"EUR{betrag}.00" if betrag else "",     # leer = Spender waehlt selbst
+        "",                                      # Zweckcode
+        "",                                      # Strukturierte Referenz
+        # Der Verwendungszweck erscheint in der Banking-App und ist die letzte
+        # Gelegenheit, an die Anschrift zu erinnern – ohne sie gibt es keine
+        # Zuwendungsbestaetigung. Bewusst ohne Umlaute.
+        "Spende, bitte Name und Anschrift angeben",
+    ])
+
+
+def build_girocodes() -> None:
+    html = SPENDEN.read_text(encoding="utf-8")
+    m_name, m_iban = KONTOINHABER.search(html), KONTO_IBAN.search(html)
+    if not (m_name and m_iban):
+        print("  ACHTUNG: Kontoinhaber oder IBAN nicht in spenden/index.html gefunden"
+              " – GiroCodes unveraendert.")
+        return
+
+    name, iban = clean(m_name.group(1)), clean(m_iban.group(1))
+    if not iban_gueltig(iban):
+        print(f"  ACHTUNG: IBAN {iban} besteht die Pruefsumme nicht – GiroCodes"
+              " unveraendert. Bitte die Angabe auf der Spendenseite pruefen.")
+        return
+    if len(name) > 70:
+        print(f"  ACHTUNG: Kontoinhaber ist {len(name)} Zeichen lang, erlaubt sind 70"
+              " – GiroCodes unveraendert.")
+        return
+
+    try:
+        import segno
+    except ModuleNotFoundError:
+        # Bewusst kein harter Fehler: die erzeugten SVG liegen im Repository,
+        # die Seite funktioniert also auch ohne segno. Neu gebaut werden die
+        # Codes nur, wenn sich Kontoinhaber oder IBAN aendern.
+        print("  Hinweis: segno nicht installiert – GiroCodes unveraendert."
+              " Zum Neubauen: pip install segno")
+        return
+
+    OUT_QR.mkdir(parents=True, exist_ok=True)
+    for betrag in QR_BETRAEGE:
+        nutzlast = epc_nutzlast(name, iban, betrag)
+        # Der Standard erlaubt hoechstens 331 Byte. Wird die Grenze gerissen,
+        # erzeugen Banking-Apps keinen Fehler, sondern lesen Unsinn.
+        laenge = len(nutzlast.encode("utf-8"))
+        if laenge > 331:
+            print(f"  ACHTUNG: EPC-Datensatz {laenge} Byte, erlaubt sind 331"
+                  " – GiroCodes unveraendert.")
+            return
+        ziel = OUT_QR / f"spenden-girocode-{betrag or 'frei'}.svg"
+        # Fehlerkorrektur M: der Standard verlangt mindestens diese Stufe.
+        # Der helle Grund steht ausdruecklich im SVG – transparent wuerde die
+        # Seitenfarbe durchscheinen lassen und den Kontrast fuer den Scanner
+        # von der Umgebung abhaengig machen.
+        segno.make(nutzlast, error="m").save(
+            ziel, kind="svg", scale=1, border=2,
+            dark="#2d3c4b", light="#ffffff",
+            svgclass=None, lineclass=None, omitsize=True,
+        )
+    print(f"{len(QR_BETRAEGE)} GiroCodes -> assets/images/spenden-girocode-*.svg"
+          f" (Empfaenger: {name})")
 
 
 def build_search() -> int:

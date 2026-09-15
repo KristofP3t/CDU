@@ -846,6 +846,52 @@ const HomeNews = (() => {
 })();
 
 // ============================================================================
+// Spendenseite: Betragswahl fuer den GiroCode
+// Die Codes liegen fertig als SVG im Repository, je einer pro Betrag und
+// einer ohne. Hier wird nur umgeschaltet – gerechnet oder erzeugt wird
+// nichts, der Datensatz im Code entsteht beim Bauen aus den Kontodaten
+// der Seite (tools/build-site-data.py).
+// ============================================================================
+
+const SpendenGiroCode = (() => {
+    const beschriftung = {
+        frei: 'Betrag frei wählbar',
+        25: 'über 25 Euro',
+        50: 'über 50 Euro',
+        100: 'über 100 Euro',
+    };
+
+    const waehle = (knoepfe, bild, aktiv) => {
+        knoepfe.forEach((knopf) => {
+            const ist = knopf === aktiv;
+            knopf.classList.toggle('is-aktiv', ist);
+            knopf.setAttribute('aria-pressed', String(ist));
+        });
+        const betrag = aktiv.dataset.betrag;
+        bild.src = `${sitePrefix()}assets/images/spenden-girocode-${betrag}.svg`;
+        bild.alt = `GiroCode für eine Spende an die CDU Schwerin, ${beschriftung[betrag]}.`
+            + ' Die Kontodaten stehen daneben auch als Text.';
+    };
+
+    const init = () => {
+        const gruppe = document.querySelector('.spenden-betraege');
+        const bild = document.getElementById('spenden-girocode');
+        if (!gruppe || !bild) return;
+
+        const knoepfe = Array.from(gruppe.querySelectorAll('.spenden-betrag'));
+        if (!knoepfe.length) return;
+
+        // Erst jetzt sichtbar: ohne JavaScript taeten die Knoepfe nichts.
+        gruppe.hidden = false;
+        knoepfe.forEach((knopf) => {
+            knopf.addEventListener('click', () => waehle(knoepfe, bild, knopf));
+        });
+    };
+
+    return { init };
+})();
+
+// ============================================================================
 // Initialize All Modules on DOM Ready
 // ============================================================================
 
@@ -853,6 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ConsentManager.init();
     Navigation.init();
     SearchManager.init();
+    SpendenGiroCode.init();
     HomeEvents.init();
     // Erst die Kacheln bauen, dann das Karussell darueber legen.
     HomeNews.init();

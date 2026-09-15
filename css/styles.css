@@ -1672,6 +1672,99 @@ body {
     margin-top: var(--spacing-md);
 }
 
+.infokarte h3 {
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Spenden: GiroCode neben den Kontodaten
+   -------------------------------------------------------------------------- */
+
+.spenden-aktion {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-lg);
+    align-items: start;
+    margin-top: var(--spacing-md);
+}
+
+.spenden-qr {
+    text-align: center;
+}
+
+.spenden-qr img {
+    display: block;
+    /* Gestapelt ist die Spalte breiter als das Bild – ohne die automatischen
+       Seitenraender stuende der Code dann am linken Rand. */
+    margin-inline: auto;
+    width: 240px;
+    height: 240px;
+    /* Die Module sollen als harte Kanten skalieren, nicht weichgezeichnet. */
+    image-rendering: pixelated;
+    border: 1px solid var(--color-light-bg);
+    border-radius: 8px;
+}
+
+.spenden-betraege {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Muss nach der display-Regel stehen: ein display aus dem Stylesheet
+   ueberstimmt sonst das hidden-Attribut, und die Knoepfe waeren ohne
+   JavaScript sichtbar, ohne etwas zu tun. */
+.spenden-betraege[hidden] {
+    display: none;
+}
+
+.spenden-betrag {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-dark);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.4em 1em;
+    cursor: pointer;
+    transition: var(--transition-color);
+}
+
+.spenden-betrag:hover {
+    background-color: var(--color-light-bg);
+}
+
+.spenden-betrag.is-aktiv {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.spenden-qr-hinweis {
+    max-width: 240px;
+    margin: var(--spacing-xs) auto 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-light);
+}
+
+@media (max-width: 768px) {
+    /* Nebeneinander wird es unter rund 700px zu eng fuer die Kontozeilen. */
+    .spenden-aktion {
+        grid-template-columns: 1fr;
+    }
+
+    .spenden-qr {
+        justify-self: center;
+    }
+}
+
 @media (max-width: 480px) {
     .textseite h1 {
         font-size: 26px;
