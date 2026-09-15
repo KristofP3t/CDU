@@ -109,6 +109,71 @@ nachziehen.
 
 ---
 
+## MIT-Seite (September 2026)
+
+Die Seite der Mittelstands- und Wirtschaftsunion trug bisher eine gekürzte
+Nacherzählung der Live-Seite: drei Absätze, eine Kontaktangabe, kein Bild.
+Jetzt steht der **vollständige Inhalt von
+`cdu-schwerin.com/wirtschafts-und-mittelstandsvereinigung/`** darauf, neu
+gegliedert.
+
+**Übernommen:** beide Textteile („Was ist die MIT?", „Was will die MIT?") in
+voller Länge, die Einladung zur Mitgliedschaft samt Hinweis auf
+Nicht-CDU-Mitglieder, die Kontaktangaben mit Kreisvorsitzendem Christian
+Graf, der Verweis auf den Landesverband (`mit-mv.de`, jetzt über HTTPS) und
+das MIT-Logo als `assets/images/mit-schwerin-logo.jpg` (950×233, das einzige
+Inhaltsbild der Vorlage).
+
+Alte Schreibweisen sind dabei angeglichen („Einfluß" → „Einfluss", „In dem
+wir" → „Indem wir", „2/3" → „zwei Drittel"), inhaltlich ist nichts gestrichen.
+
+**Neu gestaltet:**
+
+- **Kopf** mit Logo, Kicker („Vereinigung der CDU Schwerin"), H1 und
+  Vorspann. Die H1 heißt jetzt „Mittelstands- und Wirtschaftsunion (MIT)" –
+  so nennt sich die Vereinigung selbst; „Wirtschafts- und
+  Mittelstandsvereinigung" stand nur in der Adresse und in der alten
+  Überschrift. Die Adresse bleibt unverändert, damit Links weiter passen.
+- **Kennzahlen** (`.kennzahlen`): die Mitgliederzahlen (40.000 / 600 / 100)
+  und die Zahlen zum Mittelstand (90 % / zwei Drittel / vier Fünftel) standen
+  in der Vorlage als Satzteile mitten im Fließtext. Als Reihe mit Linie links
+  sind sie lesbar, ohne dass ein Kasten den Text unterbricht.
+- **Themenkarten** (`.themenkarten`): die vier Ziele aus „Was will die MIT?"
+  – Soziale Marktwirtschaft, privates Eigentum, fairer Wettbewerb,
+  gesellschaftliche Anerkennung – statt eines Absatzblocks.
+- **Mitmachen-Block** auf dunklem Grund mit zwei Schaltflächen. Die Einladung
+  war in der Vorlage eine dünne Zeile zwischen zwei Absätzen. Die
+  Hauptschaltfläche führt an `mit@mit-schwerin.de`, nicht an den
+  CDU-Mitgliedsantrag: die MIT nimmt ausdrücklich auch Nicht-CDU-Mitglieder
+  auf, der Antrag unter `mitglied-werden/` ist der der Partei.
+- **Kontakt** in zwei `.infokarte`-Spalten: Angaben links, weiterführende
+  Seiten rechts.
+
+Die Klassen heißen `.vereinigung*`, nicht `.mit*` – die drei übrigen
+Vereinigungsseiten sind gleich gebaut und bestreiten ihr Layout bisher mit
+`style`-Attributen. `.vereinigung > .container` begrenzt die Textspalte auf
+1040px; über die 1400px von `.container` laufen Zeilen sonst weit über 100
+Zeichen. Der Hauptteil enthält kein einziges `style`-Attribut mehr.
+
+### Offen
+
+- **Leitantrag von 1998.** Die Vorlage nennt den Leitantrag des 5.
+  Landesmittelstandstages vom 21. Februar 1998, verlinkt ihn aber nirgends.
+  Der Satz steht übernommen auf der Seite, mit `TODO` im Quelltext: prüfen,
+  ob es eine neuere Beschlusslage gibt – sonst streichen.
+- **Zwei Faxnummern.** Für die MIT nennt die Live-Seite die 59 00 420, für
+  den Kreisverband im Seitenfuß die 59 00 421. Beide stehen so dort; welche
+  stimmt, ist ungeprüft. Vermerkt als Kommentar an der Adresse.
+- **Logo mit weißem Rand.** Das JPEG bringt breite weiße Ränder mit. Auf dem
+  weißen Seitengrund fällt das nicht auf, eine freigestellte PNG- oder
+  SVG-Fassung wäre aber sauberer.
+- **`tools/build-site-data.py` braucht Python 3.10+.** Die
+  Typangabe `int | None` scheitert unter 3.9 beim Import. Auf Rechnern mit
+  dem Apple-Python (3.9.6) läuft das Skript nur mit
+  `from __future__ import annotations` in der ersten Zeile.
+
+---
+
 ## Meldungen lokal (September 2026)
 
 Vorher verzweigten alle Meldungen ins Web: die vier Kacheln der Startseite und

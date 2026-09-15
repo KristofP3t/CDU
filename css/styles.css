@@ -2632,3 +2632,196 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==========================================================================
+   Vereinigungsseiten
+   Aufbau wie die Textseiten, dazu ein Kopf mit Logo, Zahlenreihen und
+   Themenkarten. Die Klassen sind absichtlich nicht MIT-spezifisch: die
+   uebrigen Vereinigungen (Frauen, Senioren, Junge Union) sind gleich
+   gebaut und bestreiten ihr Layout bisher mit style-Attributen.
+   ========================================================================== */
+
+/* Der .container haelt den Inhalt bei 1400px. Fuer Fliesstext sind das weit
+   ueber 100 Zeichen je Zeile; die Spalte wird hier auf ein lesbares Mass
+   begrenzt, ohne .container selbst anzutasten. */
+.vereinigung > .container {
+    max-width: 1040px;
+}
+
+.vereinigung-kopf {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Das Logo ist ein 4:1-Banner. Neben der Ueberschrift waere es winzig,
+   ueber ihr traegt es die Breite der Textspalte nur zum Teil - mehr als
+   420px braucht es bei 950px Bildbreite nicht. */
+.vereinigung-logo {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Ordnet die Seite ein, bevor die Ueberschrift kommt. */
+.vereinigung-kicker {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Den Rhythmus im Kopf setzt der Kopf, nicht .textseite h1. */
+.vereinigung-kopf h1 {
+    margin-bottom: var(--spacing-sm);
+}
+
+.vereinigung-kopf .textseite-intro {
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Kennzahlen
+   Zahlenreihe fuer Angaben, die in der Vorlage als Satzteil mitten im
+   Fliesstext standen. Die Linie links bindet die Reihe an den Text, ohne
+   dass ein Kasten den Lesefluss unterbricht.
+   -------------------------------------------------------------------------- */
+
+.kennzahlen {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    /* Nimmt die Einrueckung von .textseite ul zurueck - die gilt fuer
+       Aufzaehlungspunkte, die es hier nicht gibt. */
+    padding-left: 0;
+    margin: var(--spacing-lg) 0;
+}
+
+.kennzahlen-eingerueckt {
+    margin-top: var(--spacing-md);
+}
+
+.kennzahl {
+    border-left: 3px solid var(--color-primary);
+    padding-left: var(--spacing-sm);
+    /* Den Abstand zwischen den Zahlen macht das Raster, nicht .textseite li. */
+    margin-bottom: 0;
+}
+
+.kennzahl-wert {
+    display: block;
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: var(--color-dark);
+}
+
+.kennzahl-text {
+    display: block;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-text-light);
+    margin-top: var(--spacing-xs);
+}
+
+/* --------------------------------------------------------------------------
+   Themenkarten
+   Karten-Raster fuer Schwerpunkte, bisher auf den Vereinigungsseiten per
+   style-Attribut gebaut.
+   -------------------------------------------------------------------------- */
+
+.themenkarten {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.themenkarte {
+    background-color: var(--color-light-bg);
+    border-radius: 8px;
+    padding: var(--spacing-md);
+}
+
+.themenkarte h3 {
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* --------------------------------------------------------------------------
+   Mitmachen und Kontakt
+   -------------------------------------------------------------------------- */
+
+.vereinigung-mitmachen {
+    background-color: var(--color-dark);
+    color: var(--color-white);
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+}
+
+/* .textseite h2 setzt die dunkle Schriftfarbe - auf dunklem Grund unlesbar. */
+.vereinigung-mitmachen h2 {
+    color: var(--color-white);
+}
+
+.vereinigung-aktionen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+/* .textseite a faerbt jeden Link im Hauptteil primaerfarben und ist mit
+   Klasse plus Typ spezifischer als .btn-accent oder .btn-on-dark. Ohne die
+   beiden Regeln bekommen die Schaltflaechen tuerkise Schrift - auf Orange
+   und auf dunklem Grund beides ohne Kontrast. */
+.vereinigung-aktionen .btn-accent {
+    color: var(--color-dark);
+    font-weight: 700;
+}
+
+.vereinigung-aktionen .btn-on-dark {
+    color: var(--color-white);
+}
+
+.vereinigung-kontakt {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    align-items: start;
+    margin-top: var(--spacing-md);
+}
+
+.vereinigung-kontakt ul {
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .kennzahlen,
+    .themenkarten,
+    .vereinigung-kontakt {
+        grid-template-columns: 1fr;
+    }
+
+    .kennzahlen {
+        gap: var(--spacing-md);
+    }
+
+    .kennzahl-wert {
+        font-size: 24px;
+    }
+
+    .vereinigung-mitmachen {
+        padding: var(--spacing-md);
+    }
+
+    /* Nebeneinander werden die Schaltflaechen auf engem Raum sehr schmal. */
+    .vereinigung-aktionen .btn {
+        flex: 1 1 100%;
+    }
+}
