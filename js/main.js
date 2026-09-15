@@ -780,6 +780,72 @@ const HomeEvents = (() => {
 })();
 
 // ============================================================================
+// Meldungen der Startseite (aus js/news-data.js)
+// ============================================================================
+
+const HomeNews = (() => {
+    // Baut die Kacheln, bevor NewsCarousel sie einsammelt. Die Meldungen
+    // stehen deshalb nur einmal im Projekt – in inhalte/meldungen/ – und
+    // nicht zusaetzlich im Text der Startseite.
+    const kachel = (m) => {
+        const item = document.createElement('li');
+        item.className = 'news-card';
+
+        const link = document.createElement('a');
+        link.className = 'news-link';
+        link.href = `${sitePrefix()}newsarchiv/${m.slug}/`;
+
+        if (m.bild) {
+            const img = document.createElement('img');
+            img.className = 'news-image';
+            img.src = `${sitePrefix()}assets/images/meldungen/${m.bild}`;
+            // Leer, wenn kein Alternativtext gepflegt ist: die Schlagzeile
+            // steht daneben, ein erfundener Text waere schlechter als keiner.
+            img.alt = m.bildAlt || '';
+            img.width = 272;
+            img.height = 182;
+            img.loading = 'lazy';
+            link.append(img);
+        }
+
+        const caption = document.createElement('div');
+        caption.className = 'news-caption';
+
+        const kicker = document.createElement('span');
+        kicker.className = 'news-kicker';
+        kicker.textContent = m.kategorie;
+
+        const title = document.createElement('h3');
+        title.className = 'news-title';
+        title.textContent = m.titel;
+
+        caption.append(kicker, title);
+        link.append(caption);
+        item.append(link);
+        return item;
+    };
+
+    const init = () => {
+        const track = document.getElementById('news-track');
+        if (!track) return;
+
+        const meldungen = window.CDU_NEWS || [];
+        if (!meldungen.length) {
+            // Ohne Meldungen bleibt der ganze Abschnitt weg statt leer
+            // stehen zu bleiben.
+            track.closest('.news-section')?.remove();
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        meldungen.forEach(m => fragment.append(kachel(m)));
+        track.append(fragment);
+    };
+
+    return { init };
+})();
+
+// ============================================================================
 // Initialize All Modules on DOM Ready
 // ============================================================================
 
@@ -788,6 +854,8 @@ document.addEventListener('DOMContentLoaded', () => {
     Navigation.init();
     SearchManager.init();
     HomeEvents.init();
+    // Erst die Kacheln bauen, dann das Karussell darueber legen.
+    HomeNews.init();
     NewsCarousel.init();
     ImageSlider.init();
     // Kein VideoManager mehr: das Werbevideo startete per JS automatisch und
