@@ -174,6 +174,59 @@ Zeichen. Der Hauptteil enthält kein einziges `style`-Attribut mehr.
 
 ---
 
+## Frauen-Union-Seite (September 2026)
+
+Gleiches Vorgehen wie bei der MIT-Seite: erst den vollständigen Inhalt von
+`cdu-schwerin.com/frauen-union-schwerin/` übernehmen, dann neu gliedern. Die
+bisherige lokale Fassung war eine Zusammenfassung – vier knappe Karten, wo
+die Live-Seite eine ausgeführte Ansprache hat.
+
+**Übernommen:** die Eingangsansprache („Politik und Wetter sind
+unausweichlich"), die drei „ob Sie … – oder nicht"-Zeilen, der
+Pflasterstein-Satz, alle vier Schwerpunkte in voller Länge (bisher standen
+sie auf ein Drittel gekürzt da), der gesamte Abschnitt „Komm mit: Politik
+braucht Frauen!" und die Kontaktangaben samt Anschrift und Faxnummer.
+
+Berichtigt sind offensichtliche Fehler der Vorlage: „Aus dem dem reinen
+Männer-Blickwinkel" → „Aus dem reinen", „neue Lösungen : Phantasie" →
+„Lösungen: Phantasie", „Ökologie Vorausdenkende Ökonomie" → „vorausdenkende".
+Aus „Ansprechpartner" ist „Ansprechpartnerin" geworden.
+
+**Neu gestaltet** – mit den `.vereinigung*`-Klassen der MIT-Seite, dazu zwei
+neue Bausteine:
+
+- **Zitat** (`.vereinigung-zitat`): „Wenn Sie nicht zur Politik gehen, kommt
+  die Politik zu Ihnen:" stand in der Vorlage mitten im Fließtext und trägt
+  die Aussage der Seite. Serifenschrift, Linie in Akzentfarbe, danach die
+  drei Zeilen als Liste.
+- **Ansprechpartnerin mit Porträt** (`.vereinigung-person`): das Bild von
+  Manuela Preuß-Daschke aus `assets/images/vorstand/`. Die Live-Seite hat
+  kein Bild, das Projekt aber dieses – so bekommt die Seite ein Gesicht.
+- Vier **Themenkarten** für die Schwerpunkte, ein **Mitmachen-Block**
+  („Lernen Sie uns kennen") und **Kontakt** in zwei Spalten, wie bei der MIT.
+
+### Offen
+
+- **Es fehlt ein Gruppenfoto.** Die Vorlage enthält die Bildunterschrift
+  „Die engagierten Frauen der Frauen Union Schwerin", aber kein Bild dazu –
+  offenbar bei einer Umstellung verloren gegangen. Die Zeile ist deshalb
+  nicht übernommen; mit einem Foto gehört beides zurück auf die Seite.
+- **Der Europa-Satz ist unklar.** „Die Europäische Frauen Union (EFU)
+  arbeitet an verantwortlicher Stelle mit" steht so auf der Live-Seite.
+  Gemeint ist wohl, dass die Frauen Union in der EFU mitarbeitet. Wörtlich
+  übernommen und im Quelltext mit `TODO` markiert.
+- **Wieder zwei Faxnummern.** Für die Frauen Union nennt die Live-Seite die
+  59 00 420 – dieselbe wie für die MIT –, der Kreisverband im Seitenfuß die
+  59 00 421. Gleiche offene Frage wie bei der MIT-Seite.
+- **Titel „Kreisvorsitzende" unbestätigt.** Die Live-Seite nennt Manuela
+  Preuß-Daschke nur „Ansprechpartner … FU Kreisverband Schwerin". Der Titel
+  stammt aus der bisherigen lokalen Fassung und ist übernommen, aber nicht
+  gegen eine Quelle geprüft.
+- **Porträt klein.** 200×266px, dargestellt bei 110px – auf Retina-Displays
+  knapp. Eine größere Fassung wäre besser.
+
+---
+
 ## Meldungen lokal (September 2026)
 
 Vorher verzweigten alle Meldungen ins Web: die vier Kacheln der Startseite und

@@ -2801,6 +2801,40 @@ body {
     margin-bottom: 0;
 }
 
+/* --------------------------------------------------------------------------
+   Zitat
+   Hebt einen Satz heraus, der in den Vorlagen mitten im Fliesstext stand
+   und die Aussage der Seite traegt.
+   -------------------------------------------------------------------------- */
+
+.vereinigung-zitat {
+    font-family: var(--font-secondary);
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--color-dark);
+    border-left: 3px solid var(--color-accent);
+    padding-left: var(--spacing-md);
+    margin: var(--spacing-lg) 0;
+}
+
+/* --------------------------------------------------------------------------
+   Ansprechpartnerin mit Portraet
+   -------------------------------------------------------------------------- */
+
+.vereinigung-person {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: var(--spacing-md);
+    align-items: start;
+}
+
+.vereinigung-person img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
 @media (max-width: 768px) {
     .kennzahlen,
     .themenkarten,
@@ -2823,5 +2857,17 @@ body {
     /* Nebeneinander werden die Schaltflaechen auf engem Raum sehr schmal. */
     .vereinigung-aktionen .btn {
         flex: 1 1 100%;
+    }
+
+    .vereinigung-zitat {
+        font-size: 19px;
+        padding-left: var(--spacing-sm);
+    }
+
+    /* Das Portraet bleibt neben dem Text - gestapelt reisst es die Karte
+       auseinander, und 90px genuegen zum Erkennen. */
+    .vereinigung-person {
+        grid-template-columns: 90px 1fr;
+        gap: var(--spacing-sm);
     }
 }
