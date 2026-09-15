@@ -161,10 +161,10 @@
 
                     <article class="infokarte">
                         <h3>Bankverbindung</h3>
-                        <!-- TODO: Kontoinhaber gegen den Kontoauszug pruefen. Der Name stammt
-                             aus dem Impressum, nicht aus den Bankunterlagen. Der GiroCode
-                             wird beim Bauen aus genau diesen beiden Zeilen erzeugt. -->
-                        <p><strong>Kontoinhaber:</strong> Christlich Demokratische Union Deutschlands, Kreisverband Schwerin</p>
+                        <!-- Kontoinhaber und IBAN sind die Quelle fuer den GiroCode: er wird
+                             beim Bauen aus genau diesen beiden Zeilen erzeugt. Nach einer
+                             Aenderung hier python3 tools/build-site-data.py laufen lassen. -->
+                        <p><strong>Kontoinhaber:</strong> CDU Kreisverband Schwerin</p>
                         <p><strong>IBAN:</strong> DE45 1404 0000 0204 2018 00</p>
                         <!-- TODO: COBADEFFXXX ist der allgemeine Commerzbank-BIC und passt nicht
                              zur konkret genannten Filiale - gegen den Kontoauszug pruefen. -->
