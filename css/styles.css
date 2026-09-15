@@ -1593,6 +1593,96 @@ body {
 }
 
 /* ==========================================================================
+   Textseiten
+   Seiten, die vor allem aus Fliesstext bestehen (Spenden). Der Reset ganz
+   oben nimmt Absaetzen, Ueberschriften und Listen jeden Abstand, und es
+   gibt keine globalen Regeln fuer p, h2 oder ul - ohne das Folgende steht
+   der Text ohne Rhythmus aufeinander und Listenpunkte haengen mangels
+   padding-left ausserhalb der Spalte. Bewusst auf .textseite begrenzt,
+   damit die uebrigen Layouts unberuehrt bleiben.
+   ========================================================================== */
+
+.textseite h1 {
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-lg);
+}
+
+.textseite h2 {
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-sm);
+}
+
+.textseite p {
+    line-height: 1.8;
+    margin-bottom: var(--spacing-sm);
+}
+
+.textseite p:last-child {
+    margin-bottom: 0;
+}
+
+.textseite ul {
+    /* Die Aufzaehlungspunkte brauchen die Einrueckung, die der Reset nimmt. */
+    padding-left: 1.25em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.textseite li {
+    line-height: 1.8;
+    margin-bottom: var(--spacing-xs);
+}
+
+.textseite li:last-child {
+    margin-bottom: 0;
+}
+
+/* Ersetzt die frueheren style="margin-top"-Attribute an jedem Abschnitt. */
+.textseite section + section {
+    margin-top: var(--spacing-xl);
+}
+
+.textseite-intro {
+    font-size: 18px;
+}
+
+.textseite address {
+    line-height: 1.8;
+}
+
+.textseite a {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* Hervorgehobener Kasten fuer Angaben, die man abschreibt oder kopiert. */
+.infokarte {
+    padding: var(--spacing-lg);
+    background-color: var(--color-light-bg);
+    border-radius: 8px;
+}
+
+/* Setzt den Verwendungszweck vom Rest der Kontodaten ab. Der Wert muss
+   groesser sein als das margin-bottom von .textseite p, sonst bleibt er
+   beim Kollabieren der Raender wirkungslos. */
+.infokarte-zweck {
+    margin-top: var(--spacing-md);
+}
+
+@media (max-width: 480px) {
+    .textseite h1 {
+        font-size: 26px;
+    }
+
+    .textseite h2 {
+        font-size: 21px;
+    }
+}
+
+/* ==========================================================================
    Board Members Section (Vorstandsmitglieder)
    ========================================================================== */
 
