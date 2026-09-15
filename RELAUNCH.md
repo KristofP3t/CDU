@@ -107,12 +107,84 @@ nachziehen.
   weich. Gebraucht werden die Original-Beitragsbilder aus der
   WordPress-Mediathek, sinnvoll wären rund 840px Breite.
 
+---
+
+## Meldungen lokal (September 2026)
+
+Vorher verzweigten alle Meldungen ins Web: die vier Kacheln der Startseite und
+„Alle Meldungen" auf `cdu-schwerin.com`, dazu die neun Kategorien des
+Newsarchivs auf dessen `category/`-Seiten. `aktuelles/index.html` pflegte
+dieselben Meldungen ein zweites Mal von Hand. Das ist jetzt alles lokal.
+
+**Gepflegt wird je Meldung eine Datei:** `inhalte/meldungen/<slug>.html` –
+oben die Angaben als `<meta>`, darunter der Text:
+
+```html
+<meta name="titel" content="Einladung Wahlkampfauftakt">
+<meta name="kategorie" content="Veranstaltungen">
+<meta name="datum" content="2026-02-25">
+<meta name="bild" content="einladung-wahlkampfauftakt.jpg">
+<meta name="beschreibung" content="Kurztext für Kachel und Liste">
+<meta name="status" content="entwurf">
+
+<p>…</p>
+```
+
+`datum` geht taggenau (`2026-02-25`) oder nur auf den Monat (`2025-11`) –
+nicht jede übernommene Meldung hat ein genaues Datum. Die Slugs sind
+identisch zu den bisherigen WordPress-Adressen, damit alte Links und
+gedrucktes Material weiter passen.
+
+**Erzeugt wird daraus** von `tools/build-site-data.py`:
+
+| Ziel | Inhalt |
+|---|---|
+| `newsarchiv/<slug>/` | die Meldungsseite |
+| `newsarchiv/index.html` | Archiv, nach Jahr gruppiert, mit Kategorienliste |
+| `newsarchiv/kategorie/<slug>/` | je Kategorie eine Seite – nur für belegte |
+| `aktuelles/index.html` | die neuesten sechs Meldungen |
+| `js/news-data.js` | `window.CDU_NEWS` für das Karussell der Startseite |
+
+Alles unter `newsarchiv/` entsteht bei jedem Lauf neu – dort nichts von Hand
+ändern. Seiten gelöschter Meldungen und leer gewordene Kategorien räumt das
+Skript selbst weg.
+
+**Das Seitengerüst** (Kopf, Navigation, Fuß) steht jetzt einmal in
+`tools/vorlagen/seite.html` statt in jeder Datei. `{{prefix}}` trägt die
+Tiefe und wird aus der Zieladresse abgeleitet, nicht je Seitenart
+hingeschrieben – `newsarchiv/kategorie/<slug>/` liegt drei Ebenen tief,
+`newsarchiv/<slug>/` zwei.
+
+**Bilder** liegen unter `assets/images/meldungen/<slug>.jpg` statt als
+`news-1.jpg … news-4.jpg`. `width`/`height` liest das Skript aus der Datei,
+statt sie zu behaupten, und weist auf Bilder unter 840px Breite hin.
+
+**Die Suche** nimmt neue Meldungen von allein auf: sie läuft über alle
+HTML-Dateien. Deshalb erzeugt das Skript erst die Seiten und indiziert dann;
+`inhalte/` und `tools/` bleiben außen vor.
+
 ### Weiterhin offen
 
-- **Newsarchiv ohne Beiträge.** `newsarchiv/index.html` enthält nur Suchfeld,
-  Monatsliste und Kategorien; die Meldungen selbst liegen weiter auf der
-  Live-Seite. Solange das so ist, verweisen die Meldungen der Startseite und
-  die Kategorien des Newsarchivs dorthin.
+- **Die Texte der vier Meldungen fehlen.** Übernommen sind Schlagzeile,
+  Kategorie, Bild und – bei zweien – der Kurztext aus `aktuelles/`. Der
+  Fließtext steht weiter auf der Live-Seite; aus der Entwicklungsumgebung
+  ist sie nicht erreichbar. Die vier Dateien stehen deshalb auf
+  `status="entwurf"`: die Seite trägt dann einen sichtbaren Hinweis und
+  `robots=noindex`, und der Build meldet sie bei jedem Lauf. Nach dem
+  Einsetzen des Textes `status` auf `veroeffentlicht` setzen.
+- **Zwei Daten sind unbestätigt.** `einladung-wahlkampfauftakt` (25.02.2026)
+  und die Nominierung (November 2025) sind aus `aktuelles/index.html` belegt.
+  Bei `cdu-kreisvorstand-schlaegt-…` (Oktober 2025) und
+  `cdu-schwerin-geht-mit-…` (September 2025) ist nur der Monat geschätzt –
+  aus der Reihenfolge der Startseite und der Monatsliste des alten
+  Newsarchivs. Vermerkt in der jeweiligen Quelldatei.
+- **Beitragsbilder zu klein.** Alle vier sind 272px breit; gebraucht werden
+  die Originale aus der WordPress-Mediathek mit rund 840px.
+- **Alternativtexte fehlen.** `bild-alt` ist überall leer, die Bilder gelten
+  damit als schmückend. Wo das Bild etwas aussagt, gehört ein Text hinein.
+- **`canonical` und `og:` der Startseite** zeigen weiter auf
+  `cdu-schwerin.com`, während `SITE_URL` im Build auf die GitHub-Pages-Adresse
+  steht. Vor dem Launch auf eine Adresse festlegen.
 
 ---
 
