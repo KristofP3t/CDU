@@ -218,12 +218,65 @@ neue Bausteine:
 - **Wieder zwei Faxnummern.** Für die Frauen Union nennt die Live-Seite die
   59 00 420 – dieselbe wie für die MIT –, der Kreisverband im Seitenfuß die
   59 00 421. Gleiche offene Frage wie bei der MIT-Seite.
+- **Einladung im Mitmachen-Block ersetzt.** Dort stand der Satz „Haben Sie
+  Interesse an Politik, Zeitgeschichte und Kultur?" aus der bisherigen
+  lokalen Fassung. Beim Umbau der Senioren-Union-Seite kam heraus, dass er
+  von dort stammt; er ist durch eine Einladung aus den Worten der
+  Frauen-Union-Seite ersetzt.
 - **Titel „Kreisvorsitzende" unbestätigt.** Die Live-Seite nennt Manuela
   Preuß-Daschke nur „Ansprechpartner … FU Kreisverband Schwerin". Der Titel
   stammt aus der bisherigen lokalen Fassung und ist übernommen, aber nicht
   gegen eine Quelle geprüft.
 - **Porträt klein.** 200×266px, dargestellt bei 110px – auf Retina-Displays
   knapp. Eine größere Fassung wäre besser.
+
+---
+
+## Senioren-Union-Seite (September 2026)
+
+Dritte Vereinigungsseite nach demselben Muster. Inhaltlich war hier am
+wenigsten zu holen: die Live-Seite besteht aus einer Begrüßung, drei
+Leitworten, drei Absätzen und den Kontaktangaben – die bisherige lokale
+Fassung hatte das schon fast vollständig.
+
+**Übernommen** ist jetzt der genaue Wortlaut, wo die lokale Fassung
+umformuliert hatte: „Fühlen Sie sich **noch** längst nicht zum »alten
+Eisen«", „Dann **wäre für Sie** eine Mitgliedschaft … interessant", und die
+Anführungszeichen »…« der Vorlage statt gerader. Die drei Leitworte stehen
+wieder als Aufzählung, nicht als eine fettgesetzte Zeile.
+
+**Ein Fund dabei:** der Satz „Haben Sie Interesse an Politik, Zeitgeschichte
+und Kultur? … Verantwortung für Staat und Gesellschaft übernehmen" gehört der
+Senioren Union. Er stand durch die bisherige lokale Fassung auch auf der
+Frauen-Union-Seite, wo er nicht hingehört – dort trägt der Mitmachen-Block
+jetzt eine Einladung aus den Worten der eigenen Seite.
+
+**Neu gestaltet** mit den `.vereinigung*`-Klassen, dazu ein Baustein:
+
+- **Leitworte** (`.leitworte`): „Mitarbeiten – Mitentscheiden –
+  Mitverantworten" als Dreierreihe mit derselben Linie wie die Kennzahlen,
+  nur ohne Zahlenwert. Sie stehen direkt unter dem Vorspann, der als
+  Überleitung auf sie endet („Dafür stehen wir:"). Unter 480px stapeln sie,
+  weil „Mitverantworten" in drei Spalten nicht mehr passt.
+- **Zwei geprüfte Auswärtsverweise**, die die Vorlage nicht hat: der
+  Bundesverband (`senioren-union.de`) und dessen ESU-Seite, auf die der
+  Europa-Absatz jetzt verlinkt. Beide antworten mit 200.
+
+### Offen
+
+- **Die Senioren Union hat keine Telefonnummer.** Die Live-Seite nennt für
+  sie nur eine Anschrift und eine E-Mail-Adresse – für eine
+  Seniorenvereinigung die unglücklichste Lücke von allen. Bis es eine eigene
+  Nummer gibt, weist die Kontaktkarte den Weg über die Geschäftsstelle
+  ((0385) 59 00 426, im Seitenfuß belegt), und der Mitmachen-Block hat dafür
+  eine zweite Schaltfläche. Eine eigene Durchwahl wäre besser.
+- **Kein Bild, auch keine Bildunterschrift.** Anders als bei der Frauen Union
+  fehlt hier kein Bild, es war nie eines da. Ein Foto vom Stammtisch oder
+  einer Veranstaltung würde der Seite guttun.
+- **Landesverband fehlt.** MIT und Frauen Union verweisen auf ihre
+  Landesebene; für die Senioren-Union Mecklenburg-Vorpommern ließ sich keine
+  eigene Adresse finden (`senioren-union-mv.de` antwortet nicht). Falls es
+  eine gibt, gehört sie in die Liste der weiterführenden Seiten.
 
 ---
 

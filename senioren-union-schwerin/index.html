@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senioren Union Schwerin – CDU Kreisverband Schwerin</title>
-    <meta name="description" content="Senioren Union Schwerin - CDU Kreisverband Schwerin">
+    <meta name="description" content="Mitarbeiten, mitentscheiden, mitverantworten: die Senioren Union Schwerin für Frauen und Männer ab 60. Kontakt zum Kreisvorsitzenden Walter Heinrich.">
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
@@ -130,44 +130,83 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main" class="site-main" role="main">
+    <main id="main" class="site-main textseite vereinigung" role="main">
         <div class="container">
-            <article>
+
+            <!-- Die Vorlage hat kein eigenes Bild, deshalb traegt der Kopf
+                 hier nur Kicker, Ueberschrift und Vorspann. -->
+            <div class="vereinigung-kopf">
+                <p class="vereinigung-kicker">Vereinigung der CDU Schwerin</p>
                 <h1>Senioren Union Schwerin</h1>
+                <!-- Kurz gehalten: die drei Leitworte darunter sagen das
+                     Uebrige, und "ab dem 60. Lebensjahr" stand hier sonst
+                     doppelt - der Satz steht im Abschnitt "Wer bei uns
+                     mitwirkt" noch einmal. -->
+                <p class="textseite-intro">
+                    Herzlich willkommen bei der Senioren Union Schwerin. Dafür stehen wir:
+                </p>
+            </div>
 
-                <section>
-                    <h2>Herzlich Willkommen bei der Senioren Union Schwerin!</h2>
-                    <p style="font-size: 18px; line-height: 1.8; margin-bottom: var(--spacing-lg);">
-                        <strong>Mitarbeiten – Mitentscheiden – Mitverantworten</strong>
-                    </p>
-                    <p>Haben Sie Interesse an Politik, Zeitgeschichte und Kultur? Fühlen Sie sich längst nicht zum "alten Eisen" zugehörig, sondern möchten aktiv bleiben und weiterhin Verantwortung für Staat und Gesellschaft übernehmen? Dann ist eine Mitgliedschaft in der SENIOREN-UNION interessant für Sie.</p>
-                </section>
+            <!-- Die drei Worte sind das Motto der Vereinigung und standen in
+                 der Vorlage als Aufzaehlung unter der Begruessung. -->
+            <ul class="leitworte">
+                <li>Mitarbeiten</li>
+                <li>Mitentscheiden</li>
+                <li>Mitverantworten</li>
+            </ul>
 
-                <section>
-                    <h2>Über uns</h2>
-                    <p>In der SENIOREN-UNION wirken Frauen und Männer ab dem 60. Lebensjahr mit, die die Wertvorstellungen und Ziele der Christlich Demokratischen Union grundsätzlich bejahen und unterstützen möchten.</p>
-                    <p>Auf europäischer Ebene gehört die SENIOREN-UNION der Europäischen SENIORENUNION (ESU) als Seniorenorganisation der Europäischen Volkspartei (EVP) an.</p>
-                </section>
+            <section>
+                <h2>Ist das etwas für Sie?</h2>
+                <p>Haben Sie Interesse an Politik, Zeitgeschichte und Kultur? Fühlen Sie sich noch längst nicht zum »alten Eisen« zugehörig, sondern möchten aktiv bleiben und wollen weiterhin Verantwortung für Staat und Gesellschaft übernehmen?</p>
+                <p>Dann wäre für Sie eine Mitgliedschaft in der Senioren-Union interessant.</p>
+            </section>
 
-                <section>
-                    <h2>Kontakt</h2>
-                    <p><strong>Kreisvorsitzender:</strong> Walter Heinrich</p>
-                    <address>
-                        <strong>Kreisverband Schwerin der SENIOREN-UNION</strong><br>
-                        Wismarsche Straße 173<br>
-                        19053 Schwerin<br>
-                        <br>
-                        E-Mail: <a href="mailto:seniorenunion@cdu-schwerin.com">seniorenunion@cdu-schwerin.com</a>
-                    </address>
-                </section>
+            <section>
+                <h2>Wer bei uns mitwirkt</h2>
+                <p>In der Senioren-Union wirken Frauen und Männer ab dem 60. Lebensjahr mit, die die Wertvorstellungen und Ziele der christlich-demokratischen Union grundsätzlich bejahen und unterstützen möchten.</p>
+                <p>Auf europäischer Ebene gehört die Senioren-Union der <a href="https://www.senioren-union.de/esu" rel="external">Europäischen Senioren Union (ESU)</a> an, der Seniorenorganisation der Europäischen Volkspartei (EVP).</p>
+            </section>
 
-                <section style="margin-top: var(--spacing-xl);">
-                    <h2>Weitere Informationen</h2>
-                    <p>
-                        <a href="../vereinigungen/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Zurück zu den Vereinigungen →</a>
-                    </p>
-                </section>
-            </article>
+            <!-- Die Einladung stand in der Vorlage im Fliesstext. Sie ist das
+                 Handlungsziel der Seite. -->
+            <section class="vereinigung-mitmachen" aria-labelledby="mitmachen-titel">
+                <h2 id="mitmachen-titel">Kommen Sie zu uns</h2>
+                <p>Schreiben Sie uns, wenn Sie die Senioren Union Schwerin kennenlernen möchten. Wenn Sie lieber sprechen als schreiben: die Geschäftsstelle der CDU Schwerin nimmt Ihre Nachricht gern auf und gibt sie weiter.</p>
+                <div class="vereinigung-aktionen">
+                    <a href="mailto:seniorenunion@cdu-schwerin.com?subject=Interesse%20an%20der%20Senioren%20Union%20Schwerin" class="btn btn-accent">E-Mail an die Senioren Union</a>
+                    <a href="tel:+493855900426" class="btn btn-on-dark">Geschäftsstelle anrufen</a>
+                </div>
+            </section>
+
+            <section>
+                <h2>Kontakt</h2>
+                <div class="vereinigung-kontakt">
+                    <article class="infokarte">
+                        <h3>Kreisverband Schwerin der Senioren-Union</h3>
+                        <p><strong>Kreisvorsitzender:</strong> Walter Heinrich</p>
+                        <address>
+                            Wismarsche Straße 173<br>
+                            19053 Schwerin<br>
+                            E-Mail: <a href="mailto:seniorenunion@cdu-schwerin.com">seniorenunion@cdu-schwerin.com</a>
+                        </address>
+                        <!-- Die Live-Seite nennt fuer die Senioren Union keine
+                             Telefonnummer. Bis es eine gibt, steht hier der Weg
+                             ueber die Geschaeftsstelle - deren Nummer ist im
+                             Seitenfuss belegt. -->
+                        <p class="infokarte-zweck">Telefonisch erreichen Sie uns über die <a href="../geschaeftsstelle-der-cdu-schwerin/">Geschäftsstelle</a> unter <a href="tel:+493855900426">(0385) 59 00 426</a>.</p>
+                    </article>
+
+                    <article class="infokarte">
+                        <h3>Weiterführende Seiten</h3>
+                        <ul>
+                            <li><a href="https://www.senioren-union.de/" rel="external">Senioren-Union der CDU Deutschlands</a> – der Bundesverband</li>
+                            <li><a href="../vereinigungen/">Alle Vereinigungen der CDU Schwerin</a></li>
+                            <li><a href="../kontakt/">Kontakt zur Geschäftsstelle</a></li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
         </div>
     </main>
 
