@@ -280,6 +280,112 @@ jetzt eine Einladung aus den Worten der eigenen Seite.
 
 ---
 
+## Junge-Union-Seite (September 2026)
+
+Vierte und letzte Vereinigungsseite. Die bisherige lokale Fassung hatte den
+Text der Live-Seite auf etwa die Hälfte gekürzt – und den ganzen
+Kreisvorstand ausgelassen.
+
+**Übernommen** ist jetzt der vollständige Wortlaut: die beiden bisher
+fehlenden Sätze zur Antragswerkstatt („Hier wird diskutiert, argumentiert
+und gefeilt …" und „Politisches Engagement bedeutet für uns mitdenken,
+mitreden und mitgestalten"), der Satz „Die Junge Union Schwerin verbindet
+politische Diskussion mit einer guten gemeinsamen Zeit", der ganze Absatz
+über Feste und Kaltgetränk, dazu die beiden Verweise, die die Vorlage unter
+„Mitmachen" anbietet: Instagram und der Mitgliedsantrag.
+
+**Neu dazugekommen sind die neun Köpfe des Kreisvorstands.** Auf der
+Live-Seite stehen sie unter dem Kontaktblock, in der lokalen Fassung fehlten
+sie ganz.
+
+Berichtigt sind zwei Grammatikfehler der Vorlage: „Teil der **Junge** Union
+Deutschlands" → „der Jungen Union", „innerhalb der Christlich **Demokratische**
+Union" → „Demokratischen". Dazu zwei Kommasplices („Rhetorikseminar, die JU
+Schwerin ist aktiv", „mitgestalten, dann werde Teil") – der erste ist jetzt
+ein Gedankenstrich, der zweite ein Punkt.
+
+**Neu gestaltet** mit den `.vereinigung*`-Klassen, dazu ein Baustein:
+
+- **Personen-Galerie** (`.personen-galerie`, `.personenkarte`): Bild oben,
+  Name und Amt darunter, drei Spalten – ab 768px zwei, ab 480px eine. Nicht
+  die `.member-card` der Vorstandsseite: die stellt ein hochkantes Passbild
+  neben den Text, die JU-Bilder sind gestaltete Grafiken im Querformat und
+  würden in 150px Breite unleserlich.
+
+  Beim Überfahren zoomt das Bild auf `scale(1.04)` und die Karte hebt sich
+  2px mit Schatten – Faktor, Dauer und Abfrage sind vom Zoom der
+  Meldungskacheln (`.news-image`) übernommen. Bewegung nur unter
+  `prefers-reduced-motion: no-preference`; der Schatten steht bewusst
+  ausserhalb dieser Abfrage, damit auch ohne Bewegung erkennbar bleibt,
+  welche Karte gemeint ist.
+
+  **Die Karte ist nicht anklickbar** – deshalb bleibt die Regung klein. Eine
+  Karte, die sich deutlich aufbäumt, verspricht einen Klick, den es nicht
+  gibt. Aus demselben Grund gibt es keine Lightbox: sie wäre möglich (die
+  Originalbilder liegen vor, `FocusTrap` und das Overlay-Muster der Suche
+  ebenfalls), war aber eine bewusste Entscheidung gegen zusätzliches
+  JavaScript.
+
+  Das Bild sitzt in einem eigenen `.personenkarte-bild`. Ohne diesen Rahmen
+  beschneidet das `overflow:hidden` der Karte das vergrösserte Bild nur
+  links, rechts und oben – unten schliesst die Textfläche an, dorthin wäre
+  es beim Zoomen etwa 5px hineingewachsen.
+- **Leitworte** (`.leitworte`, von der Senioren Union): „mitdenken –
+  mitreden – mitgestalten" standen in der Vorlage am Ende eines Satzes und
+  sind jetzt eine Dreierreihe, auf die der Absatz zuläuft.
+- **Zitat** (`.vereinigung-zitat`, von der Frauen Union): „Am letzten
+  Freitag des Monats findet immer eine gemeinsame Aktion statt" – die
+  konkreteste Zusage der Seite, in der Vorlage mitten im Fließtext.
+- **Reihenfolge nach Amt** statt wie in der Vorlage durcheinander: Vorsitz,
+  Stellvertretung, Kasse, danach die sechs Beisitzenden alphabetisch.
+- **Kreisvorstand vor den Mitmachen-Block** gerückt. Wer überlegt
+  mitzumachen, sieht erst, wer da ist, und dann die Schaltflächen.
+- **Das „du" bleibt.** Die JU duzt ihre Leser, die drei anderen
+  Vereinigungsseiten siezen. Das ist kein Fehler, sondern der Ton der
+  Vereinigung.
+
+### Die Bilder
+
+Die neun Porträts liegen jetzt unter `assets/images/junge-union/`. Sie sind
+aus den Originalen von der Live-Seite gemacht (1024×1024), und zwar mit
+einem Schnitt: **die unteren 256px sind weg.** Dort steht in jedem Bild ein
+blauer Balken mit Name und Amt – eingebrannt, als Pixel. Stünde er noch da,
+läse man jeden Namen zweimal, einmal im Bild und einmal als Überschrift
+darunter. Geschnitten bleibt ein 4:3-Bild mit dem JU-Logo oben links; die
+Namen stehen nur noch als HTML-Text und sind damit durchsuchbar, vorlesbar
+und übersetzbar. Gespeichert als 800×600, Qualität 82 – zusammen 868 KB.
+
+Der Balken sitzt in allen neun Bildern auf Pixelzeile 774/775, der Schnitt
+bei 768 ist deshalb für alle derselbe.
+
+### Offen
+
+- **Es gibt kein JU-Logo als Datei.** Das Logo steckt nur in den
+  Vorstandsbildern, weiß auf Foto – nicht sauber herauszulösen. Der Kopf der
+  Seite trägt deshalb keines, anders als bei der MIT. Mit einer
+  Logodatei gehörte es dorthin.
+- **Die JU hat keine eigene Telefonnummer.** Die Vorlage nennt unter
+  „Kontakt" die 0385-5900426 – das ist die Geschäftsstelle. Die
+  Kontaktkarte sagt das jetzt dazu; eine eigene Durchwahl wäre besser.
+- **Der Vorsitz in der Kontaktkarte ist aus den Bildern gelesen.** Dass Jan
+  Reißig Vorsitzender ist, steht nirgends im Text der Live-Seite, nur im
+  blauen Balken seines Bildes. Gleiches gilt für alle neun Ämter.
+- **Keine Mailadressen für die Vorstandsmitglieder.** Die Vorstandsseite des
+  Kreisverbands hat sie je Person, hier gibt es nur die
+  Sammeladresse `info@junge-union-schwerin.de`.
+- **Timon Matzick ist doppelt im Projekt.** Einmal hier als JU-Beisitzer,
+  einmal unter `assets/images/vorstand/timon-matzick.jpg` im Kreisvorstand
+  der CDU – zwei verschiedene Aufnahmen. Beides ist richtig, aber beim
+  Pflegen leicht zu verwechseln.
+- **`tools/build-site-data.py` läuft nicht mit dem Python dieses Rechners.**
+  Das Skript nutzt `int | None` in den Signaturen, das braucht Python 3.10;
+  installiert ist 3.9.6 (Xcode). Der Suchindex für diese Seite wurde über
+  eine Kopie mit `from __future__ import annotations` erzeugt. Entweder die
+  Zeile ins Skript, oder ein neueres Python.
+
+---
+
+
 ## Meldungen lokal (September 2026)
 
 Vorher verzweigten alle Meldungen ins Web: die vier Kacheln der Startseite und

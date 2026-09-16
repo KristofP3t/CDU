@@ -2636,9 +2636,11 @@ body {
 /* ==========================================================================
    Vereinigungsseiten
    Aufbau wie die Textseiten, dazu ein Kopf mit Logo, Zahlenreihen und
-   Themenkarten. Die Klassen sind absichtlich nicht MIT-spezifisch: die
-   uebrigen Vereinigungen (Frauen, Senioren, Junge Union) sind gleich
-   gebaut und bestreiten ihr Layout bisher mit style-Attributen.
+   Themenkarten. Die Klassen sind absichtlich nicht MIT-spezifisch: MIT,
+   Frauen-, Senioren- und Junge Union sind gleich gebaut und teilen sich
+   diesen Abschnitt. Jede Seite hat einen Baustein beigesteuert - das
+   Zitat die Frauen Union, die Leitworte die Senioren Union, die
+   Personen-Galerie die Junge Union.
    ========================================================================== */
 
 /* Der .container haelt den Inhalt bei 1400px. Fuer Fliesstext sind das weit
@@ -2844,6 +2846,107 @@ body {
 }
 
 /* --------------------------------------------------------------------------
+   Personen-Galerie
+   Raster aus Portraets fuer einen Vorstand, der mehr als eine Handvoll
+   Koepfe hat. Nicht .member-card der Vorstandsseite: dort steht ein
+   hochkantes Passbild neben dem Text, die Bilder der JU sind gestaltete
+   Grafiken im Querformat mit Logo und wuerden in 150px Breite unleserlich.
+   Hier traegt das Bild die Karte, Name und Amt stehen darunter als Text -
+   in den Bildern stehen sie zwar auch, aber nur als Pixel.
+   -------------------------------------------------------------------------- */
+
+.personen-galerie {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.personenkarte {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    /* Haelt das Bild in den abgerundeten Ecken - auch das vergroesserte. */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Rueckmeldung beim Ueberfahren, gleicher Schatten wie die .member-card der
+   Vorstandsseite. Er steht ausserhalb der Bewegungsabfrage weiter unten:
+   wer keine Bewegung will, soll trotzdem sehen, welche Karte gemeint ist.
+
+   :focus-within trifft heute nichts - in der Karte steht kein Link. Die
+   Zeile steht hier fuer den Fall, dass die Vorstandsmitglieder eigene
+   Mailadressen bekommen (siehe RELAUNCH.md, offene Punkte); dann gilt das
+   Verhalten fuer die Tastatur ohne weiteres Zutun. */
+.personenkarte:hover,
+.personenkarte:focus-within {
+    box-shadow: 0 12px 32px rgba(82, 183, 193, 0.25);
+}
+
+/* Eigener Rahmen um das Bild. Das overflow:hidden der Karte beschneidet das
+   vergroesserte Bild nur links, rechts und oben - unten schliesst die
+   Textflaeche an, dorthin waere es beim Zoomen etwa 5px hineingewachsen.
+   Dieser Rahmen endet an der Bildkante und beschneidet deshalb auf allen
+   vier Seiten: das Bild vergroessert sich innerhalb seines Ausschnitts,
+   der Ausschnitt selbst bleibt stehen. */
+.personenkarte-bild {
+    overflow: hidden;
+}
+
+.personenkarte img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* Die Bilder sind alle 4:3 - das Seitenverhaeltnis haelt die Zeilen
+       des Rasters auf gleicher Hoehe, auch bevor die Bilder geladen sind. */
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background-color: var(--color-light-bg);
+    transition: transform 0.4s ease;
+}
+
+/* Bewegung nur, wenn sie erwuenscht ist - dieselbe Abfrage und derselbe
+   Faktor wie beim Zoom der Meldungskacheln (.news-image). Die Karte ist
+   nicht anklickbar, deshalb bleibt es bei 1.04 und 2px: eine Karte, die
+   sich zu deutlich aufbaeumt, verspricht einen Klick, den es nicht gibt. */
+@media (prefers-reduced-motion: no-preference) {
+    .personenkarte:hover,
+    .personenkarte:focus-within {
+        transform: translateY(-2px);
+    }
+
+    .personenkarte:hover img,
+    .personenkarte:focus-within img {
+        transform: scale(1.04);
+    }
+}
+
+.personenkarte-text {
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+}
+
+.personenkarte-name {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-dark);
+    margin-bottom: 2px;
+}
+
+/* Das Amt traegt keine eigene Aussage, es ordnet den Namen ein - deshalb
+   kleiner und leiser als der Name. */
+.personenkarte-amt {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text-light);
+    /* .textseite p setzt hier sonst einen Absatzabstand in die Karte. */
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
    Ansprechpartnerin mit Portraet
    -------------------------------------------------------------------------- */
 
@@ -2866,6 +2969,21 @@ body {
     .themenkarten,
     .vereinigung-kontakt {
         grid-template-columns: 1fr;
+    }
+
+    /* Die Portraets bleiben zu zweit nebeneinander - einspaltig wird die
+       Galerie neun Bildschirme lang. */
+    .personen-galerie {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+    }
+
+    .personenkarte-text {
+        padding: var(--spacing-sm);
+    }
+
+    .personenkarte-name {
+        font-size: 16px;
     }
 
     /* Die drei Leitworte bleiben nebeneinander - gestapelt verlieren sie
@@ -2906,7 +3024,8 @@ body {
 }
 
 @media (max-width: 480px) {
-    .leitworte {
+    .leitworte,
+    .personen-galerie {
         grid-template-columns: 1fr;
     }
 
