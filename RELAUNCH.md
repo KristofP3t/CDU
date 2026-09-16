@@ -559,6 +559,101 @@ die vier Seiten mit eingebettetem CSS.
 ---
 
 
+## Vorstandsseite und Pause-Taste (September 2026)
+
+### Die Pause-Taste zeigt ihren Zustand jetzt wirklich
+
+Der Symboltausch allein reichte nicht – man musste zwei Piktogramme
+vergleichen, um zu erkennen, ob der Bildwechsel läuft. Gesteuert wird der
+Zustand jetzt über die Klasse `.is-paused` am Knopf statt über ein
+`hidden`-Attribut an den beiden `<svg>`. Das hat zwei Vorteile: die Regel
+steht im Autoren-Stylesheet und hängt nicht an der UA-Regel `[hidden]`,
+und derselbe Schalter färbt den ganzen Knopf.
+
+Angehalten wechselt er von durchscheinendem Weiß auf die Akzentfarbe –
+dieselbe, die auf der Seite „Mitglied werden" trägt. Der Zustand ist damit
+aus drei Metern erkennbar, nicht erst beim Hinsehen. Gezeigt wird immer,
+was ein Klick bewirken würde.
+
+Der Knopf steht im Markup jetzt auf `hidden` und wird von JavaScript
+sichtbar gemacht – ohne JavaScript läuft der Wechsel gar nicht erst los,
+dann gibt es auch nichts anzuhalten. Dasselbe Vorgehen wie bei den
+Spendenbeträgen.
+
+### Der Vorstand: drei Ebenen statt siebzehn gleicher Karten
+
+Die Seite bestand aus siebzehn identischen Kacheln. Der Vorsitzende sah
+aus wie das achte Mitglied des Kreisvorstandes, acht von dreizehn Rollen
+hießen „Vorstandsmitglied", und außer Name, Amt und Adresse stand nichts
+auf der Seite.
+
+**Der eigentliche Grund für den faden Eindruck sind aber die Bilder.**
+Zwölf der siebzehn Porträts liegen als 100×133 Pixel bei rund 5 KB vor.
+Dargestellt wurden sie auf 150×180 – über ihre eigene Auflösung hinaus,
+auf einem Retina-Schirm um mehr als das Dreifache. Alle siebzehn
+Originale der Live-Seite sind nachgemessen: **dort gibt es nichts
+Besseres.** 100×133 und 200×266, das ist die Quelle.
+
+Die Antwort darauf ist gegen die Intuition: **kleiner zeigen, nicht
+größer.** Die Bilder sind jetzt runde Ausschnitte von 132px (Vorsitz),
+88px (Ämter) und 56px (übrige) – alle unter der nativen Breite und damit
+scharf. Bei fehlender Auflösung ist Verkleinern die einzige ehrliche
+Antwort.
+
+Der Ausschnitt sitzt bei `object-position: center 20%`. Von oben
+geschnitten fehlen die Kinne, mittig geschnitten sitzen die Köpfe zu hoch
+im Kreis; 20 Prozent trifft bei allen siebzehn.
+
+Die drei Ebenen:
+
+- **Vorsitz** (`.vorstand-leitung`) allein und quer über die Spalte, auf
+  hellem Grund, 132px-Kreis.
+- **Vier Ämter** (`.member-card`, umgebaut) im Dreierraster – stellv.
+  Vorsitz zweimal, Schatzmeister, Mitgliederbeauftragter.
+- **Acht weitere** (`.vorstand-weitere`, `.person-kompakt`) als kompakte
+  Reihe mit 56px-Kreis, Name und Adresse. Ohne Amtszeile: sie hieße
+  achtmal „Mitglied des Kreisvorstandes", das sagt die
+  Zwischenüberschrift schon.
+
+Alle siebzehn Bilder haben jetzt `width` und `height` – sie waren der
+größte Teil der siebzehn Bilder ohne Maßangabe, die bei der Durchsicht
+aufgefallen waren.
+
+### Dabei gegen die Live-Seite berichtigt
+
+- **Eine Adresse war nicht zustellbar.** Silvia Rabethke stand lokal mit
+  `rebethge@`, die Live-Seite nennt `rabethge@`. Der lokale Wert traf
+  weder den Namen noch die Adresse.
+- **„Mitgliedschaftsleiter" gibt es nicht.** Die Live-Seite nennt Phillip
+  Geib „Mitgliederbeauftragter".
+- **Bernd Nottebaum** ist „Dezernent, stellvertretender
+  Oberbürgermeister", nicht nur Letzteres.
+- **Gert Rudolf** ist „Vorsitzender der CDU-Fraktion der Landeshauptstadt
+  Schwerin", lokal stand „CDU-Ratsfraktion".
+- **Zwei Durchwahlen fehlten lokal:** das CDU-Bürgerbüro von Sebastian
+  Ehlers, (0385) 55 59 36 20, und die von Ingo Freund, (0385) 59 00 423.
+
+### Offen
+
+- **Die Seite bräuchte ordentliche Porträts.** Die Junge Union hat sich
+  eine einheitliche Serie machen lassen, vor Schweriner Motiven, mit
+  Logo. Dieselbe Serie für den Kreisvorstand, und die Seite trüge sich
+  von allein. Alles hier ist Schadensbegrenzung an 5-KB-Thumbnails.
+- **Der Einleitungssatz ist selbst geschrieben.** Die Live-Seite hat
+  keinen – sie besteht aus einer Überschrift und siebzehn Visitenkarten.
+  Der Satz sagt deshalb nur das, was sich aus der Seite selbst ergibt.
+  Was der Kreisvorstand tut, wann er gewählt wurde und wie oft er tagt,
+  müsste vom Kreisverband kommen.
+- **Handynummer nicht übernommen.** Die Live-Seite nennt für Ingo Freund
+  zusätzlich (0172) 32 66 776. Dienstliche Durchwahl und Anschrift stehen
+  hier, die Mobilnummer nicht – wenn sie dazugehört, gehört sie zurück.
+- **Nicht im Browser gesehen.** Der runde Zuschnitt ist an allen
+  siebzehn Bildern nachgerechnet und als Vorschau geprüft, die fertige
+  Seite nicht.
+
+---
+
+
 ## Meldungen lokal (September 2026)
 
 Vorher verzweigten alle Meldungen ins Web: die vier Kacheln der Startseite und

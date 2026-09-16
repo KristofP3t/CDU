@@ -390,28 +390,26 @@ const ImageSlider = (() => {
         });
     };
 
-    // Die Taste traegt ihren Zustand im Symbol und im aria-label. Hat das
-    // System die Bewegung abgestellt, laeuft ohnehin nichts - dann ist die
-    // Taste gegenstandslos und verschwindet.
+    // Die Taste traegt ihren Zustand dreifach: als Symbol, als Farbe und im
+    // aria-label. Steuerung ueber eine Klasse am Knopf, das CSS entscheidet
+    // daraus, welches der beiden Symbole sichtbar ist.
+    //
+    // Nicht ueber .hidden an den <svg>: die Eigenschaft ist in der
+    // Schnittstelle HTMLElement definiert, ein <svg> ist ein SVGElement und
+    // erbt von Element, nicht von HTMLElement. Eine Zuweisung legte dort nur
+    // eine gewoehnliche JavaScript-Eigenschaft an, ohne das Attribut zu
+    // setzen - der Selektor [hidden] griff nie.
+    //
+    // Der Knopf selbst steht im Markup auf hidden und wird hier sichtbar
+    // gemacht: ohne JavaScript laeuft der Wechsel gar nicht erst los, dann
+    // gibt es auch nichts anzuhalten. Dasselbe Vorgehen wie bei den
+    // Spendenbetraegen.
     const syncPauseBtn = () => {
         if (!pauseBtn) return;
         pauseBtn.hidden = !motionOK;
-        const paused = userPaused;
-        pauseBtn.setAttribute('aria-label', paused ? 'Bildwechsel fortsetzen' : 'Bildwechsel anhalten');
-        // Angehalten zeigt die Taste das Wiedergabe-Zeichen (was ein Klick
-        // bewirken wuerde), laufend das Pause-Zeichen.
-        //
-        // toggleAttribute statt .hidden: die Eigenschaft .hidden ist in der
-        // Schnittstelle HTMLElement definiert, und ein <svg> ist ein
-        // SVGElement - es erbt von Element, nicht von HTMLElement. Eine
-        // Zuweisung .hidden = true legt dort nur eine gewoehnliche
-        // JavaScript-Eigenschaft an, ohne das Attribut im Markup zu setzen.
-        // Der Selektor [hidden] greift dann nie, und die Symbole wechseln
-        // nicht. toggleAttribute steht auf Element und wirkt auch im SVG.
-        const icoPause = pauseBtn.querySelector('.slider-icon-pause');
-        const icoPlay = pauseBtn.querySelector('.slider-icon-play');
-        if (icoPause) icoPause.toggleAttribute('hidden', paused);
-        if (icoPlay) icoPlay.toggleAttribute('hidden', !paused);
+        pauseBtn.classList.toggle('is-paused', userPaused);
+        pauseBtn.setAttribute('aria-label',
+            userPaused ? 'Bildwechsel fortsetzen' : 'Bildwechsel anhalten');
     };
 
     const showSlide = (index) => {

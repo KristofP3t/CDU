@@ -910,6 +910,41 @@ body {
     height: 20px;
 }
 
+/* Welches der beiden Symbole zu sehen ist, entscheidet die Klasse
+   .is-paused am Knopf - nicht ein hidden-Attribut an den <svg>. Das ist
+   aus zwei Gruenden besser: die Regel steht im Autoren-Stylesheet und
+   haengt nicht an der UA-Regel [hidden], und derselbe Schalter kann den
+   ganzen Knopf einfaerben.
+
+   Gezeigt wird immer, was ein Klick bewirken wuerde: laeuft der Wechsel,
+   steht dort das Pause-Zeichen; ist er angehalten, das Wiedergabe-Zeichen. */
+.slider-pause .slider-icon-play {
+    display: none;
+}
+
+.slider-pause.is-paused .slider-icon-pause {
+    display: none;
+}
+
+.slider-pause.is-paused .slider-icon-play {
+    display: block;
+}
+
+/* Der Zustand soll auf einen Blick erkennbar sein, nicht erst am
+   Symbolvergleich. Angehalten wechselt der Knopf deshalb von durch-
+   scheinendem Weiss auf die Akzentfarbe - dieselbe, die auf der Seite
+   "Mitglied werden" traegt. Dunkle Schrift darauf, damit der Kontrast
+   stimmt. */
+.slider-pause.is-paused {
+    background-color: var(--color-accent);
+    color: var(--color-dark);
+}
+
+.slider-pause.is-paused:hover,
+.slider-pause.is-paused:focus-visible {
+    background-color: #ffb733;
+}
+
 /* .slider-btn setzt display:flex. Autorenregeln schlagen die UA-Regel
    [hidden]{display:none}, ohne diese Zeile bliebe die ausgeblendete Taste
    stehen - derselbe Fall wie bei .search-overlay und .spenden-betraege. */
@@ -1855,19 +1890,31 @@ body {
 
 .vorstand-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-lg);
+    /* Drei statt zwei: die Karten sind seit dem runden Bild deutlich
+       flacher, zu zweit stuenden sie verloren nebeneinander. */
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
 }
 
+/* Die Portraets sind Daumennagel gross: zwoelf der siebzehn liegen als
+   100x133 Pixel bei rund 5 KB vor, auch auf der Live-Seite gibt es nichts
+   Besseres. Vorher wurden sie auf 150x180 gezogen - also ueber ihre
+   eigene Aufloesung hinaus, auf einem Retina-Schirm um mehr als das
+   Dreifache. Das sah matschig aus.
+
+   Deshalb jetzt rund und klein: ein Kreis von 88px bleibt unter der
+   nativen Breite und damit scharf. Bei fehlender Aufloesung ist
+   Verkleinern die einzige ehrliche Antwort. */
 .member-card {
     background-color: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    overflow: hidden;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     display: grid;
-    grid-template-columns: 150px 1fr;
-    height: 180px;
+    grid-template-columns: 88px 1fr;
+    gap: var(--spacing-md);
+    align-items: center;
+    padding: var(--spacing-md);
 }
 
 .member-card:hover,
@@ -1877,19 +1924,21 @@ body {
 }
 
 .member-image {
-    width: 150px;
-    height: 180px;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
     object-fit: cover;
+    /* Die Vorlagen sind Hochformat 3:4. Beim runden Zuschnitt liegt der
+       beste Ausschnitt bei 20 Prozent: von oben geschnitten fehlen die
+       Kinne, mittig geschnitten sitzen die Koepfe zu hoch im Kreis. */
+    object-position: center 20%;
     display: block;
     background-color: var(--color-light-bg);
 }
 
 .member-info {
-    padding: var(--spacing-md);
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    /* Den Abstand traegt jetzt .member-card, nicht mehr die Textspalte. */
+    min-width: 0;
 }
 
 .member-name {
@@ -1934,7 +1983,6 @@ body {
     outline-offset: -1px;
 }
 
-/* Desktop: 2 Columns */
 @media (max-width: 1024px) {
     .vorstand-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1948,31 +1996,10 @@ body {
         gap: var(--spacing-md);
     }
 
-    .member-card {
-        grid-template-columns: 120px 1fr;
-        height: 150px;
-    }
-
-    .member-image {
-        width: 120px;
-        height: 150px;
-        border-radius: 8px 0 0 8px;
-    }
-
-    .member-info {
-        padding: var(--spacing-sm);
-    }
-
+    /* Der Kreis bleibt rund und bleibt klein - das Bild gibt nicht mehr
+       her. Nur die Textgroessen ziehen etwas an. */
     .member-name {
-        font-size: 14px;
-    }
-
-    .member-position {
-        font-size: 12px;
-    }
-
-    .member-email {
-        font-size: 11px;
+        font-size: 15px;
     }
 }
 
@@ -1984,25 +2011,14 @@ body {
     }
 
     .member-card {
-        grid-template-columns: 100px 1fr;
-        height: 130px;
+        grid-template-columns: 64px 1fr;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
     }
 
     .member-image {
-        width: 100px;
-        height: 130px;
-    }
-
-    .member-name {
-        font-size: 13px;
-    }
-
-    .member-position {
-        font-size: 11px;
-    }
-
-    .member-email {
-        font-size: 10px;
+        width: 64px;
+        height: 64px;
     }
 }
 
@@ -3138,4 +3154,130 @@ ul.liste-blank {
     margin-top: var(--spacing-xl);
     padding-top: var(--spacing-xl);
     border-top: 1px solid var(--color-border);
+}
+
+/* ==========================================================================
+   Vorstandsseite: drei Ebenen statt siebzehn gleicher Karten
+   Vorher standen Vorsitz, Schatzmeister und das achte Mitglied des
+   Kreisvorstandes als identische Kachel nebeneinander - die Seite hatte
+   keine Rangfolge und las sich als Liste von Visitenkarten.
+   ========================================================================== */
+
+/* Ebene 1: der Vorsitz, allein und quer ueber die Spalte. */
+.vorstand-leitung {
+    display: grid;
+    grid-template-columns: 132px 1fr;
+    gap: var(--spacing-lg);
+    align-items: center;
+    padding: var(--spacing-lg);
+    background-color: var(--color-light-bg);
+    border-radius: 8px;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Das Bild des Vorsitzenden liegt als 200x266 vor - 132px bleiben
+   darunter und damit scharf. */
+.vorstand-leitung img {
+    width: 132px;
+    height: 132px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+    background-color: var(--color-white);
+}
+
+.vorstand-leitung-name {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-dark);
+}
+
+.vorstand-leitung-amt {
+    font-size: 15px;
+    color: var(--color-text-light);
+    margin: 2px 0 var(--spacing-sm);
+}
+
+/* Ebene 3: die uebrigen Mitglieder. Kein Amt unter dem Namen - es hiesse
+   bei allen acht "Mitglied des Kreisvorstandes", das traegt die
+   Zwischenueberschrift schon. */
+.vorstand-weitere {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.person-kompakt {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: var(--spacing-sm);
+    align-items: center;
+    min-width: 0;
+}
+
+.person-kompakt img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+    background-color: var(--color-light-bg);
+}
+
+.person-kompakt-name {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-dark);
+}
+
+/* Lange Adressen duerfen umbrechen statt die Spalte zu sprengen. */
+.person-kompakt a {
+    font-size: 13px;
+    color: var(--color-text-light);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.person-kompakt a:hover,
+.person-kompakt a:focus-visible {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Zwischenueberschrift ueber einer Ebene, leiser als ein h2. */
+.vorstand-zwischentitel {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-light);
+    margin-top: var(--spacing-lg);
+}
+
+@media (max-width: 1024px) {
+    .vorstand-weitere {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .vorstand-leitung {
+        grid-template-columns: 96px 1fr;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+    }
+
+    .vorstand-leitung img {
+        width: 96px;
+        height: 96px;
+    }
+
+    .vorstand-weitere {
+        grid-template-columns: 1fr;
+    }
 }
