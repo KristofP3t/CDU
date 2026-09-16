@@ -619,6 +619,17 @@ Alle siebzehn Bilder haben jetzt `width` und `height` – sie waren der
 größte Teil der siebzehn Bilder ohne Maßangabe, die bei der Durchsicht
 aufgefallen waren.
 
+**Der Kontaktabschnitt am Seitenende ist weg.** Er nannte Anschrift,
+Telefon und E-Mail des Kreisverbandes – dieselben Angaben stehen in der
+Fußzeile jeder Seite, dort sogar samt Faxnummer. Die Seite endet jetzt
+mit der Ratsfraktion.
+
+Zehn Seiten führen die Anschrift des Kreisverbandes im Hauptteil. Bei
+Impressum und Datenschutz steht sie aus rechtlichen Gründen, bei Kontakt
+und Geschäftsstelle ist sie das Thema der Seite – die bleiben. Ob sie auf
+`service` und den drei Stadtbezirksseiten nötig ist, wäre noch
+anzusehen.
+
 ### Dabei gegen die Live-Seite berichtigt
 
 - **Eine Adresse war nicht zustellbar.** Silvia Rabethke stand lokal mit
