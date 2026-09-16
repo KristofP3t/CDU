@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kontakt – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Kontaktieren Sie den CDU Kreisverband Schwerin. Wir antworten schnellstmöglich auf Ihre Anfrage.">
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
     <style>
         /* Animations */
         @keyframes slideIn {
@@ -406,7 +414,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
@@ -582,7 +590,7 @@
                     </p>
 
                     <h3>📋 Weitere Links</h3>
-                    <ul style="list-style: none; padding: 0;">
+                    <ul class="liste-blank">
                         <li><a href="../impressum/">Impressum</a></li>
                         <li><a href="../datenschutz/">Datenschutz</a></li>
                     </ul>

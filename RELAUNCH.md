@@ -386,6 +386,179 @@ bei 768 ist deshalb für alle derselbe.
 ---
 
 
+## Schrift, Slider-Pause und Entstylen (September 2026)
+
+Drei Punkte aus der Durchsicht der ganzen Seite, umgesetzt in einem Zug.
+
+### Der Slider lässt sich anhalten
+
+Die Bildbühne wechselte alle fünf Sekunden von allein, und es gab keine
+Möglichkeit, das zu stoppen – nur vor, zurück und die Punkte. WCAG 2.2.2
+verlangt für alles, was sich länger als fünf Sekunden von selbst bewegt,
+eine Pause-Möglichkeit. Für eine öffentliche Parteiseite ist das nicht
+optional.
+
+Neu ist eine Pause-Taste in der Bedienleiste, mit Symbol statt Zeichen –
+die Unicode-Zeichen für Pause und Wiedergabe sehen je nach System sehr
+verschieden aus, die Pfeile der Nachbartasten nicht.
+
+Dabei kamen drei weitere Dinge heraus:
+
+- **Ein Schalter trug zwei Bedeutungen.** `autoplayEnabled` stand sowohl
+  für „das System möchte keine Bewegung" als auch für „läuft gerade".
+  Wer `prefers-reduced-motion` gesetzt hatte und auf einen Punkt klickte,
+  bekam den Automatiklauf zurück. Jetzt gibt es `motionOK` und
+  `userPaused` getrennt, und `mayAutoplay()` verbindet beide.
+- **Die Tastatur hielt den Lauf nicht an.** Pausiert wurde bei
+  `mouseenter`, aber nicht bei Fokus. Wer sich mit Tab in die Leiste
+  bewegte, dem wechselte das Bild unter dem Finger weg. Jetzt hört der
+  Rahmen `.hero-media` auch auf `focusin`/`focusout`.
+- **`addListener` ist abgekündigt** und durch
+  `addEventListener('change')` ersetzt.
+
+Die Taste blendet sich aus, wenn das System ohnehin keine Bewegung will –
+dann gibt es nichts anzuhalten. Dafür braucht es `.slider-btn[hidden]`
+ausdrücklich: `.slider-btn` setzt `display:flex`, und Autorenregeln
+schlagen die UA-Regel `[hidden]{display:none}`. Derselbe Fall wie schon
+bei `.search-overlay` und `.spenden-betraege`.
+
+**Nachtrag – die Symbole wechselten nicht.** Der erste Wurf setzte
+`icoPause.hidden = paused` auf den beiden `<svg>`. Das wirkt nicht: die
+Eigenschaft `.hidden` ist in der Schnittstelle `HTMLElement` definiert,
+und ein `<svg>` ist ein `SVGElement` – es erbt von `Element`, nicht von
+`HTMLElement`. Die Zuweisung legte dort nur eine gewöhnliche
+JavaScript-Eigenschaft an, ohne das Attribut im Markup zu setzen; der
+Selektor `[hidden]` griff nie. Sichtbar war das nur beim Klicken, weil der
+Anfangszustand im Markup steht und deshalb stimmte. Jetzt
+`toggleAttribute('hidden', …)` – das steht auf `Element` und wirkt auch im
+SVG. Angehalten zeigt die Taste das Wiedergabe-Zeichen, laufend das
+Pause-Zeichen.
+
+### Favicon
+
+Der Browser-Tab trägt jetzt dieselbe Bildmarke wie `cdu-schwerin.com`: die
+drei ansteigenden Balken in Schwarz, Rot und Orange. Vorher zeigte allein
+die Startseite ein Symbol, und zwar `logo.png` – ein 235×88-Banner, auf
+32px unleserlich. Die übrigen 39 Seiten hatten gar keines.
+
+Neu sind `favicon-32.png`, `favicon-192.png` und ein `apple-touch-icon.png`
+unter `assets/images/`, dazu `favicon.ico` (16/32/48) in der Wurzel, weil
+Browser sie von sich aus dort anfragen. Eingebunden auf allen Seiten und in
+`tools/vorlagen/seite.html`.
+
+Das Apple-Symbol ist weiß hinterlegt: iOS legt Transparenz auf Schwarz, und
+darin verschwände der schwarze Balken der Marke.
+
+**Offen:** dasselbe Problem hat das Original im dunklen Browser-Tab. Die
+Vorlage von der Live-Seite ist transparent, der schwarze Balken ist dort
+also unsichtbar – die Marke wirkt zweifarbig statt dreifarbig. Übernommen
+ist die Datei trotzdem unverändert, weil sie so auf cdu-schwerin.com steht.
+Wer das beheben will, hat zwei Wege: weiß hinterlegen wie beim
+Apple-Symbol, oder über `<link rel="icon" media="(prefers-color-scheme:
+dark)">` eine zweite Fassung ausliefern.
+
+### Inter statt Arial, und eine fluide Skala
+
+Die Seite hatte keinen Webfont – `Arial` als Grundschrift, Überschriften
+auf `font-weight: 400`. Nichts datiert eine Seite so zuverlässig.
+
+Jetzt liegt **Inter** unter `assets/fonts/`, selbst gehostet. Nicht über
+`fonts.googleapis.com`: das lädt bei jedem Aufruf die IP des Besuchers zu
+Google, und genau dafür ist eine Website schon verurteilt worden (LG
+München I, 20.01.2022, 3 O 17493/20). Für eine Parteiseite ist das kein
+theoretisches Risiko.
+
+Zwei Dateien, aufgeteilt nach Zeichenbereich wie Google sie ausliefert.
+Für deutschen Text lädt der Browser allein `latin` (48 KB) – Umlaute und
+ß liegen in U+0000–00FF. `latin-ext` (85 KB) kommt erst dazu, wenn ein
+Name polnische oder tschechische Zeichen trägt. Variabel von 400 bis 700,
+deshalb genügt eine Datei je Bereich für alle Schnitte. SIL OFL 1.1, der
+Lizenztext liegt daneben.
+
+Vorgeladen wird die Schrift per `<link rel="preload">` auf jeder Seite und
+in `tools/vorlagen/seite.html` – im Stylesheet stehend würde sie sonst
+erst nach dessen Auswertung angefordert.
+
+**Die Größen sind jetzt fluid.** Vier Token mit `clamp()` lösen die
+bisherigen Breakpoint-Stufen ab:
+
+    --text-hero  32 -> 60px
+    --text-h1    28 -> 48px
+    --text-h2    22 -> 34px
+    --text-h3    19 -> 23px
+
+Jeder Wert wächst gleichmäßig zwischen 480px und 1400px Viewport-Breite.
+Damit entfallen neun Media-Query-Abstufungen ersatzlos – sie hätten das
+`clamp()` sonst überschrieben, weil sie später in der Datei stehen. Kein
+Sprung mehr an der Breakpoint-Kante, und 32px H1 ist auf einem 27-Zoll-
+Monitor nicht länger verloren.
+
+Dazu: Überschriften von `400` auf `600`/`700`, leicht angezogene
+Laufweite auf großen Graden (`letter-spacing: -0.02em`) und
+`text-wrap: balance` gegen die einzelne Restzeile aus einem Wort.
+
+### Rund 200 style-Attribute abgelöst
+
+Von 204 auf 8. Die verbliebenen acht sind `display: none` auf Elementen,
+die JavaScript umschaltet – Formularmeldungen, Ladeanzeige, die Schritte
+des Mitgliedsantrags. Das ist Zustand, nicht Gestaltung; die Umstellung
+auf `hidden` hieße, die Formularlogik anzufassen, und dafür ist der
+Gewinn zu klein.
+
+Es waren nur 29 verschiedene Werte, die sich 204-mal wiederholten. Fünf
+davon machten drei Viertel aus:
+
+    34x  der Hervorhebungs-Link "Mitglied werden" in der Navigation
+    33x  margin-top: 0 auf Kartenüberschriften
+    32x  "Mehr erfahren →" am Kartenfuß
+    31x  die hellblaue Infokarte
+    19x  Abstand zwischen zwei Abschnitten
+
+Die meisten brauchten keine neue Regel:
+
+- **`margin-top: 0` war schlicht überflüssig.** Der Reset setzt
+  `* { margin: 0 }`. Alle 33 ersatzlos gestrichen.
+- **Die Infokarte gab es schon.** `.infokarte` trägt exakt dieselben drei
+  Deklarationen – sie stammt von der MIT-Seite.
+- **Den Abschnittsabstand gab es auch schon**, als
+  `.textseite section + section`.
+
+Neu sind `.nav-link-cta`, `.mehr-link`, `.kartenraster`, `ul.liste-blank`
+und `.abschnitt-getrennt`. Bei `ul.liste-blank` ist der Typselektor nötig:
+`.textseite ul` setzt die Einrückung und ist gleich spezifisch, die Regel
+steht deshalb weiter unten in der Datei und gewinnt über die Reihenfolge.
+
+**Fünfzehn Inhaltsseiten tragen jetzt `.textseite`** – Datenschutz,
+Impressum, Links, Service, Vereinigungen, Stadtbezirksverbände,
+Wahlarchiv, die vier Wahlseiten, Geschäftsstelle und die drei
+Stadtbezirke. Sie nutzten vorher keine einzige eigene Komponentenklasse,
+waren also genau die Seiten, für die `.textseite` gemacht ist.
+
+Das behebt nebenbei einen Fehler: **es gibt keine globale `p`-Regel.**
+Absatzabstand und Zeilenhöhe kommen allein aus `.textseite p`. Diese
+fünfzehn Seiten hatten also bisher gar keinen Absatzabstand – die
+Paragraphen standen bündig aufeinander.
+
+Ausgenommen sind `der-vorstand` und `aktuelles` (eigene Komponenten) sowie
+die vier Seiten mit eingebettetem CSS.
+
+### Offen
+
+- **33 KB CSS und 30 KB JavaScript stecken in vier Seiten** statt in den
+  gemeinsamen Dateien: `mitglied-werden` (16 + 15 KB), `termine` (8 + 8),
+  `kontakt` (7 + 4) und `mitglied-werden/bestaetigung` (1 + 1). Das ist
+  mehr Altlast als die 204 Attribute zusammen, aber ein eigener Umbau –
+  und einer, der an die Formulare geht.
+- **Nichts davon ist im Browser gesehen worden.** Geprüft sind
+  Klammernbilanz, Tag-Ausgewogenheit, Klassenbelegung und JS-Syntax. Die
+  Wirkung der neuen Schrift, der fluiden Größen und des Absatzabstands auf
+  den fünfzehn Seiten ist gerechnet, nicht betrachtet.
+- **Georgia steht noch** als `--font-secondary` für Zitate. Eine moderne
+  Serifenschrift wäre stimmiger, kostet aber eine zweite Schriftdatei.
+
+---
+
+
 ## Meldungen lokal (September 2026)
 
 Vorher verzweigten alle Meldungen ins Web: die vier Kacheln der Startseite und

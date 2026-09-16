@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vereinigungen – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Vereinigungen - CDU Kreisverband Schwerin">
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
 </head>
 <body>
     <a href="#main" class="skip-link">Direkt zum Inhalt</a>
@@ -122,7 +130,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
@@ -130,47 +138,47 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main" class="site-main" role="main">
+    <main id="main" class="site-main textseite" role="main">
         <div class="container">
             <article>
                 <h1>Vereinigungen der CDU Schwerin</h1>
 
-                <p style="font-size: 18px; line-height: 1.8; color: var(--color-text); margin-bottom: var(--spacing-lg);">
+                <p class="seiten-einleitung">
                     Die Arbeit des Kreisverbandes der Christlich Demokratischen Union ist ohne die Arbeit der Vereinigungen nicht denkbar. Sie unterstützen die Politik der CDU in Schwerin an der Basis und direkt bei den Menschen in Schwerin.
                 </p>
 
-                <section style="margin-bottom: var(--spacing-xl);">
+                <section>
                     <h2>Unsere Vereinigungen</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-lg); margin-top: var(--spacing-lg);">
-                        <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Mittelstands- und Wirtschaftsunion (MIT)</h3>
+                    <div class="kartenraster">
+                        <article class="infokarte">
+                            <h3>Mittelstands- und Wirtschaftsunion (MIT)</h3>
                             <p>Die MIT Schwerin setzt sich für die Interessen von Unternehmern und Mittelständlern ein.</p>
                             <p>
-                                <a href="../wirtschafts-und-mittelstandsvereinigung/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Mehr erfahren →</a>
+                                <a class="mehr-link" href="../wirtschafts-und-mittelstandsvereinigung/">Mehr erfahren →</a>
                             </p>
                         </article>
 
-                        <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Frauen Union Schwerin</h3>
+                        <article class="infokarte">
+                            <h3>Frauen Union Schwerin</h3>
                             <p>Die Frauen Union setzt sich für Gleichberechtigung und Chancengleichheit ein.</p>
                             <p>
-                                <a href="../frauen-union-schwerin/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Mehr erfahren →</a>
+                                <a class="mehr-link" href="../frauen-union-schwerin/">Mehr erfahren →</a>
                             </p>
                         </article>
 
-                        <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Senioren Union Schwerin</h3>
+                        <article class="infokarte">
+                            <h3>Senioren Union Schwerin</h3>
                             <p>Die Senioren Union bietet älteren CDU-Mitgliedern die Möglichkeit zur aktiven Partizipation.</p>
                             <p>
-                                <a href="../senioren-union-schwerin/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Mehr erfahren →</a>
+                                <a class="mehr-link" href="../senioren-union-schwerin/">Mehr erfahren →</a>
                             </p>
                         </article>
 
-                        <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Junge Union Schwerin</h3>
+                        <article class="infokarte">
+                            <h3>Junge Union Schwerin</h3>
                             <p>Die Junge Union vertritt die Interessen junger Bürger in der Kommunalpolitik.</p>
                             <p>
-                                <a href="../junge-union-schwerin/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Mehr erfahren →</a>
+                                <a class="mehr-link" href="../junge-union-schwerin/">Mehr erfahren →</a>
                             </p>
                         </article>
                     </div>

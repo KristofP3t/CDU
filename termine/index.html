@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Termine – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Anstehende Termine und Veranstaltungen des CDU Kreisverbands Landeshauptstadt Schwerin.">
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
     <style>
         /* Fade-in Animation */
         @keyframes fadeIn {
@@ -473,7 +481,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
@@ -630,7 +638,7 @@
                 </article>
             </section>
 
-            <section style="margin-top: var(--spacing-xl); padding: var(--spacing-lg); background-color: #f0f8f9; border-radius: 8px;">
+            <section class="infokarte">
                 <h2>Zusätzliche Informationen</h2>
                 <p>Alle Termine finden vorbehaltlich von Änderungen statt. Bei Fragen zu einzelnen Veranstaltungen können Sie uns unter <a href="tel:+493855900426">0385 - 59 00 426</a> oder per <a href="mailto:kreisverband@cdu-schwerin.com">E-Mail</a> kontaktieren.</p>
             </section>

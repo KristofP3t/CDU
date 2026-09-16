@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mitglied werden – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Werde Mitglied der CDU Schwerin! Gemeinsam gestalten wir Politik für die Landeshauptstadt Schwerin.">
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
     <style>
         .membership-hero {
             background: linear-gradient(135deg, #52b7c1 0%, #3a9fa7 100%);
@@ -776,7 +784,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
@@ -948,7 +956,7 @@
                         </div>
 
                         <!-- Privacy Notice -->
-                        <div class="privacy-notice" style="margin-top: var(--spacing-lg);">
+                        <div class="privacy-notice">
                             <p>🔒 <strong>Sicher übertragen.</strong> Ihre Daten werden über eine sichere Verbindung übertragen. Lesen Sie unsere <a href="../datenschutz/">Datenschutzerklärung</a> für weitere Informationen.</p>
                         </div>
                     </div>
@@ -1012,7 +1020,7 @@
                 Wismarsche Straße 173<br>
                 19053 Schwerin</p>
                 <p><strong>Persönlich:</strong> Besuchen Sie uns in unserer Geschäftsstelle!</p>
-                <p style="margin-top: var(--spacing-lg); border-top: 1px solid var(--color-border); padding-top: var(--spacing-md);">
+                <p class="abschnitt-getrennt">
                     <strong>Fragen?</strong> Kontaktieren Sie uns unter <a href="tel:+493855900426">+49 (385) 59 00 426</a>
                 </p>
             </section>

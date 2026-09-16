@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Die Stadtbezirksverbände – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Die Stadtbezirksverbände - CDU Kreisverband Schwerin">
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
 </head>
 <body>
     <a href="#main" class="skip-link">Direkt zum Inhalt</a>
@@ -122,7 +130,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
@@ -130,56 +138,56 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main" class="site-main" role="main">
+    <main id="main" class="site-main textseite" role="main">
         <div class="container">
             <article>
                 <h1>Die Stadtbezirksverbände</h1>
 
-                <p style="font-size: 18px; line-height: 1.8; color: var(--color-text); margin-bottom: var(--spacing-lg);">
+                <p class="seiten-einleitung">
                     <strong>Die Schweriner Stadtbezirksverbände sind Ihre CDU vor Ort.</strong>
                 </p>
 
-                <p style="line-height: 1.8; margin-bottom: var(--spacing-xl);">
+                <p class="seiten-einleitung">
                     Hier können Sie Anteil an unserer Arbeit innerhalb des Kreisverbandes nehmen und sich davon überzeugen, dass die CDU die erste Wahl sein muss. Fast alle Stadtteile in Schwerin haben das Gremium eines Ortsbeirates. Die Mitglieder in den Ortsbeiräten sind Ansprechpartner für die jeweiligen Ortsteileinwohner und Einrichtungen.
                 </p>
 
-                <p style="line-height: 1.8; margin-bottom: var(--spacing-xl);">
+                <p class="seiten-einleitung">
                     Die Stadtbezirksverbände ermöglichen es, dass durch gemeinsame Anstrengungen in den Einzelnen Stadtteilen die Voraussetzungen geschaffen werden, damit eine gute Entwicklung in jedem Stadtteil stattfinden kann.
                 </p>
 
                 <section>
                     <h2>Unsere Stadtbezirksverbände</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-lg); margin-top: var(--spacing-lg);">
-                        <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Stadtbezirksverband Nordwest</h3>
+                    <div class="kartenraster">
+                        <article class="infokarte">
+                            <h3>Stadtbezirksverband Nordwest</h3>
                             <p>Der Bezirk umfasst die Stadtteile Warnitz, Friedrichsthal, Sacktannen, Neumühle, Weststadt und Lankow.</p>
                             <p>
-                                <a href="../stadtbezirksverband-nordwest/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Mehr erfahren →</a>
+                                <a class="mehr-link" href="../stadtbezirksverband-nordwest/">Mehr erfahren →</a>
                             </p>
                         </article>
 
-                        <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Stadtbezirksverband Mitte</h3>
+                        <article class="infokarte">
+                            <h3>Stadtbezirksverband Mitte</h3>
                             <p>Der Bezirk umfasst die Stadtteile Medewege, Wickendorf, Schelfwerder, Lewenberg, Werdervorstadt, Schelfstadt, Paulsstadt, Altstadt, Feldstadt und Ostorf.</p>
                             <p>
-                                <a href="../stadtbezirksverband-mitte/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Mehr erfahren →</a>
+                                <a class="mehr-link" href="../stadtbezirksverband-mitte/">Mehr erfahren →</a>
                             </p>
                         </article>
 
-                        <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Stadtbezirksverband Süd-Fernsehturm</h3>
+                        <article class="infokarte">
+                            <h3>Stadtbezirksverband Süd-Fernsehturm</h3>
                             <p>Besuchen Sie den Stadtbezirksverband Süd-Fernsehturm und erfahren Sie mehr über die Arbeit vor Ort.</p>
                             <p>
-                                <a href="../stadtbezirksverband-sued-fernsehturm/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Mehr erfahren →</a>
+                                <a class="mehr-link" href="../stadtbezirksverband-sued-fernsehturm/">Mehr erfahren →</a>
                             </p>
                         </article>
                     </div>
                 </section>
 
-                <section style="margin-top: var(--spacing-xl);">
+                <section>
                     <h2>Kontakt</h2>
                     <p>
-                        Haben Sie Fragen oder Anregungen? <a href="../kontakt/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Kontaktieren Sie uns →</a>
+                        Haben Sie Fragen oder Anregungen? <a class="mehr-link" href="../kontakt/">Kontaktieren Sie uns →</a>
                     </p>
                 </section>
             </article>

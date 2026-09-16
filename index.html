@@ -25,8 +25,15 @@
     <!-- Preconnect to GA (optional) -->
     <link rel="preconnect" href="https://www.googletagmanager.com">
 
+    <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="icon" href="assets/images/logo.png" sizes="32x32">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
 </head>
 <body>
     <!-- Skip Link for Keyboard Navigation -->
@@ -206,6 +213,18 @@
                     <!-- Punkte werden in js/main.js aus der Zahl der Bilder erzeugt,
                          damit Markup und Slider nicht auseinanderlaufen. -->
                     <div id="slider-dots" class="slider-dots"></div>
+                    <!-- WCAG 2.2.2: was sich von allein bewegt, muss sich anhalten
+                         lassen. Die Taste blendet js/main.js aus, wenn das System
+                         ohnehin keine Bewegung will - dann gibt es nichts zu halten. -->
+                    <button class="slider-btn slider-pause" id="slider-pause" type="button" aria-label="Bildwechsel anhalten">
+                        <svg class="slider-icon-pause" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                            <rect x="7" y="5" width="4" height="14" rx="1"/>
+                            <rect x="13" y="5" width="4" height="14" rx="1"/>
+                        </svg>
+                        <svg class="slider-icon-play" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" hidden>
+                            <path d="M8 5l11 7-11 7z"/>
+                        </svg>
+                    </button>
                     <button class="slider-btn prev" type="button" aria-label="Vorheriges Bild">‹</button>
                     <button class="slider-btn next" type="button" aria-label="Nächstes Bild">›</button>
                 </div>

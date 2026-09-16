@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Europawahl 2019 – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Europawahl 2019 - CDU Kreisverband Schwerin">
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
 </head>
 <body>
     <a href="#main" class="skip-link">Direkt zum Inhalt</a>
@@ -122,7 +130,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
@@ -130,40 +138,40 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main" class="site-main" role="main">
+    <main id="main" class="site-main textseite" role="main">
         <div class="container">
             <h1>Europawahl 2019</h1>
 
-            <section style="margin-bottom: var(--spacing-xl);">
+            <section>
                 <h2>Ohne Europa ist kein Staat zu machen!</h2>
-                <p style="font-size: 18px; line-height: 1.8; margin-bottom: var(--spacing-lg);">Unser Kandidat setzte sich für europäische Lösungen bei den großen Herausforderungen der Zeit ein.</p>
+                <p class="seiten-einleitung">Unser Kandidat setzte sich für europäische Lösungen bei den großen Herausforderungen der Zeit ein.</p>
             </section>
 
             <section>
                 <h2>Wahlprogramm-Schwerpunkte</h2>
-                <div style="display: grid; gap: var(--spacing-lg);">
-                    <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                        <h3 style="margin-top: 0;">EU-Fördermittel über 2020 hinaus sichern</h3>
+                <div class="kartenraster">
+                    <article class="infokarte">
+                        <h3>EU-Fördermittel über 2020 hinaus sichern</h3>
                         <p>Mecklenburg-Vorpommern erhält 2,2 Milliarden Euro zwischen 2014 und 2020 aus europäischen Strukturfonds für regionale Wirtschaftsentwicklung, KMU-Unterstützung sowie Investitionen in Beschäftigung und soziale Projekte.</p>
                     </article>
 
-                    <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                        <h3 style="margin-top: 0;">Arbeitskräftesituation in MV verbessern</h3>
+                    <article class="infokarte">
+                        <h3>Arbeitskräftesituation in MV verbessern</h3>
                         <p>Aufbau europäischer Arbeitsagenturen und professionelle Umsetzung der EU-Arbeitnehmerfreizügigkeit für Tourismus-, Dienstleistungs- und Handwerksbetriebe.</p>
                     </article>
 
-                    <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                        <h3 style="margin-top: 0;">Schutz der Außengrenzen verstärken</h3>
+                    <article class="infokarte">
+                        <h3>Schutz der Außengrenzen verstärken</h3>
                         <p>Sicherung der Mittelmeergrenze sowie Ausbau der FRONTEX-Agentur und Verbesserung der Küstenwachenausstattung.</p>
                     </article>
 
-                    <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                        <h3 style="margin-top: 0;">Migrationspolitik besser koordinieren</h3>
+                    <article class="infokarte">
+                        <h3>Migrationspolitik besser koordinieren</h3>
                         <p>Flüchtlingsabkommen mit nordafrikanischen Staaten und der Türkei, Seenotrettung und schnellere Rückführungen.</p>
                     </article>
 
-                    <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                        <h3 style="margin-top: 0;">Landwirtschaft und Fischerei bewahren</h3>
+                    <article class="infokarte">
+                        <h3>Landwirtschaft und Fischerei bewahren</h3>
                         <p>Gleiche Rahmenbedingungen für ostdeutsche Landwirte, angemessene Quoten und Ausgleichszahlungen für Fischer.</p>
                     </article>
                 </div>

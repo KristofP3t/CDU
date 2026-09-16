@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Links & Downloads – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Weiterführende CDU-Websites sowie Dokumente und Downloads des CDU Kreisverbandes Schwerin.">
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
 </head>
 <body>
     <a href="#main" class="skip-link">Direkt zum Inhalt</a>
@@ -122,7 +130,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
@@ -130,34 +138,34 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main" class="site-main" role="main">
+    <main id="main" class="site-main textseite" role="main">
         <div class="container">
             <h1>Links & Downloads</h1>
 
             <section>
                 <h2>Weiterführende CDU-Websites</h2>
-                <p style="margin-bottom: var(--spacing-lg);">Wenn Sie sich weiter informieren möchten, empfehlen wir Ihnen die folgenden Links:</p>
+                <p>Wenn Sie sich weiter informieren möchten, empfehlen wir Ihnen die folgenden Links:</p>
 
-                <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px; margin-bottom: var(--spacing-lg);">
-                    <h3 style="margin-top: 0;">Parteiorganisationen</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: var(--spacing-sm);"><a href="https://www.cdu.de/" target="_blank" rel="external" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">CDU Deutschland →</a></li>
-                        <li style="margin-bottom: var(--spacing-sm);"><a href="https://www.cducsu.de/" target="_blank" rel="external" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">CDU-Bundestagsfraktion →</a></li>
-                        <li style="margin-bottom: var(--spacing-sm);"><a href="https://www.cdu-mv.de/" target="_blank" rel="external" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">CDU Mecklenburg-Vorpommern →</a></li>
-                        <li style="margin-bottom: var(--spacing-sm);"><a href="https://www.cdu-fraktion.de/" target="_blank" rel="external" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">CDU-Landtagsfraktion →</a></li>
-                        <li><a href="https://www.cdu-schwerin.de/" target="_blank" rel="external" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">CDU-Stadtfraktion Schwerin →</a></li>
+                <article class="infokarte">
+                    <h3>Parteiorganisationen</h3>
+                    <ul class="liste-blank">
+                        <li><a class="mehr-link" href="https://www.cdu.de/" target="_blank" rel="external">CDU Deutschland →</a></li>
+                        <li><a class="mehr-link" href="https://www.cducsu.de/" target="_blank" rel="external">CDU-Bundestagsfraktion →</a></li>
+                        <li><a class="mehr-link" href="https://www.cdu-mv.de/" target="_blank" rel="external">CDU Mecklenburg-Vorpommern →</a></li>
+                        <li><a class="mehr-link" href="https://www.cdu-fraktion.de/" target="_blank" rel="external">CDU-Landtagsfraktion →</a></li>
+                        <li><a class="mehr-link" href="https://www.cdu-schwerin.de/" target="_blank" rel="external">CDU-Stadtfraktion Schwerin →</a></li>
                     </ul>
                 </article>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
+            <section>
                 <h2>Dokumente & Downloads</h2>
-                <article style="padding: var(--spacing-lg); background-color: var(--color-light-bg); border-radius: 8px;">
-                    <h3 style="margin-top: 0;">Wichtige CDU-Dokumente</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: var(--spacing-sm);"><a href="https://www.cdu.de/regierungsprogramm" target="_blank" rel="external" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">CDU-Regierungsprogramm →</a></li>
-                        <li style="margin-bottom: var(--spacing-sm);"><a href="https://www.cdu.de/sites/default/files/media/dokumente/071203-beschluss-grundsatzprogramm-6-navigierbar.pdf" target="_blank" rel="external" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">CDU-Grundsatzprogramm (PDF) →</a></li>
-                        <li><a href="https://www.cdu.de/sites/default/files/media/dokumente/121205-statutenbroschuere.pdf" target="_blank" rel="external" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">CDU-Statuten (PDF) →</a></li>
+                <article class="infokarte">
+                    <h3>Wichtige CDU-Dokumente</h3>
+                    <ul class="liste-blank">
+                        <li><a class="mehr-link" href="https://www.cdu.de/regierungsprogramm" target="_blank" rel="external">CDU-Regierungsprogramm →</a></li>
+                        <li><a class="mehr-link" href="https://www.cdu.de/sites/default/files/media/dokumente/071203-beschluss-grundsatzprogramm-6-navigierbar.pdf" target="_blank" rel="external">CDU-Grundsatzprogramm (PDF) →</a></li>
+                        <li><a class="mehr-link" href="https://www.cdu.de/sites/default/files/media/dokumente/121205-statutenbroschuere.pdf" target="_blank" rel="external">CDU-Statuten (PDF) →</a></li>
                     </ul>
                 </article>
             </section>

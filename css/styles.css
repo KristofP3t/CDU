@@ -3,6 +3,44 @@
    Modern, Accessible, Performant Static Website
    ========================================================================== */
 
+/* ==========================================================================
+   Schrift
+   Inter, selbst gehostet. Nicht ueber fonts.googleapis.com: das laedt bei
+   jedem Aufruf die IP des Besuchers zu Google, und genau dafuer ist eine
+   Website schon verurteilt worden (LG Muenchen I, 20.01.2022, 3 O 17493/20).
+   Fuer eine Parteiseite ist das kein theoretisches Risiko.
+
+   Eine Datei je Zeichenbereich, aufgeteilt wie sie Google ausliefert. Der
+   Browser laedt nur, was die Seite braucht: fuer deutschen Text ist das
+   allein "latin" (48 KB) - Umlaute und ss liegen in U+0000-00FF. Die
+   Erweiterung kommt erst dazu, wenn ein Name polnische oder tschechische
+   Zeichen traegt.
+
+   Variabel von 400 bis 700, deshalb genuegt eine Datei je Bereich fuer
+   Flies-, Halbfett- und Fettschnitt. Lizenz: SIL OFL 1.1, Text liegt unter
+   assets/fonts/Inter-LICENSE.txt.
+   ========================================================================== */
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400 700;
+    /* swap: der Text steht sofort in der Ersatzschrift und wird ersetzt,
+       sobald Inter da ist. Nie unsichtbarer Text. */
+    font-display: swap;
+    src: url("../assets/fonts/inter-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("../assets/fonts/inter-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 /* Custom Properties for Easy Theming */
 :root {
     --color-primary: #52b7c1;
@@ -14,8 +52,25 @@
     --color-white: #ffffff;
     --color-border: #52b7c1;
 
-    --font-primary: "Arial", "Helvetica Neue", Helvetica, sans-serif;
+    /* Die Ersatzkette bleibt stehen: solange Inter laedt - und falls sie
+       ausfaellt - setzt der Browser in der naechstbesten Grotesk. */
+    --font-primary: "Inter", "Helvetica Neue", Arial, sans-serif;
     --font-secondary: "Georgia", "Times New Roman", Times, serif;
+
+    /* Fluide Schriftgroessen. Jeder Wert waechst gleichmaessig zwischen
+       480px und 1400px Viewport-Breite - das ist die Spanne, die die Seite
+       bedient. Darunter und darueber halten die Grenzen ihn an.
+
+       Der Vorteil gegenueber den bisherigen Stufen: kein Sprung an der
+       Breakpoint-Kante, und die Ueberschrift nutzt grosse Bildschirme
+       wirklich aus. 32px H1 war auf einem 27-Zoll-Monitor verloren.
+
+       Ablesen laesst sich jede Zeile an den beiden Randwerten: der erste
+       gilt ab 480px abwaerts, der letzte ab 1400px aufwaerts. */
+    --text-hero: clamp(2rem, 1.087rem + 3.043vw, 3.75rem);      /* 32 -> 60 */
+    --text-h1: clamp(1.75rem, 1.098rem + 2.174vw, 3rem);        /* 28 -> 48 */
+    --text-h2: clamp(1.375rem, 0.984rem + 1.304vw, 2.125rem);   /* 22 -> 34 */
+    --text-h3: clamp(1.1875rem, 1.057rem + 0.435vw, 1.4375rem); /* 19 -> 23 */
 
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
@@ -718,9 +773,14 @@ body {
 }
 
 .hero-panel h1 {
-    font-size: 40px;
+    font-size: var(--text-hero);
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.1;
+    /* Inter traegt auf grossen Graden zu locker; leicht angezogen wirkt
+       die Zeile als Block statt als Buchstabenreihe. */
+    letter-spacing: -0.02em;
+    /* Verhindert die einzelne Restzeile aus einem Wort. */
+    text-wrap: balance;
     margin-bottom: var(--spacing-sm);
 }
 
@@ -735,12 +795,6 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-sm);
-}
-
-@media (max-width: 1024px) {
-    .hero-panel h1 {
-        font-size: 32px;
-    }
 }
 
 @media (max-width: 768px) {
@@ -759,10 +813,6 @@ body {
         max-width: none;
         background-color: transparent;
         padding: 0;
-    }
-
-    .hero-panel h1 {
-        font-size: 26px;
     }
 
     .hero-claim {
@@ -850,6 +900,21 @@ body {
 .slider-dot:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 0;
+}
+
+/* Die Pause-Taste traegt ein Symbol statt eines Zeichens - die
+   Unicode-Zeichen fuer Pause und Wiedergabe sehen je nach System sehr
+   verschieden aus, die Pfeile der Nachbartasten nicht. */
+.slider-pause svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* .slider-btn setzt display:flex. Autorenregeln schlagen die UA-Regel
+   [hidden]{display:none}, ohne diese Zeile bliebe die ausgeblendete Taste
+   stehen - derselbe Fall wie bei .search-overlay und .spenden-betraege. */
+.slider-btn[hidden] {
+    display: none;
 }
 
 .slider-btn {
@@ -1190,8 +1255,10 @@ body {
 }
 
 .engage-card h3 {
-    font-size: 20px;
+    font-size: var(--text-h3);
     font-weight: 600;
+    line-height: 1.3;
+    text-wrap: balance;
     margin-bottom: var(--spacing-xs);
 }
 
@@ -1258,9 +1325,6 @@ body {
         height: 32px;
     }
 
-    .engage-card h3 {
-        font-size: 18px;
-    }
 }
 
 /* ==========================================================================
@@ -1283,8 +1347,11 @@ body {
 }
 
 .greeting-body h2 {
-    font-size: 28px;
-    font-weight: 400;
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
     margin-bottom: var(--spacing-md);
 }
 
@@ -1317,10 +1384,6 @@ body {
         max-width: 160px;
     }
 
-    .greeting-body h2 {
-        font-size: 24px;
-    }
-
     .greeting-text {
         font-size: 17px;
         text-align: left;
@@ -1340,8 +1403,11 @@ body {
 }
 
 .video-title {
-    font-size: 28px;
-    font-weight: 400;
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
     margin-bottom: var(--spacing-lg);
 }
 
@@ -1367,9 +1433,6 @@ body {
         padding: var(--spacing-lg) var(--spacing-sm);
     }
 
-    .video-title {
-        font-size: 22px;
-    }
 }
 
 /* ==========================================================================
@@ -1603,15 +1666,22 @@ body {
    ========================================================================== */
 
 .textseite h1 {
-    font-size: 32px;
-    font-weight: 400;
+    font-size: var(--text-h1);
+    /* Vorher 400 - leichtes Arial als Ueberschrift wirkte kraftlos. */
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
     color: var(--color-dark);
     margin-bottom: var(--spacing-lg);
 }
 
 .textseite h2 {
-    font-size: 24px;
-    font-weight: 400;
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
     color: var(--color-dark);
     margin-bottom: var(--spacing-sm);
 }
@@ -1765,16 +1835,6 @@ body {
     }
 }
 
-@media (max-width: 480px) {
-    .textseite h1 {
-        font-size: 26px;
-    }
-
-    .textseite h2 {
-        font-size: 21px;
-    }
-}
-
 /* ==========================================================================
    Board Members Section (Vorstandsmitglieder)
    ========================================================================== */
@@ -1784,8 +1844,11 @@ body {
 }
 
 .vorstand-section h2 {
-    font-size: 28px;
-    font-weight: 400;
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
     margin-bottom: var(--spacing-lg);
     text-align: center;
 }
@@ -1883,10 +1946,6 @@ body {
     .vorstand-grid {
         grid-template-columns: 1fr;
         gap: var(--spacing-md);
-    }
-
-    .vorstand-section h2 {
-        font-size: 24px;
     }
 
     .member-card {
@@ -2226,8 +2285,11 @@ body {
 }
 
 .section-head h2 {
-    font-size: 28px;
-    font-weight: 400;
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
     margin: 0;
 }
 
@@ -2363,10 +2425,6 @@ body {
 }
 
 @media (max-width: 768px) {
-    .section-head h2 {
-        font-size: 24px;
-    }
-
     .home-event {
         gap: var(--spacing-md);
     }
@@ -3032,4 +3090,52 @@ body {
     .leitworte li {
         font-size: 19px;
     }
+}
+
+/* ==========================================================================
+   Inhaltsseiten: Bausteine statt style-Attribute
+   Diese Klassen loesen die rund 200 style-Attribute ab, die die
+   Unterseiten bisher getragen haben. Die Deklarationen sind absichtlich
+   dieselben wie vorher im Attribut - der Umbau soll nichts verschieben,
+   sondern die Regeln nur an eine Stelle holen.
+   ========================================================================== */
+
+/* Der Hervorhebungs-Link in der Navigation ("Mitglied werden"). Stand auf
+   jeder einzelnen Seite als Attribut, weil die Navigation ueberall
+   wiederholt wird - 34 gleiche Zeilen fuer eine Regel. */
+.nav-link-cta {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+/* "Mehr erfahren →" am Fuss einer Karte. Farbe und Fettung setzt bereits
+   .textseite a; hier kommt nur der fehlende Verzicht auf die
+   Unterstreichung dazu. */
+.mehr-link {
+    text-decoration: none;
+}
+
+/* Kartenraster, das sich selbst umbricht. Die Vorlagen hatten dieselbe
+   Regel mit 250px, 280px und 300px Mindestbreite nebeneinander; 260px
+   liegt dazwischen und hat auf allen drei Seiten dieselbe Wirkung. */
+.kartenraster {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+/* Aufzaehlung ohne Punkte. Der Typselektor ist noetig, weil .textseite ul
+   die Einrueckung setzt und gleich spezifisch ist - diese Regel steht
+   deshalb weiter unten in der Datei und gewinnt ueber die Reihenfolge. */
+ul.liste-blank {
+    list-style: none;
+    padding-left: 0;
+}
+
+/* Abschnitt, der sich mit einer Linie vom vorigen absetzt. */
+.abschnitt-getrennt {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
 }

@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datenschutz – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Datenschutz - CDU Kreisverband Schwerin">
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
 </head>
 <body>
     <a href="#main" class="skip-link">Direkt zum Inhalt</a>
@@ -122,7 +130,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
@@ -130,7 +138,7 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main" class="site-main" role="main">
+    <main id="main" class="site-main textseite" role="main">
         <div class="container">
             <h1>Datenschutzerklärung</h1>
 
@@ -139,9 +147,9 @@
                 <p>Bei der Nutzung dieser Website werden personenbezogene Daten erhoben. Personenbezogene Daten sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen, wie zum Beispiel Name, Adresse, E-Mail-Adresse oder Nutzerverhalten.</p>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
+            <section>
                 <h2>Verantwortliche Stelle</h2>
-                <address style="background-color: var(--color-light-bg); padding: var(--spacing-lg); border-radius: 8px;">
+                <address class="infokarte">
                     <strong>Christlich Demokratische Union Deutschlands</strong><br>
                     Kreisverband Schwerin<br>
                     Ingo Freund, Geschäftsführer<br>
@@ -153,7 +161,7 @@
                 </address>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
+            <section>
                 <h2>Ihre Rechte</h2>
                 <p>Sie haben folgende Rechte bezüglich Ihrer personenbezogenen Daten:</p>
                 <ul>
@@ -165,23 +173,23 @@
                 </ul>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
+            <section>
                 <h2>Technische Daten</h2>
                 <p>Die Website erhebt automatisch technische Daten wie IP-Adressen, Zeitstempel von Anfragen, Browser-Informationen und Betriebssystem-Details. Diese Daten werden für technische Funktionalität und Sicherheitszwecke erfasst.</p>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
+            <section>
                 <h2>Cookies</h2>
                 <p>Diese Website verwendet Cookies zur Verbesserung der Benutzerfreundlichkeit. Es werden sowohl temporäre Session-Cookies (die beim Schließen des Browsers gelöscht werden) als auch persistente Cookies (die für einen definierten Zeitraum gespeichert werden) verwendet.</p>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
+            <section>
                 <h2>Externe Dienste</h2>
                 <p>Diese Website nutzt Inhalte und Dienste von Dritten wie YouTube, Google Maps, Google Analytics, Google Web Fonts und Google reCAPTCHA. Für weitere Informationen konsultieren Sie bitte die Datenschutzerklärungen dieser Dienste.</p>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
-                <p><a href="../impressum/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Impressum →</a></p>
+            <section>
+                <p><a class="mehr-link" href="../impressum/">Impressum →</a></p>
             </section>
         </div>
     </main>

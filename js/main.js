@@ -287,8 +287,17 @@ const ImageSlider = (() => {
     let currentIndex = 0;
     let slides = [];
     let dots = [];
-    let autoplayEnabled = true;
+    // Zwei getrennte Gruende, aus denen der Wechsel stillsteht: die
+    // Systemeinstellung des Besuchers (prefers-reduced-motion) und die
+    // Pause-Taste. Ein einzelner Schalter konnte den einen Grund mit dem
+    // anderen ueberschreiben - wer die Bewegung abgestellt hat, bekam sie
+    // beim Klick auf einen Punkt zurueck.
+    let motionOK = true;
+    let userPaused = false;
     let autoplayInterval = null;
+    let pauseBtn = null;
+
+    const mayAutoplay = () => motionOK && !userPaused;
 
     // Die Punkte entstehen aus der Zahl der Bilder, damit Markup und Slider
     // nicht auseinanderlaufen, wenn jemand ein Bild ergaenzt oder entfernt.
@@ -304,7 +313,7 @@ const ImageSlider = (() => {
             dot.addEventListener('click', () => {
                 stopAutoplay();
                 showSlide(index);
-                if (autoplayEnabled) startAutoplay();
+                if (mayAutoplay()) startAutoplay();
             });
             fragment.append(dot);
             return dot;
@@ -326,9 +335,10 @@ const ImageSlider = (() => {
 
         dots = buildDots(document.getElementById('slider-dots'));
 
-        // Check for reduced motion preference
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        autoplayEnabled = !prefersReducedMotion;
+        pauseBtn = document.getElementById('slider-pause');
+
+        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        motionOK = !motionQuery.matches;
 
         // Show first slide
         showSlide(0);
@@ -337,26 +347,71 @@ const ImageSlider = (() => {
         if (prevBtn) prevBtn.addEventListener('click', () => previousSlide());
         if (nextBtn) nextBtn.addEventListener('click', () => nextSlide());
 
-        // Listen for motion preference change
-        window.matchMedia('(prefers-reduced-motion: reduce)').addListener((e) => {
-            autoplayEnabled = !e.matches;
-            if (autoplayEnabled) {
+        // addListener ist seit Jahren abgekuendigt; addEventListener('change')
+        // ist der Nachfolger und in allen Zielbrowsern vorhanden.
+        motionQuery.addEventListener('change', (e) => {
+            motionOK = !e.matches;
+            syncPauseBtn();
+            if (mayAutoplay()) {
                 startAutoplay();
             } else {
                 stopAutoplay();
             }
         });
 
-        // Start autoplay
-        if (autoplayEnabled) {
-            startAutoplay();
+        if (pauseBtn) {
+            pauseBtn.addEventListener('click', () => {
+                userPaused = !userPaused;
+                syncPauseBtn();
+                if (mayAutoplay()) {
+                    startAutoplay();
+                } else {
+                    stopAutoplay();
+                }
+            });
         }
 
-        // Stop autoplay on user interaction
-        sliderWrapper.addEventListener('mouseenter', stopAutoplay);
-        sliderWrapper.addEventListener('mouseleave', () => {
-            if (autoplayEnabled) startAutoplay();
+        syncPauseBtn();
+        if (mayAutoplay()) startAutoplay();
+
+        // Anhalten, solange jemand hinschaut oder mit der Tastatur darin
+        // steht. Der Rahmen ist .hero-media und nicht .slider-wrapper: die
+        // Bedienknoepfe liegen ausserhalb des Bildbehaelters, und wer den
+        // Weiter-Knopf gerade fokussiert hat, soll das Bild nicht unter dem
+        // Finger wegwechseln sehen.
+        const region = sliderWrapper.closest('.hero-media') || sliderWrapper;
+        const suspend = () => stopAutoplay();
+        const resume = () => { if (mayAutoplay()) startAutoplay(); };
+        region.addEventListener('mouseenter', suspend);
+        region.addEventListener('mouseleave', resume);
+        region.addEventListener('focusin', suspend);
+        region.addEventListener('focusout', (e) => {
+            if (!region.contains(e.relatedTarget)) resume();
         });
+    };
+
+    // Die Taste traegt ihren Zustand im Symbol und im aria-label. Hat das
+    // System die Bewegung abgestellt, laeuft ohnehin nichts - dann ist die
+    // Taste gegenstandslos und verschwindet.
+    const syncPauseBtn = () => {
+        if (!pauseBtn) return;
+        pauseBtn.hidden = !motionOK;
+        const paused = userPaused;
+        pauseBtn.setAttribute('aria-label', paused ? 'Bildwechsel fortsetzen' : 'Bildwechsel anhalten');
+        // Angehalten zeigt die Taste das Wiedergabe-Zeichen (was ein Klick
+        // bewirken wuerde), laufend das Pause-Zeichen.
+        //
+        // toggleAttribute statt .hidden: die Eigenschaft .hidden ist in der
+        // Schnittstelle HTMLElement definiert, und ein <svg> ist ein
+        // SVGElement - es erbt von Element, nicht von HTMLElement. Eine
+        // Zuweisung .hidden = true legt dort nur eine gewoehnliche
+        // JavaScript-Eigenschaft an, ohne das Attribut im Markup zu setzen.
+        // Der Selektor [hidden] greift dann nie, und die Symbole wechseln
+        // nicht. toggleAttribute steht auf Element und wirkt auch im SVG.
+        const icoPause = pauseBtn.querySelector('.slider-icon-pause');
+        const icoPlay = pauseBtn.querySelector('.slider-icon-play');
+        if (icoPause) icoPause.toggleAttribute('hidden', paused);
+        if (icoPlay) icoPlay.toggleAttribute('hidden', !paused);
     };
 
     const showSlide = (index) => {
@@ -378,14 +433,14 @@ const ImageSlider = (() => {
         stopAutoplay();
         currentIndex = (currentIndex + 1) % slides.length;
         showSlide(currentIndex);
-        if (autoplayEnabled) startAutoplay();
+        if (mayAutoplay()) startAutoplay();
     };
 
     const previousSlide = () => {
         stopAutoplay();
         currentIndex = (currentIndex - 1 + slides.length) % slides.length;
         showSlide(currentIndex);
-        if (autoplayEnabled) startAutoplay();
+        if (mayAutoplay()) startAutoplay();
     };
 
     const startAutoplay = () => {

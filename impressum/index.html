@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Impressum – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Impressum - CDU Kreisverband Schwerin">
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
 </head>
 <body>
     <a href="#main" class="skip-link">Direkt zum Inhalt</a>
@@ -122,7 +130,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../mitglied-werden/" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
@@ -130,13 +138,13 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main" class="site-main" role="main">
+    <main id="main" class="site-main textseite" role="main">
         <div class="container">
             <h1>Impressum</h1>
 
             <section>
                 <h2>Verantwortlich im Sinne des Telemediengesetzes (TMG)</h2>
-                <address style="background-color: var(--color-light-bg); padding: var(--spacing-lg); border-radius: 8px;">
+                <address class="infokarte">
                     <strong>Christlich Demokratische Union Deutschlands</strong><br>
                     Kreisverband Schwerin<br>
                     Wismarsche Straße 173<br>
@@ -152,18 +160,18 @@
                 </address>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
+            <section>
                 <h2>Haftung für Inhalte</h2>
                 <p>Die CDU Kreisverband Schwerin stellt die Inhalte dieser Website nach bestem Wissen und Gewissen bereit. Wir können jedoch keine Garantie für die Richtigkeit und Vollständigkeit der Inhalte geben.</p>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
+            <section>
                 <h2>Datenschutz</h2>
                 <p>Es werden statistisch erfasste Zugriffsdaten ohne Personenbezug erhoben. Alle in dieser Website genannten Personen widersprechen hiermit jeder kommerziellen Verwendung und Weitergabe ihrer Daten.</p>
-                <p><a href="../datenschutz/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Datenschutzerklärung →</a></p>
+                <p><a class="mehr-link" href="../datenschutz/">Datenschutzerklärung →</a></p>
             </section>
 
-            <section style="margin-top: var(--spacing-xl);">
+            <section>
                 <h2>Urheberrechte</h2>
                 <p>Alle Inhalte dieser Website sind urheberrechtlich geschützt. Downloads sind nur für den persönlichen, privaten und nicht kommerziellen Gebrauch gestattet. Kommerzielle Nutzung ist ohne vorherige Genehmigung nicht gestattet.</p>
             </section>

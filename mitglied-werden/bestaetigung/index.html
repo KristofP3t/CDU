@@ -6,7 +6,15 @@
     <title>E-Mail bestätigen – CDU Kreisverband Schwerin</title>
     <meta name="description" content="Bestätigen Sie Ihre E-Mail-Adresse, um Ihren Mitgliedsantrag beim CDU Kreisverband Schwerin abzuschließen.">
     <meta name="robots" content="noindex">
+    <link rel="preload" href="../../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../../css/styles.css">
+    <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
+         fuehrt. Das breite Logo taugte dafuer nicht - auf 32px wird ein
+         235x88-Banner unleserlich. favicon.ico liegt zusaetzlich in der
+         Wurzel, weil Browser sie von sich aus dort anfragen. -->
+    <link rel="icon" href="../../assets/images/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="../../assets/images/favicon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../../assets/images/apple-touch-icon.png">
     <style>
         .confirm-section {
             max-width: 640px;
@@ -169,7 +177,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a href="../../spenden/" class="nav-link">Spenden</a></li>
-                        <li class="nav-item"><a href="../" class="nav-link" style="color: var(--color-accent); font-weight: 600;">Mitglied werden</a></li>
+                        <li class="nav-item"><a href="../" class="nav-link nav-link-cta">Mitglied werden</a></li>
                     </ul>
                 </nav>
             </div>
