@@ -820,17 +820,6 @@ body {
     border-radius: 8px;
 }
 
-.hero-kicker {
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    /* Bleibt das reine Orange: der Kicker sitzt im deckenden dunklen
-       Hero-Kasten, dort traegt es 5,76:1. Die abgedunkelte Textfassung
-       waere hier sogar schlechter. */
-    color: var(--color-accent);
-    margin-bottom: var(--spacing-xs);
-}
 
 .hero-panel h1 {
     font-size: var(--text-hero);
@@ -844,11 +833,54 @@ body {
     margin-bottom: var(--spacing-sm);
 }
 
-.hero-claim {
+/* Anschrift, Sprechzeit und Rufnummer im Hero.
+
+   Loest .hero-kicker ("Herzlich willkommen") und .hero-claim ("Wir
+   informieren Sie ueber die Arbeit und die Ziele der CDU") ab. Drei
+   Zeilen, die niemandem etwas sagten, der den Link angeklickt hatte.
+   Anschrift und Sprechzeit sind ausserdem haltbar - sie stimmen in einem
+   halben Jahr noch. Beide alten Regeln sind geloescht.
+
+   <address> ist hier richtig: das Element meint die Kontaktangaben zur
+   Seite, nicht jede beliebige Anschrift. Der Browser setzt es kursiv,
+   das wird zurueckgenommen.
+
+   Farbe wie beim alten Claim. Auf dem Schreibtisch ist das Panel mit
+   0,92 durchscheinend, der Grund haengt also am Foto darunter;
+   gerechnet ist der unguenstigste Fall - ein weisses Foto ergibt
+   #3e4c59, darauf traegt #dce6ec noch 6,96:1. Auf dem Telefon wird das
+   Panel transparent und der dunkle Grund kommt von .hero selbst, dort
+   sind es 9,60:1. */
+.hero-kontakt {
+    font-style: normal;
     font-size: 18px;
-    line-height: 1.6;
+    /* Etwas luftiger als ein Fliesstext-Absatz: drei eigenstaendige
+       Angaben, keine fortlaufenden Saetze. */
+    line-height: 1.7;
     color: #dce6ec;
     margin-bottom: var(--spacing-lg);
+}
+
+/* Die Rufnummer laesst sich waehlen, und das soll man sehen.
+   Unterstreichung statt eigener Farbe - eine vierte Farbe im Kasten
+   waere Dekoration. */
+.hero-kontakt a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.hero-kontakt a:hover,
+.hero-kontakt a:focus-visible {
+    color: var(--color-white);
+}
+
+/* Auf dunklem Grund das reine Orange statt --color-focus: die
+   abgedunkelte Fassung ist fuer helle Gruende gemacht und kommt hier
+   nur auf 2,92:1, das reine Orange auf 4,49:1. */
+.hero-kontakt a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
 }
 
 .hero-actions {
@@ -875,7 +907,7 @@ body {
         padding: 0;
     }
 
-    .hero-claim {
+    .hero-kontakt {
         font-size: 16px;
         margin-bottom: var(--spacing-md);
     }
