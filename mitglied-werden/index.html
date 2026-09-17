@@ -207,11 +207,29 @@
             }
         }
 
-        /* Membership Form Section */
+        /* ==================================================================
+           Abstandsstaffel des Formulars
+
+           Ein Formular ist eine Arbeitsflaeche, keine Lesestrecke. Die
+           allgemeinen Seitenabstaende sind dafuer zu weit: zwischen zwei
+           Feldzeilen standen --spacing-lg (36px) und zwischen den beiden
+           Spalten noch einmal 36px, dazu --spacing-sm unter jedem Feld.
+           Bei neun Feldern in Schritt 1 ergab das ueber 300px reinen
+           Zwischenraum - man scrollt durch Luft, statt ein Formular vor
+           sich zu haben.
+
+           Eigene Staffel, von eng nach weit. Die Verhaeltnisse zaehlen,
+           nicht die Einzelwerte: was zusammengehoert, steht enger
+           beieinander als das, was es trennt.
+           ================================================================== */
         .membership-form-section {
+            --feld-zeile: 1.25rem;    /* 20px  Feldzeile zu Feldzeile  */
+            --feld-spalte: 1.5rem;    /* 24px  linke zu rechter Spalte */
+            --feld-gruppe: 2rem;      /* 32px  Gruppe zu Gruppe        */
+
             background-color: var(--color-white);
             border: 1px solid var(--color-border);
-            padding: var(--spacing-xl);
+            padding: var(--feld-gruppe);
             border-radius: 8px;
             margin-bottom: var(--spacing-xl);
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -233,14 +251,25 @@
 
         /* Form Layout */
         .membership-form {
-            margin-bottom: var(--spacing-xl);
+            margin-bottom: var(--feld-gruppe);
+        }
+
+        /* Die Schrittueberschrift lief bisher ueber .membership-form-section
+           h2 und stand damit zentriert in 28px - ueber einem linksbuendigen,
+           zweispaltigen Formular. Sie ist eine Zwischenueberschrift im
+           Formular, keine Seitenueberschrift: linksbuendig, kleiner, und
+           eng an den Feldern, die sie ankuendigt. */
+        .form-step h2 {
+            text-align: left;
+            font-size: 20px;
+            margin-bottom: var(--feld-zeile);
         }
 
         .form-row {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: var(--spacing-lg);
-            margin-bottom: var(--spacing-lg);
+            gap: var(--feld-spalte);
+            margin-bottom: var(--feld-zeile);
         }
 
         .form-row.full {
@@ -273,8 +302,10 @@
             box-shadow: 0 0 0 3px rgba(82, 183, 193, 0.1);
         }
 
+        /* Den Abstand nach unten traegt die Feldzeile bereits; hier stand
+           er ein zweites Mal und ergab zusammen ueber 50px je Zeile. */
         .membership-form .form-field {
-            margin-bottom: var(--spacing-sm);
+            margin-bottom: 0;
         }
 
         .membership-form .form-textarea {
@@ -414,11 +445,18 @@
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
-                gap: var(--spacing-md);
+                /* Einspaltig wird aus dem Spaltenabstand ein Zeilenabstand -
+                   er muss demselben Mass folgen wie der zwischen den Zeilen,
+                   sonst stehen Felder innerhalb einer Zeile weiter
+                   auseinander als die Zeilen selbst. */
+                gap: var(--feld-zeile);
             }
 
             .membership-form-section {
-                padding: var(--spacing-lg);
+                /* Enger als auf dem Schreibtisch, nicht weiter: auf 390px
+                   Breite frisst jeder Rand sichtbare Flaeche. Vorher standen
+                   hier 36px gegen 32px am grossen Bildschirm. */
+                padding: var(--spacing-md);
             }
 
             .membership-submit-btn {
@@ -429,7 +467,7 @@
 
         /* Multi-Step Form Styles */
         .progress-bar {
-            margin-bottom: var(--spacing-xl);
+            margin-bottom: var(--feld-gruppe);
             position: relative;
             height: 60px;
         }
@@ -499,8 +537,8 @@
 
         .form-step h3 {
             color: var(--color-dark);
-            font-size: 20px;
-            margin-bottom: var(--spacing-lg);
+            font-size: 18px;
+            margin-bottom: var(--feld-zeile);
         }
 
         .step-intro {
@@ -514,7 +552,9 @@
         .checkbox-group-label {
             display: block;
             font-weight: 600;
-            margin-bottom: var(--spacing-md);
+            /* Bindet die Aufschrift an ihre Gruppe, statt sie auf halber
+               Strecke zwischen zwei Gruppen stehen zu lassen. */
+            margin-bottom: 0.75rem;
             color: var(--color-text);
         }
 
@@ -567,7 +607,7 @@
         .form-navigation {
             display: flex;
             gap: var(--spacing-md);
-            margin-top: var(--spacing-xl);
+            margin-top: var(--feld-gruppe);
             justify-content: space-between;
         }
 
@@ -853,7 +893,9 @@
                     </div>
                 </div>
 
-                <form class="membership-form" id="membership-form" method="POST" action="https://formspree.io/f/FORMSPREE_ID_EINFUEGEN">
+                <!-- Kein action: der Versand laeuft ueber EmailJS im Skript weiter unten.
+                         Ein POST-Ziel im Markup waere ein zweiter, toter Weg. -->
+                    <form class="membership-form" id="membership-form">
                     <!-- Success Message -->
                     <div id="membership-success" class="form-message success-message" style="display: none;">
                         <span class="message-icon" aria-hidden="true">✓</span>
@@ -1153,14 +1195,56 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <script>
-        // EmailJS-Zugangsdaten: Bitte im EmailJS-Dashboard (emailjs.com) einen Service
-        // und eine Vorlage für die Bestätigungs-E-Mail anlegen und hier eintragen.
-        const EMAILJS_PUBLIC_KEY = 'EMAILJS_PUBLIC_KEY_EINFUEGEN';
-        const EMAILJS_SERVICE_ID = 'EMAILJS_SERVICE_ID_EINFUEGEN';
-        const EMAILJS_CONFIRMATION_TEMPLATE_ID = 'EMAILJS_TEMPLATE_ID_EINFUEGEN';
+        /* ==================================================================
+           E-Mail-Versand
 
-        if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'EMAILJS_PUBLIC_KEY_EINFUEGEN') {
-            emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+           Beim Absenden gehen zwei Nachrichten raus:
+             1. an die Geschaeftsstelle - der vollstaendige Antrag
+             2. an die Antragstellerin oder den Antragsteller - eine Kopie
+                ohne Bankdaten und der Bestaetigungslink (Double-Opt-in)
+
+           Beides laeuft ueber EmailJS. Vorher ging die Kopie an die
+           Geschaeftsstelle ueber Formspree und nur die Bestaetigung ueber
+           EmailJS - zwei Dienste, zwei Zugaenge, zwei Ausfallquellen. Jetzt
+           einer.
+
+           EINZUTRAGEN SIND NUR DIE FUENF WERTE HIER DARUNTER.
+
+           Dazu im Dashboard auf emailjs.com anlegen:
+             - einen Service (das Postfach, ueber das gesendet wird)
+             - zwei Vorlagen
+
+           Die Vorlagen brauchen diese Platzhalter:
+
+             Vorlage "an die Geschaeftsstelle"
+               An:       {{empfaenger}}
+               Antwort:  {{antwort_an}}
+               Betreff:  Mitgliedsantrag: {{name}}
+               Inhalt:   {{antrag}}
+
+             Vorlage "an das neue Mitglied"
+               An:       {{empfaenger}}
+               Betreff:  Ihr Mitgliedsantrag bei der CDU Schwerin
+               Inhalt:   Hallo {{name}}, ... {{bestaetigung_link}} ... {{antrag}}
+
+           Solange die Platzhalter unten stehen, wird nichts gesendet und
+           das Formular sagt das auch - statt Erfolg zu melden und die
+           Daten zu verlieren.
+           ================================================================== */
+        const MAIL = {
+            schluessel:      'EMAILJS_PUBLIC_KEY_EINFUEGEN',
+            dienst:          'EMAILJS_SERVICE_ID_EINFUEGEN',
+            vorlageCdu:      'EMAILJS_TEMPLATE_CDU_EINFUEGEN',
+            vorlageMitglied: 'EMAILJS_TEMPLATE_MITGLIED_EINFUEGEN',
+            empfaengerCdu:   'kreisverband@cdu-schwerin.com'
+        };
+
+        const mailBereit = () =>
+            typeof emailjs !== 'undefined' &&
+            !Object.values(MAIL).some(wert => wert.endsWith('_EINFUEGEN'));
+
+        if (mailBereit()) {
+            emailjs.init({ publicKey: MAIL.schluessel });
         }
 
         // Erzeugt eine PDF-Zusammenfassung des Mitgliedsantrags und bietet sie zum Download an
@@ -1302,26 +1386,100 @@
             return typeof btoa === 'function' ? btoa(unescape(encodeURIComponent(raw))) : encodeURIComponent(raw);
         };
 
-        // Sendet die Bestätigungs-E-Mail (Double-Opt-in) an das neue Mitglied
-        const sendConfirmationEmail = (formData) => {
-            if (typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'EMAILJS_PUBLIC_KEY_EINFUEGEN') {
-                console.warn('EmailJS ist nicht konfiguriert – Bestätigungs-E-Mail wurde nicht gesendet.');
-                return;
-            }
+        /* Bankdaten gehen an die Geschaeftsstelle, aber nicht zurueck an den
+           Antragsteller: eine IBAN per Mail zu verschicken vergroessert die
+           Angriffsflaeche ohne Nutzen. Wer seine Angaben nachlesen will, hat
+           das PDF, das beim Absenden heruntergeladen wird. */
+        const BANKFELDER = ['iban', 'bank-name', 'bic', 'account-holder'];
 
-            const email = formData.get('email');
-            if (!email) return;
+        /* Die Beschriftungen stehen im Markup und werden von dort gelesen,
+           nicht hier ein zweites Mal gepflegt. Sonst laufen Formular und
+           E-Mail nach der ersten Textaenderung auseinander. */
+        const beschriftungFuer = (form, feld) => {
+            const zu = feld.id && form.querySelector(`label[for="${feld.id}"]`);
+            if (zu) return zu.textContent.replace('*', '').trim();
+            const legende = feld.closest('fieldset') && feld.closest('fieldset').querySelector('legend');
+            if (legende) return legende.textContent.replace('*', '').trim();
+            const huelle = feld.closest('.form-group');
+            const auf = huelle && huelle.querySelector('.checkbox-group-label, .radio-group-label');
+            return auf ? auf.textContent.replace('*', '').trim() : feld.name;
+        };
 
-            const token = createConfirmationToken(email);
-            const confirmUrl = `${new URL('bestaetigung/', window.location.href).href}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
+        /* Baut den Antrag als lesbaren Text, nach Schritten gegliedert. So
+           braucht die EmailJS-Vorlage nur einen einzigen Platzhalter
+           ({{antrag}}) statt siebenunddreissig. */
+        const antragAlsText = (form, { ohneBankdaten = false } = {}) => {
+            const teile = [];
 
-            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONFIRMATION_TEMPLATE_ID, {
-                to_email: email,
-                to_name: `${formData.get('first-name') || ''} ${formData.get('last-name') || ''}`.trim(),
-                confirm_link: confirmUrl
-            }).catch(error => {
-                console.error('Bestätigungs-E-Mail konnte nicht gesendet werden:', error);
+            form.querySelectorAll('.form-step').forEach(schritt => {
+                const ueberschrift = schritt.querySelector('h2');
+                const zeilen = [];
+                const erledigt = new Set();
+
+                schritt.querySelectorAll('input[name], textarea[name], select[name]').forEach(feld => {
+                    if (ohneBankdaten && BANKFELDER.includes(feld.name)) return;
+                    if (erledigt.has(feld.name)) return;
+
+                    if (feld.type === 'radio' || feld.type === 'checkbox') {
+                        erledigt.add(feld.name);
+                        const gewaehlt = Array.from(
+                            schritt.querySelectorAll(`[name="${feld.name}"]:checked`)
+                        ).map(x => {
+                            const huelle = x.closest('label');
+                            return huelle ? huelle.textContent.trim() : x.value;
+                        });
+                        if (gewaehlt.length) {
+                            zeilen.push(`${beschriftungFuer(form, feld)}: ${gewaehlt.join(', ')}`);
+                        }
+                    } else if (feld.value.trim()) {
+                        /* <input type="date"> liefert 1981-04-12; in einer
+                           deutschen E-Mail liest sich das als Datum nicht. */
+                        const wert = feld.type === 'date'
+                            ? feld.value.split('-').reverse().join('.')
+                            : feld.value.trim();
+                        zeilen.push(`${beschriftungFuer(form, feld)}: ${wert}`);
+                    }
+                });
+
+                if (zeilen.length) {
+                    teile.push(ueberschrift ? ueberschrift.textContent.trim() : '');
+                    teile.push('-'.repeat(46));
+                    teile.push(...zeilen, '');
+                }
             });
+
+            return teile.join('\n');
+        };
+
+        const bestaetigungsLink = (email) => {
+            const token = createConfirmationToken(email);
+            return `${new URL('bestaetigung/', window.location.href).href}`
+                 + `?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
+        };
+
+        /* Beide Nachrichten. Sie laufen nebeneinander; schlaegt eine fehl,
+           schlaegt das Absenden fehl - sonst meldet die Seite Erfolg,
+           waehrend die Geschaeftsstelle nichts bekommen hat. */
+        const sendeAntrag = (form) => {
+            const email = form.querySelector('[name="email"]').value.trim();
+            const vorname = form.querySelector('[name="first-name"]').value.trim();
+            const name = `${vorname} ${form.querySelector('[name="last-name"]').value.trim()}`.trim();
+
+            return Promise.all([
+                emailjs.send(MAIL.dienst, MAIL.vorlageCdu, {
+                    empfaenger: MAIL.empfaengerCdu,
+                    antwort_an: email,
+                    name: name,
+                    email: email,
+                    antrag: antragAlsText(form)
+                }),
+                emailjs.send(MAIL.dienst, MAIL.vorlageMitglied, {
+                    empfaenger: email,
+                    name: vorname,
+                    bestaetigung_link: bestaetigungsLink(email),
+                    antrag: antragAlsText(form, { ohneBankdaten: true })
+                })
+            ]);
         };
 
         // Multi-Step Membership Form Wizard
@@ -1449,32 +1607,38 @@
 
                 if (!validateCurrentStep()) return;
 
-                showLoading();
-                const formData = new FormData(form);
+                /* Ohne Zugangsdaten wird nichts gesendet - und das steht dann
+                   auch da. Vorher lief der Versand in einen Platzhalter und
+                   der Antrag war weg. Der Postweg steht unter dem Formular. */
+                if (!mailBereit()) {
+                    showError(
+                        'Der Versand ist auf dieser Seite noch nicht eingerichtet, '
+                        + 'Ihr Antrag wurde nicht übermittelt. Bitte laden Sie ihn als '
+                        + 'PDF herunter und senden Sie ihn per E-Mail an '
+                        + MAIL.empfaengerCdu + ' oder per Post an die Geschäftsstelle.'
+                    );
+                    return;
+                }
 
-                // PDF-Zusammenfassung wird unabhängig vom Versand an die Geschäftsstelle
-                // erzeugt, damit der Antragsteller sie in jedem Fall erhält.
-                downloadMembershipPdf(formData);
+                showLoading();
+
+                /* Das PDF entsteht unabhaengig vom Versand, damit der Antrag
+                   in jedem Fall in der Hand des Antragstellers bleibt. */
+                downloadMembershipPdf(new FormData(form));
 
                 try {
-                    const response = await fetch(form.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: { 'Accept': 'application/json' }
-                    });
-
-                    if (response.ok) {
-                        sendConfirmationEmail(formData);
-                        showSuccess();
-                        form.reset();
-                        currentStep = 1;
-                        updateDisplay();
-                    } else {
-                        const data = await response.json();
-                        showError(data.error || 'Es gab einen Fehler beim Senden.');
-                    }
+                    await sendeAntrag(form);
+                    showSuccess();
+                    form.reset();
+                    currentStep = 1;
+                    updateDisplay();
                 } catch (error) {
-                    showError('Netzwerkfehler. Bitte versuchen Sie es später erneut.');
+                    console.error('Versand fehlgeschlagen:', error);
+                    showError(
+                        'Ihr Antrag konnte nicht übermittelt werden. Bitte versuchen '
+                        + 'Sie es später erneut oder senden Sie das heruntergeladene '
+                        + 'PDF an ' + MAIL.empfaengerCdu + '.'
+                    );
                 } finally {
                     hideLoading();
                 }

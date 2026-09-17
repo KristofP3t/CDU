@@ -3,6 +3,65 @@
 
 ---
 
+## Offen: E-Mail-Versand anbinden (September 2026)
+
+**Ohne diesen Schritt nimmt die Seite keine Anträge und keine Nachrichten
+entgegen.**
+
+### Mitgliedsantrag
+
+Beim Absenden gehen zwei Nachrichten raus: der vollständige Antrag an die
+Geschäftsstelle und eine Kopie ohne Bankdaten an die Antragstellerin oder
+den Antragsteller, zusammen mit dem Bestätigungslink (Double-Opt-in).
+Beides läuft über EmailJS, die Bibliothek ist bereits eingebunden.
+
+Einzutragen sind **fünf Werte an einer Stelle**, im `MAIL`-Objekt oben im
+Skript von `mitglied-werden/index.html`:
+
+| Wert | woher |
+|---|---|
+| `schluessel` | EmailJS-Dashboard, Public Key |
+| `dienst` | die Service-ID des sendenden Postfachs |
+| `vorlageCdu` | Template-ID der Nachricht an die Geschäftsstelle |
+| `vorlageMitglied` | Template-ID der Nachricht an das neue Mitglied |
+| `empfaengerCdu` | steht bereits auf `kreisverband@cdu-schwerin.com` |
+
+Die beiden Vorlagen im Dashboard brauchen diese Platzhalter:
+
+```
+an die Geschäftsstelle          an das neue Mitglied
+  An:      {{empfaenger}}         An:      {{empfaenger}}
+  Antwort: {{antwort_an}}         Betreff: frei
+  Betreff: {{name}}               Inhalt:  {{name}}
+  Inhalt:  {{antrag}}                      {{bestaetigung_link}}
+                                           {{antrag}}
+```
+
+`{{antrag}}` ist der fertig gesetzte Antragstext, nach Schritten
+gegliedert. Die Vorlage braucht also keine 37 Einzelfelder.
+
+Solange die Platzhalter im Code stehen, wird **nichts gesendet**, und das
+Formular sagt es auch: Es zeigt eine Fehlermeldung und verweist auf das
+PDF und den Postweg, statt Erfolg zu melden und den Antrag zu verlieren.
+
+### Kontaktformular
+
+`kontakt/index.html` sendet weiterhin an
+`https://formspree.io/f/FORMSPREE_ID_EINFUEGEN`, also an einen
+Platzhalter. **Dieses Formular ist unverändert tot.** Es wäre auf
+dieselbe EmailJS-Anbindung umzustellen; das ist noch nicht geschehen.
+
+### Vor der Freigabe zu klären
+
+Der Antrag enthält die IBAN. EmailJS ist ein US-Dienst; ob
+Bankverbindungen darüber laufen dürfen, ist eine datenschutzrechtliche
+Frage, keine technische. Zwei Auswege, falls nicht: die Bankfelder aus
+der Vorlage an die Geschäftsstelle herausnehmen und den Beitragseinzug
+getrennt einholen, oder einen Anbieter mit Verarbeitung in der EU
+verwenden. Die Anbindung liegt an einer Stelle und lässt sich tauschen.
+
+---
+
 ## Umbau der Startseite (September 2026)
 
 Die Startseite ist neu gegliedert. Reihenfolge jetzt: **Hero → Aktuelles
