@@ -62,7 +62,7 @@
         }
 
         .contact-info a {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
             text-decoration: none;
             font-weight: 500;
         }
@@ -120,6 +120,49 @@
             font-size: 24px;
             font-weight: bold;
             flex-shrink: 0;
+        }
+
+        /* Die verlinkte Liste der beanstandeten Felder in der
+           Zusammenfassung. */
+        .error-list {
+            margin: var(--spacing-xs) 0 0;
+            padding-left: 1.2em;
+            font-size: 14px;
+        }
+
+        .error-list a {
+            color: inherit;
+        }
+
+        .error-list li + li {
+            margin-top: 4px;
+        }
+
+        /* Fokusring am Kasten selbst: er bekommt den Fokus nach einem
+           fehlgeschlagenen Absenden per Skript, und wer per Tastatur
+           arbeitet, soll sehen, wo er gelandet ist. */
+        .form-message:focus-visible {
+            outline: 2px solid var(--color-focus);
+            outline-offset: 2px;
+        }
+
+        /* Fehlermeldung direkt am Feld. #b3261e traegt 6,54:1 auf Weiss;
+           das kraeftigere Rot der Warnfarben liegt darunter. Der Text
+           steht zusaetzlich zum roten Rahmen da - Farbe allein darf die
+           Aussage nicht tragen (1.4.1). */
+        .form-error {
+            margin: 4px 0 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #b3261e;
+        }
+
+        .form-error[hidden] {
+            display: none;
+        }
+
+        .form-input.is-invalid {
+            border-color: #b3261e;
         }
 
         .form-message strong {
@@ -217,7 +260,7 @@
         }
 
         .privacy-notice a {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
             text-decoration: none;
             font-weight: 500;
         }
@@ -230,9 +273,9 @@
         .submit-btn {
             width: 100%;
             padding: 12px var(--spacing-lg);
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
             color: var(--color-white);
-            border: 2px solid var(--color-primary);
+            border: 2px solid var(--color-primary-text);
             border-radius: 6px;
             font-size: 16px;
             font-weight: 600;
@@ -245,8 +288,8 @@
         }
 
         .submit-btn:hover {
-            background-color: #3a9fa7;
-            border-color: #3a9fa7;
+            background-color: #26646a;
+            border-color: #26646a;
             box-shadow: 0 4px 12px rgba(82, 183, 193, 0.2);
         }
 
@@ -296,6 +339,15 @@
                 font-size: 15px;
             }
         }
+
+        /* Symbol vor einer Ueberschrift oder einem Absatz. aria-hidden,
+           weil der Text daneben dasselbe schon sagt - vorgelesen waere
+           es nur eine Wiederholung. Ersetzt die frueheren Emoji. */
+        .text-icon {
+            vertical-align: -3px;
+            margin-right: 6px;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -307,8 +359,8 @@
         <div class="container">
             <div class="top-bar">
                 <div class="top-bar-left">
-                    <a href="tel:+493855900426" class="top-bar-item">☎ 0385 - 59 00 426</a>
-                    <a href="mailto:kreisverband@cdu-schwerin.com" class="top-bar-item">✉ kreisverband@cdu-schwerin.com</a>
+                    <a href="tel:+493855900426" class="top-bar-item"><svg class="top-bar-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 0385 - 59 00 426</a>
+                    <a href="mailto:kreisverband@cdu-schwerin.com" class="top-bar-item"><svg class="top-bar-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> kreisverband@cdu-schwerin.com</a>
                 </div>
                 <nav class="top-bar-social" role="navigation" aria-label="Soziale Netzwerke">
                     <a href="https://www.facebook.com/CduKreisverbandSchwerin" rel="external" aria-label="Facebook" class="social-icon">
@@ -434,21 +486,34 @@
                 <form class="contact-form" id="contact-form" method="POST" action="https://formspree.io/f/FORMSPREE_ID_EINFUEGEN" aria-label="Kontaktformular">
                     <!-- Success Message -->
                     <div id="success-message" class="form-message success-message" style="display: none;">
-                        <span class="message-icon">✓</span>
+                        <span class="message-icon" aria-hidden="true">✓</span>
                         <div>
                             <strong>Nachricht gesendet!</strong>
                             <p>Vielen Dank für Ihre Anfrage. Wir antworten Ihnen schnellstmöglich.</p>
                         </div>
                     </div>
 
-                    <!-- Error Message -->
-                    <div id="error-message" class="form-message error-message" style="display: none;">
-                        <span class="message-icon">!</span>
+                    <!-- Fehlerzusammenfassung.
+                         role="alert" meldet den Text beim Einblenden an, und
+                         tabindex="-1" macht den Kasten per Skript fokussierbar –
+                         nach einem fehlgeschlagenen Absenden springt der Fokus
+                         hierher, statt am Knopf stehen zu bleiben. Die Liste
+                         verlinkt jedes beanstandete Feld, damit man von hier
+                         direkt hinkommt. -->
+                    <div id="error-message" class="form-message error-message" role="alert" tabindex="-1" style="display: none;">
+                        <span class="message-icon" aria-hidden="true">!</span>
                         <div>
-                            <strong>Fehler beim Absenden</strong>
+                            <strong id="error-title">Das Formular konnte nicht gesendet werden</strong>
                             <p id="error-text">Bitte überprüfen Sie Ihre Eingaben.</p>
+                            <ul id="error-list" class="error-list" hidden></ul>
                         </div>
                     </div>
+
+                    <!-- Die Felder tragen kein aria-label mehr. Es wiederholte nur
+                         das sichtbare <label for> - und weil aria-label staerker
+                         wiegt, ersetzte es dessen Text, statt ihn zu ergaenzen.
+                         aria-describedby haengt Hinweis und Fehlermeldung an,
+                         beides wird nach dem Feldnamen mit vorgelesen. -->
 
                     <!-- Name Field -->
                     <div class="form-group">
@@ -462,12 +527,13 @@
                                 required
                                 maxlength="100"
                                 aria-required="true"
-                                aria-label="Name"
+                                aria-describedby="name-hint"
                                 autocomplete="name"
                                 placeholder=""
                             >
                         </div>
-                        <span class="form-hint">Ihr vollständiger Name</span>
+                        <span class="form-hint" id="name-hint">Ihr vollständiger Name</span>
+                        <p class="form-error" id="name-error" hidden></p>
                     </div>
 
                     <!-- Email Field -->
@@ -482,12 +548,13 @@
                                 required
                                 maxlength="100"
                                 aria-required="true"
-                                aria-label="E-Mail"
+                                aria-describedby="email-hint"
                                 autocomplete="email"
                                 placeholder=""
                             >
                         </div>
-                        <span class="form-hint">Ihre E-Mail-Adresse</span>
+                        <span class="form-hint" id="email-hint">Ihre E-Mail-Adresse</span>
+                        <p class="form-error" id="email-error" hidden></p>
                     </div>
 
                     <!-- Phone Field -->
@@ -500,13 +567,14 @@
                                 name="phone"
                                 class="form-input"
                                 maxlength="20"
-                                aria-label="Telefonnummer"
+                                aria-describedby="phone-hint"
                                 autocomplete="tel"
                                 inputmode="tel"
                                 placeholder=""
                             >
                         </div>
-                        <span class="form-hint">Optional – damit wir Sie ggf. anrufen können</span>
+                        <span class="form-hint" id="phone-hint">Optional – damit wir Sie ggf. anrufen können</span>
+                        <p class="form-error" id="phone-error" hidden></p>
                     </div>
 
                     <!-- Subject Field -->
@@ -521,11 +589,12 @@
                                 required
                                 maxlength="100"
                                 aria-required="true"
-                                aria-label="Betreff"
+                                aria-describedby="subject-hint"
                                 placeholder=""
                             >
                         </div>
-                        <span class="form-hint">Worum geht es in Ihrer Anfrage?</span>
+                        <span class="form-hint" id="subject-hint">Worum geht es in Ihrer Anfrage?</span>
+                        <p class="form-error" id="subject-error" hidden></p>
                     </div>
 
                     <!-- Message Field -->
@@ -539,17 +608,18 @@
                                 required
                                 maxlength="2000"
                                 aria-required="true"
-                                aria-label="Nachricht"
+                                aria-describedby="message-hint"
                                 placeholder=""
                             ></textarea>
                             <span class="char-count">0 / 2000</span>
                         </div>
-                        <span class="form-hint">Max. 2000 Zeichen</span>
+                        <span class="form-hint" id="message-hint">Max. 2000 Zeichen</span>
+                        <p class="form-error" id="message-error" hidden></p>
                     </div>
 
                     <!-- Privacy Notice -->
                     <div class="privacy-notice">
-                        <p>🔒 <strong>Sicher übertragen.</strong> Ihre Daten werden über eine sichere Verbindung übertragen. Lesen Sie unsere <a href="../datenschutz/">Datenschutzerklärung</a> für weitere Informationen.</p>
+                        <p><svg class="text-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> <strong>Sicher übertragen.</strong> Ihre Daten werden über eine sichere Verbindung übertragen. Lesen Sie unsere <a href="../datenschutz/">Datenschutzerklärung</a> für weitere Informationen.</p>
                     </div>
 
                     <!-- Submit Button -->
@@ -570,7 +640,7 @@
                         Deutschland
                     </p>
 
-                    <h3>📞 Telefon & Fax</h3>
+                    <h3><svg class="text-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Telefon & Fax</h3>
                     <p>
                         <strong>Telefon:</strong><br>
                         <a href="tel:+493855900426">+49 (385) 59 00 426</a><br>
@@ -578,18 +648,18 @@
                         +49 (385) 59 00 421
                     </p>
 
-                    <h3>✉️ E-Mail</h3>
+                    <h3><svg class="text-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> E-Mail</h3>
                     <p>
                         <a href="mailto:kreisverband@cdu-schwerin.com">kreisverband@cdu-schwerin.com</a>
                     </p>
 
-                    <h3>🕐 Öffnungszeiten</h3>
+                    <h3><svg class="text-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Öffnungszeiten</h3>
                     <p>
                         Montag – Freitag<br>
                         10:00 – 17:00 Uhr
                     </p>
 
-                    <h3>📋 Weitere Links</h3>
+                    <h3><svg class="text-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5h6a1 1 0 0 1 1 1v1H8V6a1 1 0 0 1 1-1z"/><path d="M16 6h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg> Weitere Links</h3>
                     <ul class="liste-blank">
                         <li><a href="../impressum/">Impressum</a></li>
                         <li><a href="../datenschutz/">Datenschutz</a></li>
@@ -699,6 +769,19 @@
                     textareaField.addEventListener('input', updateCharCount);
                 }
 
+                /* Pruefen beim Verlassen des Feldes. Ein schon gemeldeter
+                   Fehler verschwindet zusaetzlich waehrend des Tippens,
+                   sobald die Eingabe stimmt - aber nur dann, damit niemand
+                   beim Schreiben angemeckert wird. */
+                felder().forEach(feld => {
+                    feld.addEventListener('blur', validateField);
+                    feld.addEventListener('input', () => {
+                        if (feld.hasAttribute('aria-invalid') && feld.checkValidity()) {
+                            fehlerLoeschen(feld);
+                        }
+                    });
+                });
+
                 // Form Submission
                 form.addEventListener('submit', handleSubmit);
             };
@@ -710,38 +793,93 @@
             };
 
             /**
-             * TODO: Feldvalidierung implementieren.
+             * Feldvalidierung.
              *
-             * Platzhalter. Die Funktion wurde in handleSubmit aufgerufen, aber
-             * nie definiert – jedes Absenden mit ungueltigem Feld brach mit
-             * einem ReferenceError ab, die Fehlermeldung erschien nie.
+             * Der Browser kennt den Zustand jedes Feldes bereits ueber
+             * validity; hier kommt nur der deutsche Text dazu und die
+             * Verdrahtung, die eine Fehlermeldung fuer Screenreader
+             * ueberhaupt auffindbar macht:
              *
-             * Noch umzusetzen:
-             *   - Fehlertext inline neben dem betroffenen Feld ausgeben,
-             *     statt nur der globalen Sammelmeldung
-             *   - aria-invalid="true" am Feld setzen und wieder entfernen
-             *   - erstes ungueltiges Feld fokussieren
+             *   - der Text steht im <p id="<feld>-error"> direkt beim Feld,
+             *     nicht nur in der Sammelmeldung oben
+             *   - aria-describedby verweist darauf, solange der Fehler gilt
+             *   - aria-invalid="true" markiert das Feld selbst
              *
-             * Aufruf erfolgt mit einem Event-aehnlichen Objekt: { target: input }
+             * Geprueft wird beim Verlassen des Feldes, nicht bei jedem
+             * Tastendruck: waehrend des Tippens ist eine Eingabe fast immer
+             * noch unvollstaendig, und eine Meldung dazu waere nur Laerm.
+             * Ein bereits gemeldeter Fehler verschwindet dagegen sofort,
+             * sobald die Eingabe stimmt.
              */
-            const validateField = () => {
-                // Bewusst leer – verhindert vorerst nur den Absturz.
+            const meldungFuer = (feld) => {
+                const v = feld.validity;
+                const beschriftung = form.querySelector(`label[for="${feld.id}"]`);
+                const bezeichnung = beschriftung
+                    ? beschriftung.textContent.replace('*', '').trim()
+                    : 'Dieses Feld';
+
+                if (v.valueMissing) {
+                    return feld.id === 'message'
+                        ? 'Bitte schreiben Sie uns Ihre Nachricht.'
+                        : `Bitte füllen Sie das Feld „${bezeichnung}“ aus.`;
+                }
+                if (v.typeMismatch && feld.type === 'email') {
+                    return 'Bitte geben Sie eine E-Mail-Adresse mit @ ein, zum Beispiel name@beispiel.de.';
+                }
+                if (v.tooLong) {
+                    return `Bitte kürzen Sie die Eingabe auf höchstens ${feld.maxLength} Zeichen.`;
+                }
+                return 'Bitte prüfen Sie diese Eingabe.';
             };
+
+            /* aria-describedby traegt den Hinweistext und soll ihn behalten -
+               die Fehler-id kommt nur dazu und wieder weg. */
+            const beschreibungSetzen = (feld, id, dazu) => {
+                const teile = (feld.getAttribute('aria-describedby') || '')
+                    .split(/\s+/).filter(Boolean).filter(t => t !== id);
+                if (dazu) teile.push(id);
+                if (teile.length) feld.setAttribute('aria-describedby', teile.join(' '));
+                else feld.removeAttribute('aria-describedby');
+            };
+
+            const fehlerZeigen = (feld) => {
+                const kasten = document.getElementById(`${feld.id}-error`);
+                if (!kasten) return;
+                kasten.textContent = meldungFuer(feld);
+                kasten.hidden = false;
+                feld.setAttribute('aria-invalid', 'true');
+                feld.classList.add('is-invalid');
+                beschreibungSetzen(feld, kasten.id, true);
+            };
+
+            const fehlerLoeschen = (feld) => {
+                const kasten = document.getElementById(`${feld.id}-error`);
+                if (!kasten) return;
+                kasten.hidden = true;
+                kasten.textContent = '';
+                feld.removeAttribute('aria-invalid');
+                feld.classList.remove('is-invalid');
+                beschreibungSetzen(feld, kasten.id, false);
+            };
+
+            const validateField = ({ target }) => {
+                if (target.checkValidity()) fehlerLoeschen(target);
+                else fehlerZeigen(target);
+            };
+
+            const felder = () => Array.from(form.querySelectorAll('.form-input'));
 
             const handleSubmit = async (e) => {
                 e.preventDefault();
 
-                // Validate all fields
-                let isFormValid = true;
-                form.querySelectorAll('.form-input[required]').forEach(input => {
-                    if (!input.checkValidity()) {
-                        isFormValid = false;
-                        validateField({ target: input });
-                    }
-                });
+                /* Alle Felder pruefen, nicht nur bis zum ersten Fehler:
+                   wer dreimal absenden muss, um drei Fehler zu erfahren,
+                   gibt vorher auf. */
+                const ungueltig = felder().filter(feld => !feld.checkValidity());
+                felder().forEach(feld => validateField({ target: feld }));
 
-                if (!isFormValid) {
-                    showError('Bitte füllen Sie alle erforderlichen Felder aus.');
+                if (ungueltig.length) {
+                    showError(ungueltig);
                     return;
                 }
 
@@ -793,11 +931,53 @@
                 successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             };
 
-            const showError = (message) => {
+            /**
+             * Nimmt entweder einen Text (Fehler beim Senden) oder die Liste
+             * der beanstandeten Felder entgegen.
+             *
+             * Im zweiten Fall entsteht eine verlinkte Zusammenfassung: jeder
+             * Eintrag springt auf sein Feld. Die Inline-Meldungen bleiben
+             * dabei stehen - die Zusammenfassung ergaenzt sie, sie ersetzt
+             * sie nicht. Der Fokus wandert in den Kasten, damit die Meldung
+             * per Tastatur und Screenreader ankommt, statt unbemerkt ueber
+             * dem Absendeknopf zu erscheinen.
+             */
+            const showError = (was) => {
+                const text = errorMsg.querySelector('#error-text');
+                const liste = errorMsg.querySelector('#error-list');
+
+                liste.innerHTML = '';
+                if (typeof was === 'string') {
+                    text.textContent = was;
+                    liste.hidden = true;
+                } else {
+                    text.textContent = was.length === 1
+                        ? 'Eine Eingabe fehlt oder stimmt noch nicht:'
+                        : `${was.length} Eingaben fehlen oder stimmen noch nicht:`;
+                    was.forEach(feld => {
+                        const eintrag = document.createElement('li');
+                        const link = document.createElement('a');
+                        link.href = `#${feld.id}`;
+                        link.textContent = meldungFuer(feld);
+                        /* Der Sprung soll den Fokus mitnehmen, nicht nur die
+                           Seite scrollen - sonst landet die Tastatur weiter
+                           oben im Dokument. */
+                        link.addEventListener('click', ev => {
+                            ev.preventDefault();
+                            feld.focus();
+                        });
+                        eintrag.append(link);
+                        liste.append(eintrag);
+                    });
+                    liste.hidden = false;
+                }
+
                 errorMsg.style.display = 'flex';
-                errorMsg.querySelector('#error-text').textContent = message;
                 successMsg.style.display = 'none';
                 errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                /* preventScroll, weil focus() sonst selbst springt und das
+                   weiche Scrollen der Zeile darueber abschneidet. */
+                errorMsg.focus({ preventScroll: true });
             };
 
             return { init };

@@ -34,6 +34,11 @@ aendern.
 Aufruf nach inhaltlichen Aenderungen:
     python3 tools/build-site-data.py
 """
+# Macht die Typangaben zu Zeichenketten, statt sie beim Laden auszuwerten.
+# Ohne diese Zeile scheitert "int | None" unter Python 3.9 - und 3.9 ist,
+# was Xcode auf macOS mitbringt. Am Verhalten aendert sich sonst nichts.
+from __future__ import annotations
+
 import json
 import pathlib
 import re

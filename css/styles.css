@@ -43,14 +43,42 @@
 
 /* Custom Properties for Easy Theming */
 :root {
+    /* Die Hausfarben. Sie taugen als Flaeche, aber nicht als Schrift: auf
+       Weiss kommt das Tuerkis auf 2,36:1 und das Orange auf 1,96:1, WCAG
+       2.2 AA verlangt fuer Text 4,5:1. Deshalb steht neben jeder Flaechen-
+       farbe eine abgedunkelte Textfassung im selben Farbton. Welche gilt,
+       entscheidet die Rolle: Hintergrund -> Hausfarbe, Schrift auf hellem
+       Grund -> *-text.
+
+       Auf dunklem Grund (Fusszeile, Hero-Kasten, .btn-accent) bleiben die
+       Hausfarben richtig - dort tragen sie 4,79:1 bzw. 5,76:1. */
     --color-primary: #52b7c1;
     --color-dark: #2d3c4b;
     --color-accent: #ffa600;
     --color-light-bg: #ddeef1;
     --color-text: #2d3c4b;
-    --color-text-light: #7f8e9d;
     --color-white: #ffffff;
     --color-border: #52b7c1;
+
+    /* Tuerkis als Schrift und als Rand eines Bedienelements. 4,53:1 auf
+       Weiss. Gleicher Farbton wie --color-primary, nur dunkler. */
+    --color-primary-text: #318189;
+
+    /* Orange als Schrift auf hellem Grund: Pflichtfeldstern, der
+       hervorgehobene Menuepunkt, Hover-Farben. 4,55:1 auf Weiss. */
+    --color-accent-text: #a36a00;
+
+    /* Der Fokusring. Das reine Orange lag auf Weiss bei 1,96:1 und war
+       damit kaum zu sehen. 2.4.13 Focus Appearance ist zwar nur AAA, ein
+       unsichtbarer Ring macht die Tastaturbedienung aber praktisch
+       wertlos. 3,02:1 auf Weiss, auf dunklem Grund weiterhin deutlich. */
+    --color-focus: #cd8500;
+
+    /* Vorher #7f8e9d: 3,36:1 auf Weiss und damit unter AA, obwohl die
+       Farbe an rund 20 Stellen fuer 13-15px grosse Zeilen benutzt wird
+       (Termindaten, Aemter, Kartentexte). Jetzt 5,38:1 auf Weiss und
+       4,50:1 auf --color-light-bg - beide Untergruende kommen vor. */
+    --color-text-light: #5e6c7a;
 
     /* Die Ersatzkette bleibt stehen: solange Inter laedt - und falls sie
        ausfaellt - setzt der Browser in der naechstbesten Grotesk. */
@@ -163,7 +191,7 @@ body {
 
 .skip-link:focus-visible {
     top: 0;
-    outline: 3px solid var(--color-accent);
+    outline: 3px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -250,7 +278,9 @@ body {
    haelt den Inhalt weiterhin auf 1400px begrenzt und buendig zum Rest
    der Seite. */
 .top-bar-outer {
-    background-color: var(--color-primary);
+    /* Wie .btn-primary: die Leiste traegt weisse Schrift und weisse
+       Symbole, also die dunklere Fassung. Vorher 2,36:1. */
+    background-color: var(--color-primary-text);
     color: var(--color-white);
 }
 
@@ -274,6 +304,15 @@ body {
     color: var(--color-white);
     text-decoration: none;
     transition: opacity 0.2s ease;
+}
+
+/* Das Briefsymbol vor der Adresse. Vorher stand hier das Schriftzeichen
+   U+2709; das zeichnet jedes System anders und Screenreader lesen es als
+   "Umschlag" vor die Adresse. Jetzt ein SVG wie bei den uebrigen Symbolen,
+   aria-hidden, weil die Adresse daneben steht. */
+.top-bar-icon {
+    vertical-align: -2px;
+    margin-right: 4px;
 }
 
 .top-bar-item:hover,
@@ -405,19 +444,19 @@ body {
 }
 
 .nav-link-highlight {
-    color: var(--color-accent);
+    color: var(--color-accent-text);
     font-weight: 600;
 }
 
 .nav-link:hover,
 .nav-link:focus-visible {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: rgba(82, 183, 193, 0.1);
     outline: 2px solid transparent;
 }
 
 .nav-link:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -483,7 +522,7 @@ body {
 }
 
 .submenu a:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: -2px;
 }
 
@@ -514,7 +553,7 @@ body {
 }
 
 .menu-toggle:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -642,24 +681,29 @@ body {
 }
 
 .btn:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
 .btn-primary {
-    background-color: var(--color-primary);
+    /* Traegt weisse Schrift, deshalb die dunklere Fassung: auf dem hellen
+       --color-primary kam der wichtigste Knopf der Seite auf 2,36:1. Jetzt
+       4,53:1. Der Farbton ist derselbe, die Knoepfe wirken nur satter. */
+    background-color: var(--color-primary-text);
     color: var(--color-white);
 }
 
 .btn-primary:hover,
 .btn-primary:focus-visible {
-    background-color: #3a9fa7;
+    /* Muss dunkler sein als der Ruhezustand, nicht heller - das alte
+       #3a9fa7 lag mit Weiss bei 3,14:1 und fiel beim Hovern unter AA. */
+    background-color: #26646a;
 }
 
 .btn-secondary {
     background-color: transparent;
-    color: var(--color-primary);
-    border: 2px solid var(--color-primary);
+    color: var(--color-primary-text);
+    border: 2px solid var(--color-primary-text);
 }
 
 .btn-secondary:hover,
@@ -768,6 +812,9 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    /* Bleibt das reine Orange: der Kicker sitzt im deckenden dunklen
+       Hero-Kasten, dort traegt es 5,76:1. Die abgedunkelte Textfassung
+       waere hier sogar schlechter. */
     color: var(--color-accent);
     margin-bottom: var(--spacing-xs);
 }
@@ -898,7 +945,7 @@ body {
 }
 
 .slider-dot:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 0;
 }
 
@@ -973,7 +1020,7 @@ body {
 }
 
 .slider-btn:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -1072,7 +1119,7 @@ body {
 .news-link:focus-visible {
     /* Nach innen gesetzt: ein aeusserer Rahmen wuerde vom scrollenden
        Element abgeschnitten. */
-    outline: 3px solid var(--color-accent);
+    outline: 3px solid var(--color-focus);
     outline-offset: -3px;
 }
 
@@ -1149,7 +1196,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--spacing-xs);
+    /* Kein gap: die Knoepfe tragen ihren Abstand selbst. Mit 24px Breite
+       liegen die Mittelpunkte 24px auseinander - das Mass, das 2.5.8
+       verlangt - und die sichtbaren Punkte stehen 16px auseinander. */
+    gap: 0;
 }
 
 .news-arrows {
@@ -1174,8 +1224,8 @@ body {
 }
 
 .news-arrow:hover:not(:disabled) {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    border-color: var(--color-primary-text);
+    color: var(--color-primary-text);
 }
 
 .news-arrow:disabled {
@@ -1184,7 +1234,7 @@ body {
 }
 
 .news-arrow:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -1193,24 +1243,53 @@ body {
     height: 20px;
 }
 
+/* Der Knopf ist 24x24, der sichtbare Punkt nur 8px - dasselbe Muster wie
+   bei .slider-dot. Vorher war der Knopf selbst 8px gross und stand 8px vom
+   naechsten entfernt, also 16px von Mitte zu Mitte; WCAG 2.2 AA (2.5.8
+   Target Size Minimum) verlangt 24. Auf dem Telefon wiegt das doppelt: dort
+   sind die Blaetterpfeile ausgeblendet und die Punkte sind neben dem
+   Wischen die einzige Bedienung.
+
+   Der Punkt steckt in ::before, damit die Flaeche des Knopfes gleich bleibt,
+   waehrend der aktive Punkt zum Balken waechst. */
 .news-dot {
-    width: 8px;
-    height: 8px;
+    width: 24px;
+    height: 24px;
     padding: 0;
     border: none;
-    border-radius: 999px;
-    background-color: #c2ccd4;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    /* Verhindert die Verzoegerung durch Doppeltipp-Zoom auf Touchgeraeten. */
+    touch-action: manipulation;
+}
+
+.news-dot::before {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    /* Vorher #c2ccd4: 1,63:1 auf Weiss. Fuer Bedienelemente verlangt
+       1.4.11 drei zu eins, dieser Wert traegt 3,02:1. */
+    background-color: #8397a8;
     transition: width 0.25s ease, background-color 0.25s ease;
 }
 
+/* Der aktive Punkt ist ein Balken und braucht mehr als die 24px Knopfbreite. */
 .news-dot[aria-current="true"] {
+    width: 28px;
+}
+
+.news-dot[aria-current="true"]::before {
     width: 28px;
     background-color: var(--color-dark);
 }
 
 .news-dot:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 3px;
 }
 
@@ -1281,7 +1360,7 @@ body {
 
 .engage-icon {
     margin-bottom: var(--spacing-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
 }
 
 .engage-icon svg {
@@ -1304,11 +1383,11 @@ body {
 
 .engage-card h3 a:hover,
 .engage-card h3 a:focus-visible {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
 }
 
 .engage-card h3 a:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -1322,7 +1401,7 @@ body {
 }
 
 .engage-link {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     text-decoration: none;
     font-weight: 600;
     font-size: 15px;
@@ -1331,12 +1410,12 @@ body {
 
 .engage-link:hover,
 .engage-link:focus-visible {
-    color: var(--color-accent);
+    color: var(--color-accent-text);
     text-decoration: underline;
 }
 
 .engage-link:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -1519,7 +1598,7 @@ body {
 }
 
 .footer-section address a:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -1543,7 +1622,7 @@ body {
 }
 
 .footer-links a:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -1568,7 +1647,7 @@ body {
 }
 
 .footer-sitemap a:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -1601,7 +1680,7 @@ body {
 }
 
 .footer-social-link:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -1759,7 +1838,7 @@ body {
 }
 
 .textseite a {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-weight: 600;
 }
 
@@ -1834,7 +1913,7 @@ body {
     font-weight: 600;
     color: var(--color-dark);
     background-color: var(--color-white);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-primary-text);
     border-radius: 999px;
     padding: 0.4em 1em;
     cursor: pointer;
@@ -1846,8 +1925,8 @@ body {
 }
 
 .spenden-betrag.is-aktiv {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
+    background-color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
     color: var(--color-white);
 }
 
@@ -1969,17 +2048,17 @@ body {
 
 .member-card:hover .member-email,
 .member-card:focus-within .member-email {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: rgba(82, 183, 193, 0.1);
 }
 
 .member-email:hover {
     text-decoration: underline;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
 }
 
 .member-email:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: -1px;
 }
 
@@ -2035,12 +2114,12 @@ body {
 }
 
 .form-label .required {
-    color: var(--color-accent);
+    color: var(--color-accent-text);
     font-weight: 600;
 }
 
 .required {
-    color: var(--color-accent);
+    color: var(--color-accent-text);
     font-weight: 600;
     margin-left: 2px;
 }
@@ -2093,12 +2172,12 @@ body {
 }
 
 .header-action:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: rgba(82, 183, 193, 0.1);
 }
 
 .header-action:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -2207,11 +2286,11 @@ body {
 
 .search-close:hover {
     background-color: rgba(82, 183, 193, 0.1);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
 }
 
 .search-close:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -2244,7 +2323,7 @@ body {
 }
 
 .search-results a:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: -2px;
 }
 
@@ -2310,7 +2389,7 @@ body {
 }
 
 .section-link {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     text-decoration: none;
     font-weight: 600;
     font-size: 15px;
@@ -2319,12 +2398,12 @@ body {
 
 .section-link:hover,
 .section-link:focus-visible {
-    color: var(--color-accent);
+    color: var(--color-accent-text);
     text-decoration: underline;
 }
 
 .section-link:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -2352,7 +2431,7 @@ body {
 }
 
 .home-event:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: -2px;
 }
 
@@ -2363,7 +2442,7 @@ body {
     flex-shrink: 0;
     width: 72px;
     line-height: 1.1;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
 }
 
 .home-event-day {
@@ -2402,7 +2481,7 @@ body {
 }
 
 .home-event-badge.vorstand { background-color: #e3f2fd; color: #1565c0; }
-.home-event-badge.wahlveranstaltung { background-color: #fff3e0; color: #e65100; }
+.home-event-badge.wahlveranstaltung { background-color: #fff3e0; color: #b34700; }
 .home-event-badge.parteitag { background-color: #f3e5f5; color: #7b1fa2; }
 .home-event-badge.gedenkveranstaltung { background-color: #e8eaf6; color: #3f51b5; }
 
@@ -2426,7 +2505,7 @@ body {
 .home-event-arrow {
     flex-shrink: 0;
     align-self: center;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-size: 22px;
     transition: transform 0.2s ease;
 }
@@ -2476,7 +2555,7 @@ body {
 }
 
 .brotkrumen a {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     text-decoration: none;
 }
 
@@ -2508,7 +2587,7 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     text-decoration: none;
     margin-bottom: var(--spacing-xs);
 }
@@ -2569,7 +2648,7 @@ body {
 }
 
 .meldung-zurueck a {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-weight: 600;
     text-decoration: none;
 }
@@ -2622,7 +2701,7 @@ body {
 }
 
 .meldung-kachel-link:focus-visible {
-    outline: 3px solid var(--color-accent);
+    outline: 3px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -2645,7 +2724,7 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
 }
 
 .meldung-kachel-titel {
@@ -2686,7 +2765,7 @@ body {
 }
 
 .meldung-kategorie-liste a {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     text-decoration: none;
     font-weight: 600;
 }
@@ -2745,7 +2824,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     margin-bottom: var(--spacing-xs);
 }
 
@@ -3120,7 +3199,7 @@ body {
    jeder einzelnen Seite als Attribut, weil die Navigation ueberall
    wiederholt wird - 34 gleiche Zeilen fuer eine Regel. */
 .nav-link-cta {
-    color: var(--color-accent);
+    color: var(--color-accent-text);
     font-weight: 600;
 }
 
@@ -3245,7 +3324,7 @@ ul.liste-blank {
 
 .person-kompakt a:hover,
 .person-kompakt a:focus-visible {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     text-decoration: underline;
 }
 

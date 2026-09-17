@@ -16,7 +16,12 @@
     <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
     <style>
         .membership-hero {
-            background: linear-gradient(135deg, #52b7c1 0%, #3a9fa7 100%);
+            /* Traegt weisse Schrift, darunter eine 42px-Ueberschrift. Der
+               alte Verlauf lief von #52b7c1 nach #3a9fa7; weiss darauf kam
+               auf 2,36:1 bzw. 3,14:1 und verfehlte damit selbst die Grenze
+               fuer grosse Schrift. Derselbe Farbverlauf, nur dunkler:
+               jetzt 4,53:1 am hellen und 6,75:1 am dunklen Ende. */
+            background: linear-gradient(135deg, #318189 0%, #26646a 100%);
             color: var(--color-white);
             padding: var(--spacing-xl);
             border-radius: 8px;
@@ -72,17 +77,25 @@
         }
 
         .membership-section li:before {
+            /* Das Haekchen ist Schmuck. Manche Screenreader lesen den
+               Inhalt von ::before mit; der leere Alternativtext nach dem
+               Schraegstrich unterdrueckt das.
+
+               Zwei Zeilen, weil aeltere Browser die Kurzform mit / nicht
+               kennen und die ganze Deklaration verwerfen wuerden - dann
+               waere das Haekchen weg. Sie behalten die erste Zeile. */
             content: "✓";
+            content: "✓" / "";
             position: absolute;
             left: 0;
-            color: var(--color-primary);
+            color: var(--color-primary-text);
             font-weight: bold;
             font-size: 18px;
         }
 
         .cta-button {
             display: inline-block;
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
             color: var(--color-white);
             padding: var(--spacing-md) var(--spacing-lg);
             border-radius: 4px;
@@ -96,11 +109,11 @@
 
         .cta-button:hover,
         .cta-button:focus {
-            background-color: #3a9fa7;
+            background-color: #26646a;
         }
 
         .cta-button:focus-visible {
-            outline: 2px solid var(--color-accent);
+            outline: 2px solid var(--color-focus);
             outline-offset: 2px;
         }
 
@@ -134,7 +147,7 @@
             justify-content: center;
             width: 60px;
             height: 60px;
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
             color: var(--color-white);
             border-radius: 50%;
             font-size: 28px;
@@ -172,7 +185,7 @@
         }
 
         .contact-section a {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
             text-decoration: none;
         }
 
@@ -322,9 +335,9 @@
         .membership-submit-btn {
             width: 100%;
             padding: 12px var(--spacing-lg);
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
             color: var(--color-white);
-            border: 2px solid var(--color-primary);
+            border: 2px solid var(--color-primary-text);
             border-radius: 6px;
             font-size: 16px;
             font-weight: 600;
@@ -337,8 +350,8 @@
         }
 
         .membership-submit-btn:hover {
-            background-color: #3a9fa7;
-            border-color: #3a9fa7;
+            background-color: #26646a;
+            border-color: #26646a;
             box-shadow: 0 4px 12px rgba(82, 183, 193, 0.2);
         }
 
@@ -379,8 +392,8 @@
         .pdf-download-btn {
             display: inline-block;
             background-color: transparent;
-            color: var(--color-primary);
-            border: 2px solid var(--color-primary);
+            color: var(--color-primary-text);
+            border: 2px solid var(--color-primary-text);
             padding: 10px 20px;
             border-radius: 6px;
             text-decoration: none;
@@ -394,7 +407,7 @@
         }
 
         .pdf-download-btn:focus-visible {
-            outline: 2px solid var(--color-accent);
+            outline: 2px solid var(--color-focus);
             outline-offset: 2px;
         }
 
@@ -444,7 +457,9 @@
             height: 50px;
             border-radius: 50%;
             background-color: #e0e0e0;
-            color: var(--color-text-light);
+            /* Nicht --color-text-light: die Zahl steht auf Grau statt auf
+               Weiss, dort traegt die Variable nur 4,08:1. 5,68:1. */
+            color: #4a5663;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -455,13 +470,15 @@
         }
 
         .progress-step.active {
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
             color: var(--color-white);
             box-shadow: 0 0 0 4px rgba(82, 183, 193, 0.2);
         }
 
         .progress-step.completed {
-            background-color: #28a745;
+            /* Vorher #28a745 - das Bootstrap-Gruen traegt weisse Schrift
+               nur mit 3,13:1. Derselbe Farbton dunkler: 5,87:1. */
+            background-color: #157347;
             color: var(--color-white);
         }
 
@@ -501,6 +518,15 @@
             color: var(--color-text);
         }
 
+        /* Der Browser gibt jedem fieldset Rahmen und Innenabstand; hier
+           soll die Gruppe aussehen wie vorher, nur eben richtig ausgezeichnet. */
+        .radio-fieldset {
+            border: 0;
+            padding: 0;
+            margin: 0;
+            min-width: 0;
+        }
+
         .radio-group,
         .checkbox-group {
             display: flex;
@@ -527,7 +553,7 @@
 
         .radio-label input:focus-visible,
         .checkbox-label input:focus-visible {
-            outline: 2px solid var(--color-accent);
+            outline: 2px solid var(--color-focus);
             outline-offset: 2px;
         }
 
@@ -548,7 +574,7 @@
         .nav-btn,
         .membership-submit-btn {
             padding: 12px var(--spacing-lg);
-            border: 2px solid var(--color-primary);
+            border: 2px solid var(--color-primary-text);
             border-radius: 6px;
             font-size: 15px;
             font-weight: 600;
@@ -558,7 +584,7 @@
 
         .nav-btn {
             background-color: transparent;
-            color: var(--color-primary);
+            color: var(--color-primary-text);
             flex: 1;
         }
 
@@ -572,18 +598,18 @@
 
         .next-btn {
             order: 2;
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
             color: var(--color-white);
         }
 
         .next-btn:hover {
-            background-color: #3a9fa7;
+            background-color: #26646a;
         }
 
         .membership-submit-btn {
             order: 2;
             width: 100%;
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
             color: var(--color-white);
             display: flex;
             align-items: center;
@@ -592,7 +618,7 @@
         }
 
         .membership-submit-btn:hover {
-            background-color: #3a9fa7;
+            background-color: #26646a;
             box-shadow: 0 4px 12px rgba(82, 183, 193, 0.2);
         }
 
@@ -666,6 +692,15 @@
                 padding: var(--spacing-md);
             }
         }
+
+        /* Symbol vor einer Ueberschrift oder einem Absatz. aria-hidden,
+           weil der Text daneben dasselbe schon sagt - vorgelesen waere
+           es nur eine Wiederholung. Ersetzt die frueheren Emoji. */
+        .text-icon {
+            vertical-align: -3px;
+            margin-right: 6px;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -677,8 +712,8 @@
         <div class="container">
             <div class="top-bar">
                 <div class="top-bar-left">
-                    <a href="tel:+493855900426" class="top-bar-item">☎ 0385 - 59 00 426</a>
-                    <a href="mailto:kreisverband@cdu-schwerin.com" class="top-bar-item">✉ kreisverband@cdu-schwerin.com</a>
+                    <a href="tel:+493855900426" class="top-bar-item"><svg class="top-bar-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 0385 - 59 00 426</a>
+                    <a href="mailto:kreisverband@cdu-schwerin.com" class="top-bar-item"><svg class="top-bar-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> kreisverband@cdu-schwerin.com</a>
                 </div>
                 <nav class="top-bar-social" role="navigation" aria-label="Soziale Netzwerke">
                     <a href="https://www.facebook.com/CduKreisverbandSchwerin" rel="external" aria-label="Facebook" class="social-icon">
@@ -821,7 +856,7 @@
                 <form class="membership-form" id="membership-form" method="POST" action="https://formspree.io/f/FORMSPREE_ID_EINFUEGEN">
                     <!-- Success Message -->
                     <div id="membership-success" class="form-message success-message" style="display: none;">
-                        <span class="message-icon">✓</span>
+                        <span class="message-icon" aria-hidden="true">✓</span>
                         <div>
                             <strong>Antrag eingegangen!</strong>
                             <p>Vielen Dank für Ihren Mitgliedsantrag. Eine PDF-Zusammenfassung wurde automatisch heruntergeladen. Bitte bestätigen Sie außerdem die E-Mail, die wir Ihnen soeben gesendet haben – erst danach ist Ihr Antrag vollständig und wir setzen uns mit Ihnen in Verbindung.</p>
@@ -843,25 +878,27 @@
                         <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-1-announcement">Schritt 1 von 6: Persönliche Daten</div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="radio-group-label">Anrede <span class="required">*</span></label>
-                                <div class="radio-group">
-                                    <label class="radio-label"><input type="radio" name="salutation" value="Herr" required aria-label="Anrede: Herr"> Herr</label>
-                                    <label class="radio-label"><input type="radio" name="salutation" value="Frau" required aria-label="Anrede: Frau"> Frau</label>
-                                    <label class="radio-label"><input type="radio" name="salutation" value="ohne" required aria-label="Anrede: Ohne Anrede"> Ohne Anrede</label>
-                                </div>
+                                <fieldset class="radio-fieldset">
+                                    <legend class="radio-group-label">Anrede <span class="required">*</span></legend>
+                                    <div class="radio-group">
+                                        <label class="radio-label"><input type="radio" name="salutation" value="Herr" required> Herr</label>
+                                        <label class="radio-label"><input type="radio" name="salutation" value="Frau" required> Frau</label>
+                                        <label class="radio-label"><input type="radio" name="salutation" value="ohne" required> Ohne Anrede</label>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label for="first-name" class="form-label">Vorname <span class="required">*</span></label><div class="form-field"><input type="text" id="first-name" name="first-name" class="form-input" required maxlength="50" autocomplete="given-name" aria-label="Vorname" placeholder=""></div></div>
-                            <div class="form-group"><label for="last-name" class="form-label">Nachname <span class="required">*</span></label><div class="form-field"><input type="text" id="last-name" name="last-name" class="form-input" required maxlength="50" autocomplete="family-name" aria-label="Nachname" placeholder=""></div></div>
+                            <div class="form-group"><label for="first-name" class="form-label">Vorname <span class="required">*</span></label><div class="form-field"><input type="text" id="first-name" name="first-name" class="form-input" required maxlength="50" autocomplete="given-name" placeholder=""></div></div>
+                            <div class="form-group"><label for="last-name" class="form-label">Nachname <span class="required">*</span></label><div class="form-field"><input type="text" id="last-name" name="last-name" class="form-input" required maxlength="50" autocomplete="family-name" placeholder=""></div></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label for="birthdate" class="form-label">Geburtsdatum <span class="required">*</span></label><div class="form-field"><input type="date" id="birthdate" name="birthdate" class="form-input" required aria-label="Geburtsdatum" placeholder=""></div></div>
-                            <div class="form-group"><label for="birthplace" class="form-label">Geburtsort <span class="required">*</span></label><div class="form-field"><input type="text" id="birthplace" name="birthplace" class="form-input" required maxlength="50" aria-label="Geburtsort" placeholder=""></div></div>
+                            <div class="form-group"><label for="birthdate" class="form-label">Geburtsdatum <span class="required">*</span></label><div class="form-field"><input type="date" id="birthdate" name="birthdate" class="form-input" required placeholder=""></div></div>
+                            <div class="form-group"><label for="birthplace" class="form-label">Geburtsort <span class="required">*</span></label><div class="form-field"><input type="text" id="birthplace" name="birthplace" class="form-input" required maxlength="50" placeholder=""></div></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label for="nationality" class="form-label">Staatsangehörigkeit <span class="required">*</span></label><div class="form-field"><input type="text" id="nationality" name="nationality" class="form-input" required maxlength="50" value="Deutsch" aria-label="Staatsangehörigkeit" placeholder=""></div></div>
-                            <div class="form-group"><label for="religion" class="form-label">Religion/Konfession</label><div class="form-field"><input type="text" id="religion" name="religion" class="form-input" maxlength="50" aria-label="Religion/Konfession" placeholder=""></div></div>
+                            <div class="form-group"><label for="nationality" class="form-label">Staatsangehörigkeit <span class="required">*</span></label><div class="form-field"><input type="text" id="nationality" name="nationality" class="form-input" required maxlength="50" value="Deutsch" placeholder=""></div></div>
+                            <div class="form-group"><label for="religion" class="form-label">Religion/Konfession</label><div class="form-field"><input type="text" id="religion" name="religion" class="form-input" maxlength="50" placeholder=""></div></div>
                         </div>
                     </div>
 
@@ -870,13 +907,13 @@
                         <h2>Schritt 2: Kontaktdaten</h2>
                         <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-2-announcement">Schritt 2 von 6: Kontaktdaten</div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="email" class="form-label">E-Mail <span class="required">*</span></label><div class="form-field"><input type="email" id="email" name="email" class="form-input" required maxlength="100" autocomplete="email" aria-label="E-Mail" placeholder=""></div></div>
+                            <div class="form-group"><label for="email" class="form-label">E-Mail <span class="required">*</span></label><div class="form-field"><input type="email" id="email" name="email" class="form-input" required maxlength="100" autocomplete="email" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="phone" class="form-label">Telefon/Mobil <span class="required">*</span></label><div class="form-field"><input type="tel" id="phone" name="phone" class="form-input" required maxlength="20" autocomplete="tel" inputmode="tel" aria-label="Telefon/Mobil" placeholder=""></div></div>
+                            <div class="form-group"><label for="phone" class="form-label">Telefon/Mobil <span class="required">*</span></label><div class="form-field"><input type="tel" id="phone" name="phone" class="form-input" required maxlength="20" autocomplete="tel" inputmode="tel" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="recruited-by" class="form-label">Geworben durch</label><div class="form-field"><input type="text" id="recruited-by" name="recruited-by" class="form-input" maxlength="50" aria-label="Geworben durch" placeholder=""></div></div>
+                            <div class="form-group"><label for="recruited-by" class="form-label">Geworben durch</label><div class="form-field"><input type="text" id="recruited-by" name="recruited-by" class="form-input" maxlength="50" placeholder=""></div></div>
                         </div>
                     </div>
 
@@ -885,12 +922,12 @@
                         <h2>Schritt 3: Adresse</h2>
                         <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-3-announcement">Schritt 3 von 6: Adresse</div>
                         <div class="form-row">
-                            <div class="form-group"><label for="street" class="form-label">Straße <span class="required">*</span></label><div class="form-field"><input type="text" id="street" name="street" class="form-input" required maxlength="100" autocomplete="street-address" aria-label="Straße" placeholder=""></div></div>
-                            <div class="form-group"><label for="house-number" class="form-label">Hausnummer <span class="required">*</span></label><div class="form-field"><input type="text" id="house-number" name="house-number" class="form-input" required maxlength="10" aria-label="Hausnummer" placeholder=""></div></div>
+                            <div class="form-group"><label for="street" class="form-label">Straße <span class="required">*</span></label><div class="form-field"><input type="text" id="street" name="street" class="form-input" required maxlength="100" autocomplete="street-address" placeholder=""></div></div>
+                            <div class="form-group"><label for="house-number" class="form-label">Hausnummer <span class="required">*</span></label><div class="form-field"><input type="text" id="house-number" name="house-number" class="form-input" required maxlength="10" placeholder=""></div></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label for="postal-code" class="form-label">PLZ <span class="required">*</span></label><div class="form-field"><input type="text" id="postal-code" name="postal-code" class="form-input" required maxlength="10" autocomplete="postal-code" aria-label="PLZ" placeholder=""></div></div>
-                            <div class="form-group"><label for="city" class="form-label">Stadt <span class="required">*</span></label><div class="form-field"><input type="text" id="city" name="city" class="form-input" required maxlength="50" autocomplete="address-level2" aria-label="Stadt" placeholder=""></div></div>
+                            <div class="form-group"><label for="postal-code" class="form-label">PLZ <span class="required">*</span></label><div class="form-field"><input type="text" id="postal-code" name="postal-code" class="form-input" required maxlength="10" autocomplete="postal-code" placeholder=""></div></div>
+                            <div class="form-group"><label for="city" class="form-label">Stadt <span class="required">*</span></label><div class="form-field"><input type="text" id="city" name="city" class="form-input" required maxlength="50" autocomplete="address-level2" placeholder=""></div></div>
                         </div>
                     </div>
 
@@ -899,10 +936,10 @@
                         <h2>Schritt 4: Beruf & Engagement</h2>
                         <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-4-announcement">Schritt 4 von 6: Beruf und Engagement</div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="profession" class="form-label">Beruf</label><div class="form-field"><input type="text" id="profession" name="profession" class="form-input" maxlength="50" aria-label="Beruf" placeholder=""></div></div>
+                            <div class="form-group"><label for="profession" class="form-label">Beruf</label><div class="form-field"><input type="text" id="profession" name="profession" class="form-input" maxlength="50" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="functions" class="form-label">Ehrenamtliche Funktionen, Ämter, Mitgliedschaften</label><div class="form-field"><textarea id="functions" name="functions" class="form-input form-textarea" maxlength="500" aria-label="Ehrenamtliche Funktionen, Ämter, Mitgliedschaften" placeholder=""></textarea></div></div>
+                            <div class="form-group"><label for="functions" class="form-label">Ehrenamtliche Funktionen, Ämter, Mitgliedschaften</label><div class="form-field"><textarea id="functions" name="functions" class="form-input form-textarea" maxlength="500" placeholder=""></textarea></div></div>
                         </div>
                     </div>
 
@@ -930,41 +967,43 @@
                         <h2>Schritt 6: Finanzen & Bestätigung</h2>
                         <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-6-announcement">Schritt 6 von 6: Finanzen und Bestätigung</div>
                         <div class="form-row">
-                            <div class="form-group"><label for="monthly-fee" class="form-label">Monatsbeitrag (€) <span class="required">*</span></label><div class="form-field"><input type="number" id="monthly-fee" name="monthly-fee" class="form-input" required min="8" step="0.01" value="15" aria-label="Monatsbeitrag" placeholder=""></div></div>
+                            <div class="form-group"><label for="monthly-fee" class="form-label">Monatsbeitrag (€) <span class="required">*</span></label><div class="form-field"><input type="number" id="monthly-fee" name="monthly-fee" class="form-input" required min="8" step="0.01" value="15" placeholder=""></div></div>
                             <div class="form-group">
-                                <label class="radio-group-label">Zahlweise <span class="required">*</span></label>
-                                <div class="radio-group">
-                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="monatlich" required checked aria-label="Zahlweise: Monatlich"> Monatlich</label>
-                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="quartalsweise" required aria-label="Zahlweise: Quartal"> Quartal</label>
-                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="halbjährlich" required aria-label="Zahlweise: Halbjahr"> Halbjahr</label>
-                                    <label class="radio-label"><input type="radio" name="payment-frequency" value="jährlich" required aria-label="Zahlweise: Jährlich"> Jährlich</label>
-                                </div>
+                                <fieldset class="radio-fieldset">
+                                    <legend class="radio-group-label">Zahlweise <span class="required">*</span></legend>
+                                    <div class="radio-group">
+                                        <label class="radio-label"><input type="radio" name="payment-frequency" value="monatlich" required checked> Monatlich</label>
+                                        <label class="radio-label"><input type="radio" name="payment-frequency" value="quartalsweise" required> Quartal</label>
+                                        <label class="radio-label"><input type="radio" name="payment-frequency" value="halbjährlich" required> Halbjahr</label>
+                                        <label class="radio-label"><input type="radio" name="payment-frequency" value="jährlich" required> Jährlich</label>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="startup-fee" class="form-label">Aufnahmespende (€) - optional</label><div class="form-field"><input type="number" id="startup-fee" name="startup-fee" class="form-input" min="0" step="0.01" aria-label="Aufnahmespende" placeholder=""></div></div>
+                            <div class="form-group"><label for="startup-fee" class="form-label">Aufnahmespende (€) - optional</label><div class="form-field"><input type="number" id="startup-fee" name="startup-fee" class="form-input" min="0" step="0.01" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="iban" class="form-label">IBAN <span class="required">*</span></label><div class="form-field"><input type="text" id="iban" name="iban" class="form-input" required maxlength="34" aria-label="IBAN" placeholder=""></div></div>
+                            <div class="form-group"><label for="iban" class="form-label">IBAN <span class="required">*</span></label><div class="form-field"><input type="text" id="iban" name="iban" class="form-input" required maxlength="34" placeholder=""></div></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label for="bank-name" class="form-label">Geldinstitut <span class="required">*</span></label><div class="form-field"><input type="text" id="bank-name" name="bank-name" class="form-input" required maxlength="100" aria-label="Geldinstitut" placeholder=""></div></div>
-                            <div class="form-group"><label for="bic" class="form-label">BIC</label><div class="form-field"><input type="text" id="bic" name="bic" class="form-input" maxlength="11" aria-label="BIC" placeholder=""></div></div>
+                            <div class="form-group"><label for="bank-name" class="form-label">Geldinstitut <span class="required">*</span></label><div class="form-field"><input type="text" id="bank-name" name="bank-name" class="form-input" required maxlength="100" placeholder=""></div></div>
+                            <div class="form-group"><label for="bic" class="form-label">BIC</label><div class="form-field"><input type="text" id="bic" name="bic" class="form-input" maxlength="11" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="account-holder" class="form-label">Kontoinhaber (falls abweichend)</label><div class="form-field"><input type="text" id="account-holder" name="account-holder" class="form-input" maxlength="100" aria-label="Kontoinhaber" placeholder=""></div></div>
+                            <div class="form-group"><label for="account-holder" class="form-label">Kontoinhaber (falls abweichend)</label><div class="form-field"><input type="text" id="account-holder" name="account-holder" class="form-input" maxlength="100" placeholder=""></div></div>
                         </div>
 
                         <!-- Privacy Notice -->
                         <div class="privacy-notice">
-                            <p>🔒 <strong>Sicher übertragen.</strong> Ihre Daten werden über eine sichere Verbindung übertragen. Lesen Sie unsere <a href="../datenschutz/">Datenschutzerklärung</a> für weitere Informationen.</p>
+                            <p><svg class="text-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> <strong>Sicher übertragen.</strong> Ihre Daten werden über eine sichere Verbindung übertragen. Lesen Sie unsere <a href="../datenschutz/">Datenschutzerklärung</a> für weitere Informationen.</p>
                         </div>
                     </div>
 
                     <!-- Navigation Buttons -->
                     <div class="form-navigation">
-                        <button type="button" class="nav-btn prev-btn" id="prev-btn" style="display: none;">← Zurück</button>
-                        <button type="button" class="nav-btn next-btn" id="next-btn">Weiter →</button>
+                        <button type="button" class="nav-btn prev-btn" id="prev-btn" style="display: none;"><span aria-hidden="true">←</span> Zurück</button>
+                        <button type="button" class="nav-btn next-btn" id="next-btn">Weiter <span aria-hidden="true">→</span></button>
                         <button type="submit" class="submit-btn membership-submit-btn" id="membership-submit-btn" style="display: none;">
                             <span class="btn-text">Antrag absenden</span>
                             <span class="btn-loader" style="display: none;">
@@ -978,7 +1017,7 @@
                 <div class="pdf-alternative">
                     <p><strong>Oder klassisch per Post:</strong></p>
                     <a href="https://cdu-mv.de/wp-content/uploads/2024/07/Aktuelle-CDU_Mitgliedsantrag-06-24.pdf" target="_blank" rel="noopener noreferrer" aria-label="PDF herunterladen (öffnet in neuem Fenster)" class="pdf-download-btn">
-                        📥 Mitgliedsantrag als PDF herunterladen
+                        <svg class="text-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Mitgliedsantrag als PDF herunterladen
                     </a>
                 </div>
             </section>
@@ -986,7 +1025,7 @@
             <!-- Why Join Section -->
             <section class="membership-content">
                 <div class="membership-section">
-                    <h2>🎯 Warum Mitglied werden?</h2>
+                    <h2><svg class="text-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Warum Mitglied werden?</h2>
                     <p>Der CDU Kreisverband Schwerin freut sich über jedes neue Mitglied. Gemeinsam können wir mehr erreichen:</p>
                     <ul>
                         <li>Gestalten Sie Politik in Ihrer Stadt mit</li>
@@ -998,7 +1037,7 @@
                 </div>
 
                 <div class="membership-section">
-                    <h2>💪 Was Sie bewirken können</h2>
+                    <h2><svg class="text-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Was Sie bewirken können</h2>
                     <p>Als Mitglied der CDU tragen Sie dazu bei, dass unsere Stadt und unser Land besser werden:</p>
                     <ul>
                         <li>Beeinflussen Sie Parteibeschlüsse</li>
@@ -1012,7 +1051,7 @@
 
             <!-- Contact Section -->
             <section class="contact-section">
-                <h2>📬 Wo können Sie Ihren Antrag einreichen?</h2>
+                <h2><svg class="text-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Wo können Sie Ihren Antrag einreichen?</h2>
                 <p><strong>Per E-Mail:</strong> <a href="mailto:kreisverband@cdu-schwerin.com">kreisverband@cdu-schwerin.com</a></p>
                 <p><strong>Per Fax:</strong> +49 (385) 59 00 421</p>
                 <p><strong>Per Post:</strong><br>

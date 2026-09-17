@@ -46,17 +46,17 @@
             margin-top: var(--spacing-sm);
             font-size: 13px;
             font-weight: 600;
-            color: var(--color-primary);
+            color: var(--color-primary-text);
             text-decoration: none;
             border-bottom: 1px solid currentColor;
         }
 
         .event-ics:hover {
-            color: var(--color-accent);
+            color: var(--color-accent-text);
         }
 
         .event-ics:focus-visible {
-            outline: 2px solid var(--color-accent);
+            outline: 2px solid var(--color-focus);
             outline-offset: 2px;
         }
 
@@ -107,13 +107,13 @@
         }
 
         .filter-btn.active {
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
             color: var(--color-white);
-            border-color: var(--color-primary);
+            border-color: var(--color-primary-text);
         }
 
         .filter-btn:focus-visible {
-            outline: 2px solid var(--color-accent);
+            outline: 2px solid var(--color-focus);
             outline-offset: 2px;
         }
 
@@ -159,7 +159,7 @@
         }
 
         .toggle-checkbox:checked + .toggle-slider {
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
         }
 
         .toggle-checkbox:checked + .toggle-slider::before {
@@ -249,7 +249,7 @@
         }
 
         .event-date {
-            background-color: var(--color-primary);
+            background-color: var(--color-primary-text);
             color: var(--color-white);
             padding: var(--spacing-md);
             border-radius: 6px;
@@ -291,7 +291,8 @@
 
         .event-badge.wahlveranstaltung {
             background-color: #fff3e0;
-            color: #e65100;
+            /* Vorher #e65100: 3,46:1 auf dem hellen Orange. 5,02:1. */
+            color: #b34700;
         }
 
         .event-badge.parteitag {
@@ -324,14 +325,38 @@
             font-weight: 500;
         }
 
-        .event-location:before {
-            content: "📍 ";
+        /* Vorher standen hier Emoji (Pin und Uhr). Die zeichnet jedes
+           System anders - unter Windows flach, auf dem iPhone bunt, auf
+           Android wieder anders - und Screenreader lesen sie als
+           "Rundes Pushpin" bzw. "Uhr zwei Uhr" vor. Jetzt dieselben
+           Symbole als SVG wie ueberall sonst auf der Seite.
+
+           mask statt background: so faerbt currentColor das Symbol mit,
+           es folgt also --color-text-light wie der Text daneben. */
+        .event-location:before,
+        .event-time:before {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
             margin-right: 6px;
+            /* Haelt das Symbol auf der Grundlinie des Textes. */
+            vertical-align: -2px;
+            background-color: currentColor;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-size: contain;
+            mask-size: contain;
+        }
+
+        .event-location:before {
+            -webkit-mask-image: url("data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>");
+            mask-image: url("data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>");
         }
 
         .event-time:before {
-            content: "🕐 ";
-            margin-right: 6px;
+            -webkit-mask-image: url("data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>");
+            mask-image: url("data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>");
         }
 
         .event-organizer {
@@ -374,8 +399,8 @@
         <div class="container">
             <div class="top-bar">
                 <div class="top-bar-left">
-                    <a href="tel:+493855900426" class="top-bar-item">☎ 0385 - 59 00 426</a>
-                    <a href="mailto:kreisverband@cdu-schwerin.com" class="top-bar-item">✉ kreisverband@cdu-schwerin.com</a>
+                    <a href="tel:+493855900426" class="top-bar-item"><svg class="top-bar-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 0385 - 59 00 426</a>
+                    <a href="mailto:kreisverband@cdu-schwerin.com" class="top-bar-item"><svg class="top-bar-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> kreisverband@cdu-schwerin.com</a>
                 </div>
                 <nav class="top-bar-social" role="navigation" aria-label="Soziale Netzwerke">
                     <a href="https://www.facebook.com/CduKreisverbandSchwerin" rel="external" aria-label="Facebook" class="social-icon">
@@ -498,12 +523,12 @@
 
             <!-- Filter Buttons -->
             <section class="events-filter">
-                <div class="filter-buttons-group">
-                    <button class="filter-btn active" data-filter="all">Alle</button>
-                    <button class="filter-btn" data-filter="vorstand">Vorstand</button>
-                    <button class="filter-btn" data-filter="wahlveranstaltung">Wahlveranstaltung</button>
-                    <button class="filter-btn" data-filter="parteitag">Parteitag</button>
-                    <button class="filter-btn" data-filter="gedenkveranstaltung">Gedenkveranstaltung</button>
+                <div class="filter-buttons-group" role="group" aria-label="Termine nach Art filtern">
+                    <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">Alle</button>
+                    <button type="button" class="filter-btn" data-filter="vorstand" aria-pressed="false">Vorstand</button>
+                    <button type="button" class="filter-btn" data-filter="wahlveranstaltung" aria-pressed="false">Wahlveranstaltung</button>
+                    <button type="button" class="filter-btn" data-filter="parteitag" aria-pressed="false">Parteitag</button>
+                    <button type="button" class="filter-btn" data-filter="gedenkveranstaltung" aria-pressed="false">Gedenkveranstaltung</button>
                 </div>
                 <div class="toggle-group">
                     <label class="toggle-label">
@@ -880,8 +905,16 @@
                 // Filter button click events
                 filterButtons.forEach(button => {
                     button.addEventListener('click', () => {
-                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        /* .active faerbt den Knopf, aria-pressed sagt dasselbe
+                           an, was der Screenreader vorliest. Beides muss
+                           zusammen umgesetzt werden, sonst ist nur zu sehen,
+                           aber nicht zu hoeren, welcher Filter greift. */
+                        filterButtons.forEach(btn => {
+                            btn.classList.remove('active');
+                            btn.setAttribute('aria-pressed', 'false');
+                        });
                         button.classList.add('active');
+                        button.setAttribute('aria-pressed', 'true');
                         updateEventVisibility();
                     });
                 });
