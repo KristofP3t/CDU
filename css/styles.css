@@ -1921,6 +1921,38 @@ body {
     line-height: 1.8;
 }
 
+/* Beschreibungslisten hatten wie zuvor die H3 gar keine Regel - weder
+   hier noch global -, und der Reset nimmt dl, dt und dd jeden Abstand
+   und jede Einrueckung. Auf der Geschaeftsstellenseite standen die
+   Bankdaten deshalb als sechs gleiche Zeilen untereinander: "Bank:",
+   "Commerzbank Schwerin", "IBAN:", "DE45 ...". Angabe und Wert waren
+   nicht zu unterscheiden.
+
+   Als zweispaltiges Raster steht die Bezeichnung links und der Wert
+   rechts. max-content fuer die linke Spalte: sie wird so breit wie die
+   laengste Bezeichnung und nicht breiter. */
+.textseite dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.4rem var(--spacing-md);
+    max-width: var(--mass-text);
+    margin-bottom: var(--spacing-md);
+}
+
+.textseite dt {
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+
+.textseite dd {
+    color: var(--color-dark);
+    /* Gleich breite Ziffern: in einer IBAN stehen die Vierergruppen
+       dadurch untereinander statt zu flimmern. */
+    font-variant-numeric: tabular-nums;
+    /* Eine IBAN ist auf dem Telefon breiter als die Spalte. */
+    overflow-wrap: anywhere;
+}
+
 .textseite a {
     color: var(--color-primary-text);
     font-weight: 600;
