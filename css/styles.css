@@ -2928,13 +2928,14 @@ body {
    dass ein Kasten den Lesefluss unterbricht.
    -------------------------------------------------------------------------- */
 
-.kennzahlen {
+ul.kennzahlen {
     list-style: none;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-lg);
     /* Nimmt die Einrueckung von .textseite ul zurueck - die gilt fuer
-       Aufzaehlungspunkte, die es hier nicht gibt. */
+       Aufzaehlungspunkte, die es hier nicht gibt. Typselektor wie bei
+       ul.leitworte, sonst ist die Regel zu schwach. */
     padding-left: 0;
     margin: var(--spacing-lg) 0;
 }
@@ -3046,12 +3047,15 @@ body {
    Begruessung. Dieselbe Linie wie bei den Kennzahlen, aber ohne Zahlenwert.
    -------------------------------------------------------------------------- */
 
-.leitworte {
+ul.leitworte {
     list-style: none;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-lg);
-    /* Nimmt die Einrueckung von .textseite ul zurueck. */
+    /* Nimmt die Einrueckung von .textseite ul zurueck. Der Typselektor
+       ist noetig: .textseite ul ist Klasse plus Typ und damit staerker
+       als eine Klasse allein - ohne ihn blieb das Raster eingerueckt,
+       obwohl hier padding-left: 0 stand. */
     padding-left: 0;
     margin: var(--spacing-lg) 0;
 }
@@ -3307,6 +3311,49 @@ body {
 /* Aufzaehlung ohne Punkte. Der Typselektor ist noetig, weil .textseite ul
    die Einrueckung setzt und gleich spezifisch ist - diese Regel steht
    deshalb weiter unten in der Datei und gewinnt ueber die Reihenfolge. */
+/* Stichwortliste: kurze Begriffe in Spalten statt untereinander.
+
+   Gedacht fuer Aufzaehlungen, die aus einzelnen Begriffen bestehen -
+   Ortsteile, Themenfelder, Namen von Vereinigungen. Ab etwa sechs
+   Punkten wird die gewoehnliche Bulletliste zur Kolonne: die sechzehn
+   Wahlkampfthemen von 2019 waren sechzehn Zeilen untereinander, von
+   denen keine heraussticht und deren Ende man erst beim Scrollen
+   findet. In zwei Spalten ist dieselbe Menge auf einen Blick zu
+   ueberschauen.
+
+   Die Liste bleibt in der Textspalte (--mass-text ueber .textseite ul),
+   sie soll den Satzspiegel nicht sprengen - sie ist eine Nebenangabe,
+   keine eigene Ebene. Bei 608px und 210px Mindestbreite ergibt das zwei
+   Spalten, auf schmalen Geraeten faellt auto-fit von selbst auf eine
+   zurueck; eine Media Query braucht es dafuer nicht.
+
+   Bewusst ohne Aufzaehlungszeichen und ohne Trennlinie je Zeile: Die
+   Begriffe stehen fuer sich, jede zusaetzliche Marke waere Dekoration,
+   und Trennstriche unter jeder Zeile sind genau das Muster, das lange
+   Listen zaeh macht. Die Ordnung uebernimmt das Raster.
+
+   Typselektor wie bei ul.liste-blank - .textseite ul waere sonst
+   staerker und brächte die Einrueckung zurueck. */
+ul.stichwortliste {
+    list-style: none;
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    /* Zeilenabstand knapp, Spaltenabstand weit: so liest sich das
+       Raster spaltenweise und nicht als Tabelle. */
+    gap: 0.15rem var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.stichwortliste li {
+    /* Hebt den Begriff aus dem Fliesstext, ohne ihn zu betonen. */
+    font-weight: 500;
+    color: var(--color-dark);
+    line-height: 1.5;
+    padding: 0.35em 0;
+    margin-bottom: 0;
+}
+
 ul.liste-blank {
     list-style: none;
     padding-left: 0;
