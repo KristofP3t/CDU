@@ -100,6 +100,19 @@
     --text-h2: clamp(1.375rem, 0.984rem + 1.304vw, 2.125rem);   /* 22 -> 34 */
     --text-h3: clamp(1.1875rem, 1.057rem + 0.435vw, 1.4375rem); /* 19 -> 23 */
 
+    /* Breite der Textspalte.
+       Bisher gab es keine: --container ist 1400px breit, und fuer den
+       Fliesstext stand nirgends ein max-width. Ein Absatz lief damit
+       ueber rund 1360px - gut 150 Zeichen je Zeile. Lesbar sind 60-75;
+       darueber findet das Auge beim Zeilensprung den Anfang der
+       naechsten Zeile nicht mehr zuverlaessig wieder.
+
+       38rem sind bei 16px Grundschrift etwa 68 Zeichen. Bewusst in rem
+       und nicht in ch: ch bezieht sich auf die Schriftgroesse des
+       jeweiligen Elements, eine 34px-Ueberschrift bekaeme damit eine
+       breitere Spalte als der Text darunter - also genau verkehrt. */
+    --mass-text: 38rem;
+
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 1.5rem;
@@ -1779,6 +1792,50 @@ body {
    damit die uebrigen Layouts unberuehrt bleiben.
    ========================================================================== */
 
+/* Die Textspalte. Erfasst wird, was Zeilen bildet - nicht die
+   Container: .kartenraster, .infokarte und Bilder duerfen breiter
+   bleiben, sie werden nicht Zeile fuer Zeile gelesen. */
+.textseite h1,
+.textseite h2,
+.textseite h3,
+.textseite p,
+.textseite ul,
+.textseite ol,
+.textseite address,
+.textseite blockquote,
+.seiten-einleitung {
+    max-width: var(--mass-text);
+}
+
+/* Ausnahmen: .leitworte und .kennzahlen sind als <ul> ausgezeichnet,
+   liegen aber als dreispaltiges Raster vor. In die Textspalte gezwungen
+   blieben je Spalte rund 180px - dafuer ist die 22px-Schrift der
+   Leitworte zu gross. Sie bilden keine Lesezeilen und behalten deshalb
+   die volle Breite. */
+.textseite .leitworte,
+.textseite .kennzahlen {
+    max-width: none;
+}
+
+/* Vertikaler Rhythmus.
+   Vorher trugen Seitenrand und Abschnittsabstand denselben Wert
+   (--spacing-xl), und unter einer H2 stand genau so viel Luft wie unter
+   einem Absatz. Damit gehoerte eine Ueberschrift optisch zu nichts: sie
+   hing zwischen zwei gleich grossen Luecken, statt an dem zu kleben, was
+   sie ankuendigt. Die Staffel jetzt, von eng nach weit:
+
+       Ueberschrift -> ihr Text      12px
+       Absatz -> Absatz              24px
+       Abschnitt -> Abschnitt        64px
+       Seitenrand oben und unten     48 -> 88px, waechst mit dem Fenster */
+.site-main.textseite {
+    padding: clamp(3rem, 2rem + 2.5vw, 5.5rem) 0;
+}
+
+.textseite section + section {
+    margin-top: 4rem;
+}
+
 .textseite h1 {
     font-size: var(--text-h1);
     /* Vorher 400 - leichtes Arial als Ueberschrift wirkte kraftlos. */
@@ -1797,12 +1854,43 @@ body {
     letter-spacing: -0.01em;
     text-wrap: balance;
     color: var(--color-dark);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: 0.75rem;
 }
 
+/* Falls mehrere H2 in einem <section> stehen. Steht die Ueberschrift wie
+   ueblich als erstes Kind, greift die Regel nicht - dann macht schon
+   section + section den Abstand. */
+.textseite * + h2 {
+    margin-top: 4rem;
+}
+
+/* Es gab keine Regel fuer H3 - weder hier noch global, und der Reset
+   nimmt jedem Element Groesse und Abstand. Auf allen 21 Textseiten
+   stand eine Zwischenueberschrift damit in Grundschriftgroesse und ohne
+   jeden Abstand zwischen den Absaetzen, also nicht von fettem Fliesstext
+   zu unterscheiden. --text-h3 war definiert, aber nur von der Startseite
+   benutzt. */
+.textseite h3 {
+    font-size: var(--text-h3);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-dark);
+    margin-top: var(--spacing-lg);
+    margin-bottom: 0.5rem;
+}
+
+/* Die erste H3 direkt unter ihrer H2 braucht den Vorlauf nicht. */
+.textseite h2 + h3 {
+    margin-top: var(--spacing-sm);
+}
+
+/* 1.8 war auf die alte, viel zu breite Spalte gemuenzt: lange Zeilen
+   brauchen viel Durchschuss, damit man die Zeile haelt. Mit 68 Zeichen
+   wirkt derselbe Wert auseinandergerissen. 1.7 statt der sonst ueblichen
+   1.5-1.6, weil die Zielgruppe bis zur Senioren-Union reicht. */
 .textseite p {
-    line-height: 1.8;
-    margin-bottom: var(--spacing-sm);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-md);
 }
 
 .textseite p:last-child {
@@ -1816,7 +1904,7 @@ body {
 }
 
 .textseite li {
-    line-height: 1.8;
+    line-height: 1.7;
     margin-bottom: var(--spacing-xs);
 }
 
@@ -1827,10 +1915,6 @@ body {
 /* Ersetzt die frueheren style="margin-top"-Attribute an jedem Abschnitt. */
 .textseite section + section {
     margin-top: var(--spacing-xl);
-}
-
-.textseite-intro {
-    font-size: 18px;
 }
 
 .textseite address {
@@ -2833,7 +2917,7 @@ body {
     margin-bottom: var(--spacing-sm);
 }
 
-.vereinigung-kopf .textseite-intro {
+.vereinigung-kopf .seiten-einleitung {
     margin-bottom: 0;
 }
 
