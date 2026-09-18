@@ -1,4 +1,4 @@
-/* Automatisch erzeugt von tools/build-site-data.py aus termine/index.html.
+/* Automatisch erzeugt von tools/build-site-data.py aus inhalte/termine/.
    Termine werden dort gepflegt, nicht hier. */
 window.CDU_EVENTS = [
   {

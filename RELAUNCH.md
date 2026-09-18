@@ -801,6 +801,58 @@ HTML-Dateien. Deshalb erzeugt das Skript erst die Seiten und indiziert dann;
   `cdu-schwerin.com`, während `SITE_URL` im Build auf die GitHub-Pages-Adresse
   steht. Vor dem Launch auf eine Adresse festlegen.
 
+## Termine als Quelldateien (September 2026)
+
+Bisher war `termine/index.html` selbst die Pflegestelle: jeder Termin ein
+`<article class="event-card">` mit leeren Hilfs-`<span>`s, die JavaScript
+füllte, und der Build las die Karten per regulärem Ausdruck zurück. Jetzt
+laufen Termine wie Meldungen.
+
+**Gepflegt wird je Termin eine Datei:**
+`inhalte/termine/<datum>-<name>.html`, zum Beispiel
+`2026-09-21-vorsitzendenkonferenz.html`:
+
+```html
+<meta name="titel" content="Vorsitzendenkonferenz CDU Schwerin">
+<meta name="datum" content="2026-09-21">
+<meta name="zeit" content="19:30">
+<meta name="ende" content="">
+<meta name="kategorie" content="Vorstand">
+<meta name="ort" content="Intercity Hotel, Grunthalplatz 5, 19053 Schwerin">
+<meta name="veranstalter" content="CDU Landeshauptstadt Schwerin">
+
+<p>Optional: ein Hinweis, der auf der Karte unter Zeit und Ort steht.</p>
+```
+
+Pflicht sind `titel`, `datum` (`JJJJ-MM-TT`) und `kategorie`. `zeit` und
+`ende` gehen als `HH:MM`; ohne `zeit` ist der Termin ganztägig, ohne
+`ende` bekommt er im Kalender zwei Stunden. `ende` darf fehlen.
+Ein vergangener Termin kann liegen bleiben – der Schalter „Vergangene
+anzeigen" zeigt ihn – oder die Datei wird gelöscht.
+
+Der Build erzeugt daraus:
+
+| Datei | Inhalt |
+|---|---|
+| `termine/index.html` | die Karten zwischen `<!-- TERMINE -->` und `<!-- /TERMINE -->` |
+| `js/events-data.js` | `window.CDU_EVENTS` für „Nächste Termine" der Startseite |
+| `termine/ics/<anker>.ics` | je Termin eine Kalenderdatei |
+
+Der Rest von `termine/index.html` – Einleitung, Filter, Hinweiskasten –
+bleibt Handarbeit. Die Karten kommen fertig aus dem Build: Datum, Badge,
+Sprunganker und Kalenderlink stehen im Markup statt per JavaScript
+nachgetragen zu werden. Die Seite zeigt damit auch ohne JavaScript alles;
+das Skript filtert nur noch.
+
+**Neue Kategorie:** Aus dem Klartext wird der Slug (`Vorstand` →
+`vorstand`). Er braucht einen Filter-Button in `termine/index.html` und
+eine Farbe für `.event-badge` dort und `.home-event-badge` in
+`css/styles.css`. Fehlt der Button, meldet es der Build.
+
+Nebenbei behoben: `ics_fold` hat lange Zeilen nach Bytes geschnitten und
+dabei einen Umlaut an der Grenze verworfen. Jetzt wird zeichenweise
+umgebrochen.
+
 ---
 
 ### ✅ Abgeschlossen

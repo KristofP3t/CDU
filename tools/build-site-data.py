@@ -2,7 +2,8 @@
 """Erzeugt die generierten Datendateien der Seite.
 
   js/search-index.js  – Suchindex ueber alle Seiten
-  js/events-data.js   – Termine aus termine/index.html, fuer die Startseite
+  termine/index.html  – die Terminkarten (nur der Bereich zwischen den Markierungen)
+  js/events-data.js   – Termine fuer die Startseite
   termine/ics/*.ics   – je Termin eine Kalenderdatei zum Herunterladen
   js/news-data.js     – Meldungen aus inhalte/meldungen/, fuer die Startseite
   newsarchiv/**       – Meldungsseiten, Archivliste und Kategorieseiten
@@ -14,6 +15,8 @@ oben die Angaben als <meta>, darunter der Text. Alles unter newsarchiv/
 entsteht daraus und wird bei jedem Lauf ueberschrieben – dort nichts von
 Hand aendern. Das Seitengeruest (Kopf, Navigation, Fuss) steht einmal in
 tools/vorlagen/seite.html.
+
+Termine genauso: je Termin eine Datei inhalte/termine/<datum>-<name>.html.
 
 Die Seite ist statisch und liegt auf GitHub Pages – es gibt keinen Server,
 der suchen oder Termine ausliefern koennte. Beide Dateien werden deshalb
@@ -51,6 +54,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT_SEARCH = ROOT / "js" / "search-index.js"
 OUT_EVENTS = ROOT / "js" / "events-data.js"
 TERMINE = ROOT / "termine" / "index.html"
+QUELLEN_TERMINE = ROOT / "inhalte" / "termine"
 OUT_ICS = ROOT / "termine" / "ics"
 QUELLEN_NEWS = ROOT / "inhalte" / "meldungen"
 OUT_NEWS = ROOT / "newsarchiv"
@@ -249,52 +253,138 @@ def build_search() -> int:
     return 0
 
 
-CARD = re.compile(r'<article class="event-card"[^>]*data-category="([^"]+)"[^>]*data-date="([^"]+)"[^>]*>(.*?)</article>', re.S)
-FIELD = re.compile(r'<(?:h3|p)[^>]*class="([a-z-]+)"[^>]*>(.*?)</(?:h3|p)>', re.S)
-H3 = re.compile(r"<h3[^>]*>(.*?)</h3>", re.S)
+TERMINE_START = "<!-- TERMINE -->"
+TERMINE_ENDE = "<!-- /TERMINE -->"
 FILTER_BTN = re.compile(r'data-filter="([^"]+)"[^>]*>([^<]+)</button>')
+UHRZEIT = re.compile(r"^\d{1,2}:\d{2}$")
+
+
+def lies_termine() -> list[dict]:
+    """Liest inhalte/termine/<datum>-<name>.html – je Datei ein Termin.
+
+    Aufbau wie bei den Meldungen: oben die Angaben als <meta>, darunter
+    ein optionaler Text, der auf der Karte unter Zeit und Ort steht.
+    """
+    termine = []
+    for pfad in sorted(QUELLEN_TERMINE.glob("*.html")):
+        roh = pfad.read_text(encoding="utf-8")
+        felder = {k.lower(): v.strip() for k, v in META.findall(roh)}
+        fehlend = [f for f in ("titel", "datum", "kategorie") if not felder.get(f)]
+        if fehlend:
+            raise SystemExit(f"{pfad.relative_to(ROOT)}: es fehlt {', '.join(fehlend)}")
+        try:
+            datetime.strptime(felder["datum"], "%Y-%m-%d")
+        except ValueError:
+            raise SystemExit(f"{pfad.relative_to(ROOT)}: datum muss JJJJ-MM-TT sein,"
+                             f" nicht {felder['datum']!r}")
+        for feld in ("zeit", "ende"):
+            if felder.get(feld) and not UHRZEIT.match(felder[feld]):
+                raise SystemExit(f"{pfad.relative_to(ROOT)}: {feld} muss HH:MM sein,"
+                                 f" nicht {felder[feld]!r}")
+        if felder.get("ende") and not felder.get("zeit"):
+            raise SystemExit(f"{pfad.relative_to(ROOT)}: ende ohne zeit")
+
+        treffer = list(META.finditer(roh))
+        text = KOMMENTAR.sub("", roh[treffer[-1].end():]).strip()
+        zeit, ende = felder.get("zeit", ""), felder.get("ende", "")
+        termine.append({
+            "quelle": pfad.name,
+            "datum": felder["datum"],
+            "beginn": zeit,
+            "ende": ende,
+            "kategorie": slugify(felder["kategorie"]),
+            "kategorieLabel": felder["kategorie"],
+            "titel": felder["titel"],
+            "zeit": f"{zeit}\u2013{ende} Uhr" if ende else (f"{zeit} Uhr" if zeit else ""),
+            "ort": felder.get("ort", ""),
+            "veranstalter": felder.get("veranstalter", ""),
+            "text": text,
+        })
+
+    # Nach Tag und Uhrzeit; der Dateiname haelt die Reihenfolge stabil,
+    # wenn beides gleich ist.
+    termine.sort(key=lambda t: (t["datum"], t["beginn"].zfill(5), t["quelle"]))
+    # Anker: termin-<datum>, bei mehreren Terminen am selben Tag mit
+    # hochgezaehltem Suffix. Die Startseite und die .ics-Dateien verlinken
+    # darauf, deshalb nach dem Sortieren vergeben.
+    used: dict[str, int] = {}
+    for t in termine:
+        used[t["datum"]] = used.get(t["datum"], 0) + 1
+        n = used[t["datum"]]
+        t["anker"] = f"termin-{t['datum']}" if n == 1 else f"termin-{t['datum']}-{n}"
+    return termine
+
+
+def terminkarte(t: dict) -> str:
+    """Eine Karte fuer termine/index.html – vollstaendig, auch ohne JavaScript."""
+    tag = datetime.strptime(t["datum"], "%Y-%m-%d").date()
+    zeilen = [f'<h3>{esc(t["titel"])}</h3>',
+              f'<span class="event-badge {t["kategorie"]}">{esc(t["kategorieLabel"])}</span>']
+    if t["zeit"]:
+        zeilen.append(f'<p class="event-time">{t["zeit"]}</p>')
+    if t["ort"]:
+        zeilen.append(f'<p class="event-location">{esc(t["ort"])}</p>')
+    if t["text"]:
+        zeilen += t["text"].splitlines()
+    if t["veranstalter"]:
+        zeilen.append(f'<p class="event-organizer">{esc(t["veranstalter"])}</p>')
+    # Bewusst ohne download-Attribut: So bieten Mobilgeraete an, den Termin
+    # direkt in den Kalender zu uebernehmen, statt ihn nur abzulegen. Das
+    # aria-label nennt den Termin, sonst hoert der Screenreader bei jeder
+    # Karte denselben Linktext.
+    zeilen.append(f'<a class="event-ics" href="ics/{t["anker"]}.ics"'
+                  f' aria-label="{esc(t["titel"])} am {tag.day}. {MONATE[tag.month - 1]}'
+                  f' in den Kalender speichern (ics-Datei)">In den Kalender speichern (.ics)</a>')
+    details = "\n".join("                        " + z.strip() for z in zeilen)
+    return f"""                <article class="event-card" id="{t['anker']}" data-category="{t['kategorie']}" data-date="{t['datum']}">
+                    <div class="event-date">
+                        <span class="event-date-label">{MONATE[tag.month - 1]} {tag.year}</span>
+                        <span class="event-date-main">{tag:%d.%m.}</span>
+                    </div>
+                    <div class="event-details">
+{details}
+                    </div>
+                </article>
+"""
 
 
 def build_events() -> None:
-    """Liest die Termine aus termine/index.html.
+    """Erzeugt die Terminkarten, die Vorschau der Startseite und die .ics.
 
-    Die Terminseite bleibt die einzige Pflegestelle – die Startseite
-    bekommt hier nur eine Kopie fuer ihre Vorschau. Die Badge-Beschriftung
-    stammt wie dort aus den Filter-Buttons.
+    Gepflegt wird in inhalte/termine/. In termine/index.html wird nur der
+    Bereich zwischen den Markierungen ersetzt – Kopf, Filter und Hinweise
+    der Seite bleiben Handarbeit.
     """
+    termine = lies_termine()
     html = TERMINE.read_text(encoding="utf-8")
-    labels = {s: clean(t) for s, t in FILTER_BTN.findall(html) if s != "all"}
+    if html.count(TERMINE_START) != 1 or html.count(TERMINE_ENDE) != 1:
+        raise SystemExit(f"termine/index.html: Markierungen {TERMINE_START} und"
+                         f" {TERMINE_ENDE} muessen je einmal vorkommen")
+    vor, rest = html.split(TERMINE_START)
+    _, nach = rest.split(TERMINE_ENDE)
+    karten = "\n".join(terminkarte(t) for t in termine)
+    TERMINE.write_text(f"{vor}{TERMINE_START}\n{karten}                {TERMINE_ENDE}{nach}",
+                       encoding="utf-8")
 
-    events = []
-    used: dict[str, int] = {}
-    for category, date, body in CARD.findall(html):
-        fields = {cls: clean(val) for cls, val in FIELD.findall(body)}
-        title_m = H3.search(body)
-        # Muss der Regel in termine/index.html entsprechen (assignAnchors),
-        # sonst zeigen die Links der Startseite ins Leere.
-        used[date] = used.get(date, 0) + 1
-        anchor = f"termin-{date}" if used[date] == 1 else f"termin-{date}-{used[date]}"
-        events.append({
-            "datum": date,
-            "anker": anchor,
-            "kategorie": category,
-            "kategorieLabel": labels.get(category, category),
-            "titel": clean(title_m.group(1)) if title_m else "",
-            "zeit": fields.get("event-time", ""),
-            "ort": fields.get("event-location", ""),
-            "veranstalter": fields.get("event-organizer", ""),
-        })
+    # Eine Kategorie ohne Filter-Button liesse sich nicht filtern und haette
+    # keine Badge-Farbe – kein Abbruch, aber ein deutlicher Hinweis.
+    knoepfe = {s for s, _ in FILTER_BTN.findall(html)}
+    for kat in sorted({t["kategorie"] for t in termine} - knoepfe):
+        print(f"  ACHTUNG: Kategorie {kat!r} hat keinen Filter-Button in termine/index.html"
+              " und keine Badge-Farbe (.event-badge / .home-event-badge).")
 
-    events.sort(key=lambda e: e["datum"])
-    payload = json.dumps(events, ensure_ascii=False, indent=2)
+    vorschau = [{k: t[k] for k in ("datum", "anker", "kategorie", "kategorieLabel",
+                                    "titel", "zeit", "ort", "veranstalter")}
+                for t in termine]
+    payload = json.dumps(vorschau, ensure_ascii=False, indent=2)
     OUT_EVENTS.write_text(
-        "/* Automatisch erzeugt von tools/build-site-data.py aus termine/index.html.\n"
+        "/* Automatisch erzeugt von tools/build-site-data.py aus inhalte/termine/.\n"
         "   Termine werden dort gepflegt, nicht hier. */\n"
         f"window.CDU_EVENTS = {payload};\n",
         encoding="utf-8",
     )
-    print(f"{len(events)} Termine uebernommen -> {OUT_EVENTS.relative_to(ROOT)}")
-    build_ics(events)
+    print(f"{len(termine)} Termine -> termine/index.html, {OUT_EVENTS.relative_to(ROOT)}")
+    build_ics(termine)
 
 
 def ics_escape(value: str) -> str:
@@ -310,41 +400,37 @@ def ics_fold(line: str) -> str:
 
     Gezaehlt wird in Bytes, nicht in Zeichen – Umlaute belegen in UTF-8 zwei.
     """
-    raw = line.encode("utf-8")
-    if len(raw) <= 75:
-        return line
-    parts, rest = [], raw
-    parts.append(rest[:75])
-    rest = rest[75:]
-    while rest:
-        parts.append(rest[:74])
-        rest = rest[74:]
-    # An Byte-Grenzen kann ein Mehrbyte-Zeichen zerschnitten werden; die
-    # Teile werden vor dem Dekodieren wieder zusammengefuegt.
-    out = parts[0].decode("utf-8", "ignore")
-    for part in parts[1:]:
-        out += "\r\n " + part.decode("utf-8", "ignore")
-    return out
+    # Zeichenweise aufteilen, nicht nach Bytes schneiden – sonst kann ein
+    # Umlaut an der Grenze zerteilt werden und ginge verloren.
+    teile, aktuell, grenze = [], "", 75
+    for zeichen in line:
+        if len((aktuell + zeichen).encode("utf-8")) > grenze:
+            teile.append(aktuell)
+            aktuell, grenze = "", 74
+        aktuell += zeichen
+    teile.append(aktuell)
+    return "\r\n ".join(teile)
 
 
 def build_ics(events: list[dict]) -> None:
     """Schreibt je Termin eine .ics-Datei.
 
-    Termine ohne Uhrzeit werden als ganztaegig eingetragen, Termine mit
-    Uhrzeit mit zwei Stunden Dauer – eine echte Endzeit pflegt die
-    Terminseite nicht.
+    Termine ohne Uhrzeit werden als ganztaegig eingetragen. Termine mit
+    Uhrzeit enden zur angegebenen Endzeit, ohne sie nach zwei Stunden.
     """
     OUT_ICS.mkdir(parents=True, exist_ok=True)
     geschrieben = set()
 
     for ev in events:
         tag = datetime.strptime(ev["datum"], "%Y-%m-%d").date()
-        zeit = re.match(r"(\d{1,2}):(\d{2})", ev["zeit"] or "")
-
-        if zeit:
-            start = datetime(tag.year, tag.month, tag.day,
-                             int(zeit.group(1)), int(zeit.group(2)), tzinfo=TZ)
-            ende = start + timedelta(hours=2)
+        if ev["beginn"]:
+            h, m = map(int, ev["beginn"].split(":"))
+            start = datetime(tag.year, tag.month, tag.day, h, m, tzinfo=TZ)
+            if ev["ende"]:
+                h, m = map(int, ev["ende"].split(":"))
+                ende = datetime(tag.year, tag.month, tag.day, h, m, tzinfo=TZ)
+            else:
+                ende = start + timedelta(hours=2)
             dt = [f"DTSTART:{start.astimezone(ZoneInfo('UTC')):%Y%m%dT%H%M%SZ}",
                   f"DTEND:{ende.astimezone(ZoneInfo('UTC')):%Y%m%dT%H%M%SZ}"]
         else:
@@ -353,6 +439,7 @@ def build_ics(events: list[dict]) -> None:
 
         beschreibung = " · ".join(filter(None, [
             ev["kategorieLabel"],
+            clean(ev["text"]),
             f"Veranstalter: {ev['veranstalter']}" if ev["veranstalter"] else "",
         ]))
 
