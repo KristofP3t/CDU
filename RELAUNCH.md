@@ -46,10 +46,19 @@ PDF und den Postweg, statt Erfolg zu melden und den Antrag zu verlieren.
 
 ### Kontaktformular
 
-`kontakt/index.html` sendet weiterhin an
-`https://formspree.io/f/FORMSPREE_ID_EINFUEGEN`, also an einen
-Platzhalter. **Dieses Formular ist unverändert tot.** Es wäre auf
-dieselbe EmailJS-Anbindung umzustellen; das ist noch nicht geschehen.
+`kontakt/index.html` sendet jetzt ebenfalls über EmailJS, mit demselben
+Public Key und derselben Service-ID wie der Mitgliedsantrag. Dazu kommt
+**eine dritte Vorlage** für Nachrichten. Einzutragen im `MAIL`-Objekt
+oben im Skript: `schluessel`, `dienst`, `vorlage`. Platzhalter der
+Vorlage: `{{empfaenger}}`, `{{antwort_an}}`, `{{name}}`, `{{email}}`,
+`{{telefon}}`, `{{betreff}}`, `{{nachricht}}`.
+
+Bis dahin sendet das Formular nicht und sagt das, mit Verweis auf
+E-Mail und Telefon. Vorher lief es in einen Formspree-Platzhalter und
+meldete einen Fehler erst nach dem Versuch.
+
+**Die Datenschutzerklärung nennt EmailJS noch nicht.** Vor dem
+Scharfschalten gehört der Dienst dort hinein.
 
 ### Vor der Freigabe zu klären
 
@@ -59,6 +68,24 @@ Frage, keine technische. Zwei Auswege, falls nicht: die Bankfelder aus
 der Vorlage an die Geschäftsstelle herausnehmen und den Beitragseinzug
 getrennt einholen, oder einen Anbieter mit Verarbeitung in der EU
 verwenden. Die Anbindung liegt an einer Stelle und lässt sich tauschen.
+
+---
+
+## 404-Seite, Sitemap, robots.txt (September 2026)
+
+Alle drei erzeugt `tools/build-site-data.py` aus `SITE_URL`. Die
+404-Seite verlinkt mit Pfad ab Domain (`/CDU/…`), weil der Server sie
+unter jeder Tiefe ausliefert; lokal über `python -m http.server` lädt
+sie deshalb ohne Stylesheet. Die Sitemap lässt alles mit `noindex` aus,
+also derzeit die vier Meldungen ohne Text. `robots.txt` wirkt erst,
+wenn die Seite an der Wurzel einer Domain liegt – unter
+`kristofp3t.github.io/CDU/` lesen Suchmaschinen sie nicht.
+
+Auf der Terminseite standen statt Uhr und Ortsmarke schwarze Quadrate:
+die SVGs in `mask-image` trugen doppelte Anführungszeichen innerhalb
+von `url("…")`, der Wert war ungültig. Die Links im Kasten
+„Zusätzliche Informationen“ standen im Browser-Blau; `.infokarte a`
+färbt sie jetzt wie auf den Textseiten.
 
 ---
 

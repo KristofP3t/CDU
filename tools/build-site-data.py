@@ -43,6 +43,7 @@ Aufruf nach inhaltlichen Aenderungen:
 from __future__ import annotations
 
 import json
+import urllib.parse
 import pathlib
 import re
 import struct
@@ -104,7 +105,10 @@ def main() -> int:
     build_news()
     build_events()
     build_girocodes()
-    return build_search()
+    build_404()
+    ergebnis = build_search()
+    build_sitemap()
+    return ergebnis
 
 
 # ============================================================================
@@ -218,7 +222,7 @@ def build_search() -> int:
         if path.parts[len(ROOT.parts):][0] in {"inhalte", "tools"}:
             continue
         # Seiten, die man nicht direkt ansteuert, gehoeren nicht in die Suche.
-        if page_url(path) in EXCLUDE:
+        if page_url(path) in EXCLUDE or path == OUT_404:
             continue
         html = path.read_text(encoding="utf-8")
 
@@ -610,13 +614,14 @@ def prefix_fuer(url: str) -> str:
 
 
 def seite(url: str, titel: str, beschreibung: str,
-          inhalt: str, kopfzusatz: str = "") -> str:
+          inhalt: str, kopfzusatz: str = "", prefix: str | None = None) -> str:
     """Setzt eine Seite aus tools/vorlagen/seite.html zusammen.
 
     Das Geruest steht dort einmal; {{prefix}} traegt die Tiefe, damit
     dieselbe Vorlage fuer newsarchiv/ und newsarchiv/<slug>/ passt.
     """
-    prefix = prefix_fuer(url)
+    if prefix is None:
+        prefix = prefix_fuer(url)
     vorlage = VORLAGE.read_text(encoding="utf-8")
     # {{inhalt}} zuerst, damit der Inhalt selbst {{prefix}} benutzen darf.
     return (vorlage
@@ -840,6 +845,89 @@ def build_news() -> None:
         print(f"  ACHTUNG: {len(entwuerfe)} Meldung(en) ohne vollstaendigen Text (noindex):")
         for slug in entwuerfe:
             print(f"    inhalte/meldungen/{slug}.html")
+
+
+# ============================================================================
+# 404-Seite, Sitemap und robots.txt
+# ============================================================================
+
+OUT_404 = ROOT / "404.html"
+OUT_SITEMAP = ROOT / "sitemap.xml"
+OUT_ROBOTS = ROOT / "robots.txt"
+NOINDEX = re.compile(r'<meta\s+name="robots"\s+content="[^"]*noindex', re.I)
+
+
+def build_404() -> None:
+    """Fehlerseite fuer Adressen, die es nicht gibt.
+
+    Der Server liefert sie unter jeder beliebigen Tiefe aus - unter
+    /CDU/gibt/es/nicht/ genauso wie unter /CDU/falsch/. Relative Links
+    wie ../css/ zeigten dann je nach Adresse woandershin. Deshalb traegt
+    diese eine Seite den Pfad ab Domain (/CDU/ auf GitHub Pages), abgeleitet
+    aus SITE_URL. Lokal ueber python -m http.server laedt sie deshalb ohne
+    Stylesheet; auf dem Server stimmt es.
+    """
+    prefix = urllib.parse.urlparse(SITE_URL).path or "/"
+    inhalt = f"""            <h1>Seite nicht gefunden</h1>
+            <p class="seiten-einleitung">Unter dieser Adresse gibt es keine Seite. Vielleicht
+            ist sie umgezogen, oder in der Adresse steckt ein Tippfehler.</p>
+
+            <div class="kartenraster">
+                <article class="infokarte">
+                    <h2>Startseite</h2>
+                    <p>Aktuelle Meldungen, Termine und alles Weitere im Überblick.</p>
+                    <p><a class="mehr-link" href="{prefix}">Zur Startseite <span aria-hidden="true">→</span></a></p>
+                </article>
+                <article class="infokarte">
+                    <h2>Termine</h2>
+                    <p>Die nächsten Veranstaltungen des Kreisverbands.</p>
+                    <p><a class="mehr-link" href="{prefix}termine/">Alle Termine <span aria-hidden="true">→</span></a></p>
+                </article>
+                <article class="infokarte">
+                    <h2>Kontakt</h2>
+                    <p>Sie suchen etwas Bestimmtes? Schreiben Sie uns oder rufen Sie an:
+                    <a href="tel:+493855900426">(0385) 59 00 426</a>.</p>
+                    <p><a class="mehr-link" href="{prefix}kontakt/">Nachricht schreiben <span aria-hidden="true">→</span></a></p>
+                </article>
+            </div>
+"""
+    kopfzusatz = '    <meta name="robots" content="noindex">\n'
+    html = seite("404.html", "Seite nicht gefunden",
+                 "Diese Seite gibt es nicht.", inhalt, kopfzusatz, prefix)
+    # Eine Fehlerseite hat keine kanonische Adresse.
+    html = re.sub(r'\s*<link rel="canonical"[^>]*>', "", html, count=1)
+    schreibe(OUT_404, html)
+    print(f"Fehlerseite -> {OUT_404.relative_to(ROOT)}")
+
+
+def build_sitemap() -> None:
+    """Alle oeffentlichen Seiten fuer Suchmaschinen, dazu robots.txt.
+
+    Ausgelassen sind dieselben Seiten wie in der Suche und alles mit
+    noindex - also auch Meldungen, deren Text noch fehlt. Sobald eine
+    Meldung veroeffentlicht ist, steht sie beim naechsten Lauf drin.
+    """
+    urls = []
+    for path in sorted(ROOT.rglob("index.html")):
+        teile = path.parts[len(ROOT.parts):]
+        if ".git" in path.parts or teile[0] in {"inhalte", "tools"}:
+            continue
+        url = page_url(path)
+        if url in EXCLUDE or NOINDEX.search(path.read_text(encoding="utf-8")):
+            continue
+        urls.append(url)
+
+    zeilen = "".join(f"  <url><loc>{esc(SITE_URL + u)}</loc></url>\n" for u in urls)
+    schreibe(OUT_SITEMAP,
+             '<?xml version="1.0" encoding="UTF-8"?>\n'
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+             f"{zeilen}</urlset>\n")
+    schreibe(OUT_ROBOTS,
+             "# Automatisch erzeugt von tools/build-site-data.py.\n"
+             "User-agent: *\n"
+             f"Disallow: {urllib.parse.urlparse(SITE_URL).path}mitglied-werden/bestaetigung/\n"
+             f"\nSitemap: {SITE_URL}sitemap.xml\n")
+    print(f"{len(urls)} Seiten -> {OUT_SITEMAP.relative_to(ROOT)}, {OUT_ROBOTS.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
