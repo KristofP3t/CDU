@@ -1,6 +1,6 @@
 # Offene Punkte bis zum Start auf cdu-schwerin.com
 
-Stand: 25. September 2026. Einzelheiten zu vielen Punkten stehen in
+Stand: 25. September 2026. Der Plan mit Begründung steht in `PLAN.md`. Einzelheiten zu vielen Punkten stehen in
 `RELAUNCH.md`.
 
 Bei jedem Punkt steht, wer ihn erledigen kann:
