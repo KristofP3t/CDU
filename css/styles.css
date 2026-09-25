@@ -1997,6 +1997,13 @@ body {
     border-radius: 8px;
 }
 
+/* Wie .textseite a - fuer Seiten ohne .textseite im Hauptteil (Termine),
+   sonst stehen die Links dort im Browser-Blau. */
+.infokarte a {
+    color: var(--color-primary-text);
+    font-weight: 600;
+}
+
 /* Setzt den Verwendungszweck vom Rest der Kontodaten ab. Der Wert muss
    groesser sein als das margin-bottom von .textseite p, sonst bleibt er
    beim Kollabieren der Raender wirkungslos. */

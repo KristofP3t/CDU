@@ -1,0 +1,5 @@
+# Automatisch erzeugt von tools/build-site-data.py.
+User-agent: *
+Disallow: /CDU/mitglied-werden/bestaetigung/
+
+Sitemap: https://kristofp3t.github.io/CDU/sitemap.xml
