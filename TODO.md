@@ -12,31 +12,38 @@ Bei jedem Punkt steht, wer ihn erledigen kann:
 ## 1. Muss vor dem Start erledigt sein
 
 ### Formulare
-- [ ] **[KV]** Ein EmailJS-Konto anlegen und ein Postfach als Service verbinden.
-- [ ] **[KV]** Im EmailJS-Dashboard drei Vorlagen anlegen: Antrag an die
-      Geschäftsstelle, Kopie an das neue Mitglied, Kontaktnachricht. Die
-      Platzhalter stehen in `RELAUNCH.md`.
-- [ ] **[Tech]** Public Key, Service-ID und die drei Vorlagen-IDs eintragen, im
-      `MAIL`-Objekt von `mitglied-werden/index.html` und `kontakt/index.html`.
-- [ ] **[KV]** In EmailJS nur `cdu-schwerin.com` als erlaubte Domain eintragen,
-      damit niemand den Key von anderen Seiten aus benutzt.
-- [ ] **[KV]** Rechtlich klären, ob die IBAN aus dem Mitgliedsantrag über einen
-      US-Dienst laufen darf. Wenn nicht: die Bankdaten aus der Mail nehmen
-      oder einen Anbieter in der EU verwenden.
-- [ ] **[Tech]** Nach dem Eintragen einen echten Testantrag und eine echte
-      Testnachricht schicken und prüfen, dass beides ankommt.
+Entschieden: kein EmailJS, sondern ein eigenes PHP-Skript im Webpaket.
+Begründung und Einzelheiten in `PLAN.md`, Phase 1.
+
+- [ ] **[KV]** Anbieter und PHP-Version des Webpakets herausfinden. Gebraucht
+      werden PHP 8.1 oder neuer mit libsodium, SMTP-Zugang zum Postfach,
+      SFTP und Subdomains.
+- [ ] **[KV]** Beim Schatzmeister oder der Bank klären, ob ein online
+      bestätigtes SEPA-Mandat ohne Unterschrift reicht.
+- [ ] **[Tech]** PHP-Skript für Mitgliedsantrag und Kontaktformular: Versand
+      über SMTP, echter Double-Opt-in, Anträge bis zur Bestätigung
+      verschlüsselt gespeichert und nach 7 Tagen gelöscht, Honeypot und
+      Ratenlimit, keine Bankdaten in Logs.
+- [ ] **[Tech]** EmailJS aus `mitglied-werden/index.html` und
+      `kontakt/index.html` entfernen.
+- [ ] **[KV]** SPF, DKIM und DMARC der Domain prüfen, damit die Mails aus dem
+      Paket nicht im Spam landen.
+- [ ] **[Tech]** Auf der Test-Subdomain einen echten Testantrag mit IBAN und
+      eine echte Testnachricht schicken und prüfen, dass beides ankommt.
 
 ### Rechtstexte
-- [ ] **[KV]** Datenschutzerklärung ergänzen: EmailJS, das Hosting und die
-      nachgeladenen Bibliotheken von jsDelivr und cdnjs (dabei geht die IP des
-      Besuchers an Dritte).
-- [ ] **[Tech]** Alternative dazu: EmailJS und jsPDF selbst hosten. Dann fällt
-      das Nachladen von fremden Servern weg, wie schon bei der Schrift.
-- [ ] **[KV]** Impressum: Es beruft sich noch auf das TMG. Seit Mai 2024 gilt
-      das Digitale-Dienste-Gesetz (DDG).
-- [ ] **[KV]** Prüfen, ob Google Analytics bleiben soll. Eine cookielose
-      Messung wie Plausible oder Matomo würde das Cookie-Banner überflüssig
-      machen.
+- [ ] **[Tech]** jsPDF selbst hosten, wie schon die Schrift.
+- [ ] **[Tech]** Datenschutzerklärung entwerfen: PHP-Versand, gespeicherte
+      Anträge und Löschfrist, Hosting, Google Analytics.
+- [ ] **[Tech]** Impressum: „TMG“ durch „DDG“ ersetzen. Seit Mai 2024 gilt
+      das Digitale-Dienste-Gesetz.
+- [ ] **[KV]** Beide Entwürfe prüfen und freigeben.
+
+### Google Analytics
+- [ ] **[Tech]** Das Cookie-Banner auf alle Seiten bringen; GA lädt erst nach
+      der Einwilligung.
+- [ ] **[Tech]** Den `preconnect` zu googletagmanager.com in `index.html`
+      entfernen, er baut schon vor der Einwilligung eine Verbindung auf.
 
 ### Meldungen
 - [ ] **[KV]** Den Fließtext der vier Meldungen liefern. Danach
@@ -64,9 +71,17 @@ Bei jedem Punkt steht, wer ihn erledigen kann:
       werden Sitemap, `robots.txt`, 404-Seite, Kalenderdateien und die
       `canonical`-Links neu erzeugt. **Erst beim Umzug**, sonst funktioniert
       die 404-Seite in der Vorschau auf GitHub Pages nicht mehr.
-- [ ] **[KV]** Das Hosting festlegen: das bisherige Webpaket, GitHub Pages mit
-      eigener Domain oder ein anderer statischer Hoster. Der Server muss
-      `404.html` für unbekannte Adressen ausliefern.
+- [x] **[KV]** Das Hosting festlegen: das bisherige Webpaket beim selben
+      Anbieter wie WordPress und das Postfach.
+- [ ] **[Tech]** GitHub Action: Build und Upload per SFTP nach jedem Push auf
+      `main`. Die Zugangsdaten liegen als Secret im Repo.
+- [ ] **[KV]** Eine Test-Subdomain mit Passwortschutz anlegen, zum Beispiel
+      `neu.cdu-schwerin.com`.
+- [ ] **[Tech]** Über `.htaccess` dafür sorgen, dass der Server `404.html` für
+      unbekannte Adressen ausliefert.
+- [ ] **[KV]** Beim Umstellen WordPress in seinem Verzeichnis liegen lassen und
+      die Domain auf das neue Verzeichnis umhängen. So geht es mit einem
+      Klick zurück.
 - [ ] **[KV]** HTTPS-Zertifikat für `cdu-schwerin.com` und `www.` einrichten,
       dazu eine Weiterleitung von `www` auf die Hauptadresse oder umgekehrt.
 - [ ] **[KV]** Beim Umstellen der DNS-Einträge die **MX-Einträge nicht
