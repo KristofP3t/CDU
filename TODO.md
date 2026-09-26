@@ -1,6 +1,6 @@
 # Offene Punkte bis zum Start auf cdu-schwerin.com
 
-Stand: 25. September 2026. Der Plan mit Begründung steht in `PLAN.md`. Einzelheiten zu vielen Punkten stehen in
+Stand: 26. September 2026. Der Plan mit Begründung steht in `PLAN.md`. Einzelheiten zu vielen Punkten stehen in
 `RELAUNCH.md`.
 
 Bei jedem Punkt steht, wer ihn erledigen kann:
@@ -137,17 +137,49 @@ Begründung und Einzelheiten in `PLAN.md`, Phase 1.
 
 Inhalte (brauchen Texte vom Kreisverband):
 - [ ] Themenseite mit den Positionen der CDU Schwerin zu Verkehr, Sicherheit,
-      Schule, Wohnen und Wirtschaft.
+      Schule, Wohnen und Wirtschaft. Je drei kurze Forderungen mit Bezug zu
+      Schwerin, als Kacheln, und „Themen“ als eigener Punkt in der
+      Hauptnavigation, wie auf cdu.de, spd.de und gruene.de.
 - [ ] Kandidatenseite für die Landtags- und OB-Wahl.
 - [ ] Seite zur Stadtratsfraktion: Mitglieder, Anträge, Ausschüsse.
-- [ ] Formular „Ich kann helfen“ für Plakate, Infostände und Flyer.
-- [ ] Newsletter mit Double-Opt-in.
+- [ ] Formular „Ich kann helfen“ für Plakate, Infostände, Flyer und
+      Haustürbesuche. Auf der Startseite unter „Mitmachen“ als vierte Karte
+      neben Mitglied werden, Spenden und Kontakt.
+- [ ] Newsletter mit Double-Opt-in. Das Anmeldefeld gehört auf die
+      Startseite und in den Footer, nicht nur auf eine Unterseite.
 - [ ] Bürgersprechstunden als eigene Termin-Kategorie.
-- [ ] Karte der Stadtbezirksverbände.
+- [ ] Karte der Stadtbezirksverbände, dazu eine Suche nach Straße oder
+      Stadtteil: „Wer ist bei mir zuständig?“
+- [ ] Regelmäßige Meldungen, etwa alle zwei Wochen, zum Beispiel
+      Rückblicke mit Fotos vom Infostand.
+- [ ] **[KV]** Seite in Leichter Sprache: wer wir sind, was wir wollen, wie man
+      uns erreicht. Verlinkt im Kopf oder Footer jeder Seite. Alle drei
+      Bundesparteien bieten das an.
+- [ ] **[KV]** Presse-Seite: Ansprechpartner, Pressemitteilungen, Porträts in
+      Druckauflösung und Logo zum Herunterladen.
+- [ ] **[KV]** Entscheiden, ob es einen WhatsApp-Kanal geben soll. Wenn ja,
+      neben Facebook und Instagram verlinken.
+- [ ] **[KV]** Online-Spende zusätzlich zum GiroCode, etwa per PayPal. Vorher
+      mit dem Schatzmeister klären, was das Parteiengesetz dafür verlangt.
+
+Vor der nächsten Wahl (Wahlkampf-Modus, wie ihn die Bundesparteien fahren):
+- [ ] Kandidat mit Slogan und Wahltag im Hero.
+- [ ] Countdown bis zum Wahltag, mit Rücksicht auf reduzierte Bewegung.
+- [ ] Seite „So wählen Sie“: Briefwahl, Wahllokal, Fristen, dazu ein Link
+      zum Wahl-O-Mat, falls es einen gibt.
+- [ ] Das Wahlprogramm als Kurzfassung auf der eigenen Seite, nicht nur als
+      PDF.
 
 Gestaltung und Technik:
 - [ ] Hero mit einer politischen Botschaft statt Anschrift. Auf dem Telefon
-      sollte der Text über dem Bild liegen.
+      sollte der Text über dem Bild liegen. Alle drei Vergleichsseiten
+      beginnen mit einem politischen Satz, einem Gesicht und einem Button;
+      das ist der wichtigste Punkt aus dem Vergleich.
+- [ ] Teilen-Buttons unter jeder Meldung: WhatsApp, Facebook, Link kopieren
+      und auf dem Telefon das Teilen-Menü des Geräts. Als einfache Links,
+      ohne fremde Skripte.
+- [ ] Erklärung zur Barrierefreiheit mit Kontakt für Hinweise, verlinkt im
+      Footer.
 - [ ] Terminseite kompakter, ein abonnierbarer Gesamtkalender und eine
       Monatsansicht.
 - [ ] Service, Wahlarchiv und Impressum mit Seitenkopf und Bildern gestalten.
