@@ -1,6 +1,6 @@
 # Plan: Ausbau und Modernisierung
 
-Stand: 25. September 2026. Hier steht, **was** getan werden soll und
+Stand: 26. September 2026. Hier steht, **was** getan werden soll und
 **warum**. Die Checkliste zum Abhaken steht in `TODO.md`, der bisherige
 Verlauf in `RELAUNCH.md`.
 
@@ -166,6 +166,40 @@ Hier liegt die größte inhaltliche Lücke.
 5. **Web-App-Manifest** und dezente Seitenübergänge (View Transitions),
    jeweils mit Rücksicht auf die Einstellung für reduzierte Bewegung.
 6. **Serifenschrift** für Zitate statt Georgia.
+
+---
+
+## Vergleich mit cdu.de, spd.de und gruene.de
+
+Stand: 26. September 2026. Die drei Seiten waren aus der Arbeitsumgebung
+nicht erreichbar; der Vergleich beruht auf ihrem bekannten Aufbau und
+einer Websuche. Die Punkte stehen in `TODO.md`, Abschnitt 5.
+
+**Was wir schon so gut oder besser machen:** Tempo, kaum fremde Skripte,
+Tastaturbedienung, Spenden per GiroCode mit festen Beträgen, Termine als
+Kalenderdatei mit Filter.
+
+**Was alle drei machen und uns fehlt:**
+
+1. Ein politischer Satz mit Gesicht und Button im ersten Bildschirm
+   (Phase 2.3). Der wichtigste Punkt.
+2. „Themen“ als eigener Menüpunkt mit kurzen Forderungen (Phase 2.1).
+3. Wege zum Mitmachen unterhalb der Mitgliedschaft: Newsletter auf der
+   Startseite, „Ich kann helfen“ (Phase 3.1 und 3.2).
+4. Die Suche „Wer ist bei mir zuständig?“ (Phase 3.4).
+5. Leichte Sprache und eine Erklärung zur Barrierefreiheit. Neu.
+6. Eine Presse-Seite. Neu.
+7. Teilen-Buttons unter den Meldungen und häufigere Meldungen. Neu
+   beziehungsweise Phase 3.5.
+8. Ein Wahlkampf-Modus vor Wahlen: Countdown, „So wählen Sie“, Programm
+   als Kurzfassung. Die OB-Wahl (12. April) und die Landtagswahl sind
+   vorbei, deshalb erst vor der nächsten Wahl.
+
+**Bewusst nicht übernehmen:** Mega-Menüs und lange Startseiten, die ein
+Bundesverband mit Hunderten Unterseiten braucht, ein Kreisverband aber
+nicht. Eingebettete Social-Media-Beiträge und weiteres Tracking: Sie
+kosten Tempo und machen die Datenschutzerklärung komplizierter.
+Verlinken statt einbetten.
 
 ---
 
