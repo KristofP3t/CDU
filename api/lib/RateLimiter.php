@@ -27,6 +27,7 @@ final class RateLimiter
      */
     public function allow(string $scope, string $ip, int $limit, int $windowSeconds = 3600): bool
     {
+        $this->purgeStale($windowSeconds);
         $path = $this->dir . '/' . hash('sha256', $scope . '|' . $ip) . '.json';
 
         $handle = fopen($path, 'c+');
@@ -59,5 +60,22 @@ final class RateLimiter
         fclose($handle);
 
         return $allowed;
+    }
+
+    /**
+     * Loescht Zaehler, die laenger als das Zeitfenster unberuehrt liegen.
+     * Der Dateiname ist ein Hash der IP-Adresse - bei IPv4 laesst er sich
+     * durchprobieren, er gilt also als personenbezogen und darf nicht
+     * laenger liegen als noetig (siehe Datenschutzerklaerung: eine Stunde).
+     */
+    private function purgeStale(int $maxAgeSeconds): void
+    {
+        $cutoff = time() - $maxAgeSeconds;
+        foreach (glob($this->dir . '/*.json') ?: [] as $file) {
+            $mtime = @filemtime($file);
+            if ($mtime !== false && $mtime < $cutoff) {
+                @unlink($file);
+            }
+        }
     }
 }

@@ -1961,6 +1961,13 @@ body {
     margin-bottom: var(--spacing-sm);
 }
 
+/* Nummern brauchen mehr Platz als Punkte ("3." statt "•"), und nach
+   einer Schrittfolge folgt meist ein Absatz, der nicht daran kleben soll. */
+.textseite ol {
+    padding-left: 1.6em;
+    margin-bottom: var(--spacing-md);
+}
+
 .textseite li {
     line-height: 1.7;
     margin-bottom: var(--spacing-xs);
