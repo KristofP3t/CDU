@@ -73,12 +73,22 @@ Begründung und Einzelheiten in `PLAN.md`, Phase 1.
       entfernen, er baut schon vor der Einwilligung eine Verbindung auf.
 
 ### Meldungen
-- [ ] **[KV]** Den Fließtext der vier Meldungen liefern. Danach
+- [x] **[KV]** Den Fließtext der vier Meldungen liefern. Danach
       `status="veroeffentlicht"` setzen und den Build laufen lassen.
-- [ ] **[KV]** Die Veröffentlichungsdaten bestätigen. Bei zweien ist nur der
-      Monat geschätzt.
-- [ ] **[KV]** Die Beitragsbilder in rund 840px Breite aus der
-      WordPress-Mediathek liefern; lokal liegen sie nur in 272px vor.
+      Übernommen von der bisherigen Seite (WordPress-Schnittstelle), nur
+      eindeutige Tippfehler korrigiert – was genau, steht als Kommentar in
+      jeder Datei unter `inhalte/meldungen/`. Bitte gegenlesen.
+- [x] **[KV]** Die Veröffentlichungsdaten bestätigen. Bei zweien ist nur der
+      Monat geschätzt. Jetzt die echten Daten aus WordPress; bei der
+      Einladung stand vorher der Veranstaltungstag statt des 19. Februar.
+- [x] **[KV]** Die Beitragsbilder in rund 840px Breite aus der
+      WordPress-Mediathek liefern; lokal liegen sie nur in 272px vor. Jetzt
+      840px (3:2, Metadaten entfernt); die Grafik „Aktuelle News“ gibt es
+      im Original nur in 800px.
+- [ ] **[KV]** Entscheiden, ob die übrigen 113 Beiträge der bisherigen Seite
+      (2021 bis August 2025) mit umziehen. Übernommen sind bisher nur die
+      vier neuesten. Wenn nicht, brauchen ihre Adressen eine Weiterleitung
+      auf das Newsarchiv (siehe Abschnitt 2).
 - [x] **[Tech]** Alternativtexte für die Meldungsbilder ergänzen. Die
       Personen auf den beiden Gruppenfotos sind bewusst nicht benannt – wer
       wer ist, kann nur der Kreisverband sicher sagen und bei Bedarf in

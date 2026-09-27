@@ -2812,6 +2812,21 @@ body {
     margin-top: 0;
 }
 
+/* Bisher stand hier kein Text, nur der Hinweis, dass er fehlt - Absaetze
+   und Zwischenueberschriften ("Zur Person") hatten deshalb keine Abstaende. */
+.meldung-text p {
+    margin: 0 0 1em;
+}
+
+.meldung-text p:last-child {
+    margin-bottom: 0;
+}
+
+.meldung-text h2 {
+    font-size: 20px;
+    margin: 1.6em 0 0.6em;
+}
+
 /* Sichtbarer Hinweis, solange der Text einer uebernommenen Meldung fehlt.
    Die Seite traegt dann zusaetzlich robots=noindex. */
 .meldung-hinweis {
