@@ -55,8 +55,9 @@ Begründung und Einzelheiten in `PLAN.md`, Phase 1.
 - [ ] **[Tech]** jsPDF selbst hosten, wie schon die Schrift.
 - [ ] **[Tech]** Datenschutzerklärung entwerfen: PHP-Versand, gespeicherte
       Anträge und Löschfrist, Hosting, Google Analytics.
-- [ ] **[Tech]** Impressum: „TMG“ durch „DDG“ ersetzen. Seit Mai 2024 gilt
-      das Digitale-Dienste-Gesetz.
+- [x] **[Tech]** Impressum: „TMG“ durch „DDG“ ersetzen. Seit Mai 2024 gilt
+      das Digitale-Dienste-Gesetz. Dazu vorgeschlagen: Verantwortlicher nach
+      § 18 Abs. 2 MStV (angenommen: der Kreisvorsitzende, bitte bestätigen).
 - [ ] **[KV]** Beide Entwürfe prüfen und freigeben.
 
 ### Google Analytics
