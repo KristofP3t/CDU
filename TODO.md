@@ -52,7 +52,9 @@ Begründung und Einzelheiten in `PLAN.md`, Phase 1.
       eine echte Testnachricht schicken und prüfen, dass beides ankommt.
 
 ### Rechtstexte
-- [ ] **[Tech]** jsPDF selbst hosten, wie schon die Schrift.
+- [x] **[Tech]** jsPDF selbst hosten, wie schon die Schrift. Liegt unter
+      `js/vendor/`, dabei von 2.5.1 auf 4.2.1 aktualisiert (2.5.1 hatte
+      bekannte Sicherheitslücken) und erst ab Schritt 6 geladen.
 - [ ] **[Tech]** Datenschutzerklärung entwerfen: PHP-Versand, gespeicherte
       Anträge und Löschfrist, Hosting, Google Analytics.
 - [x] **[Tech]** Impressum: „TMG“ durch „DDG“ ersetzen. Seit Mai 2024 gilt

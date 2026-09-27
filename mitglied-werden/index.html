@@ -1323,9 +1323,6 @@
     <script src="../js/search-index.js"></script>
     <script src="../js/main.js"></script>
 
-    <!-- PDF-Erzeugung für die Antrags-Zusammenfassung -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
     <script>
         /* ==================================================================
            E-Mail-Versand
@@ -1654,6 +1651,11 @@
             return ladevorgaenge[datei];
         };
         const bankleitzahlen = () => datenLaden('bankleitzahlen.js', 'CDU_BANKLEITZAHLEN');
+
+        /* jsPDF (420 KB) liegt auf dem eigenen Server, nicht mehr bei
+           cdnjs - dann bleibt Google Analytics das einzige fremde Skript.
+           Es laedt erst mit Schritt 6, wer vorher abbricht, braucht es nie. */
+        const jspdfLaden = () => datenLaden('vendor/jspdf.umd.min.js', 'jspdf');
 
         /* Vergleichsform eines Strassennamens: "Hagenower Str.",
            "hagenower strasse" und "Hagenower Straße" werden gleich. Muss
@@ -2225,6 +2227,9 @@
                 nextBtn.style.display = currentStep < totalSteps ? 'block' : 'none';
                 submitBtn.style.display = currentStep === totalSteps ? 'flex' : 'none';
 
+                // Vorladen, damit das PDF beim Absenden ohne Wartezeit entsteht.
+                if (currentStep === totalSteps) jspdfLaden();
+
                 /* Eine Versandmeldung gehoert zum Absenden, nicht zum
                    naechsten Schritt; eine Feldliste bleibt, solange noch
                    Felder offen sind. */
@@ -2290,7 +2295,10 @@
                 showLoading();
 
                 /* Das PDF entsteht unabhaengig vom Versand, damit der Antrag
-                   in jedem Fall in der Hand des Antragstellers bleibt. */
+                   in jedem Fall in der Hand des Antragstellers bleibt. jsPDF
+                   ist meist schon da (geladen mit Schritt 6); fehlt es, gibt
+                   es eben kein PDF - der Versand geht trotzdem. */
+                await jspdfLaden();
                 downloadMembershipPdf(new FormData(form));
 
                 try {
