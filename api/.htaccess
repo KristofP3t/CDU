@@ -1,0 +1,15 @@
+# Alles unter diesem Verzeichnis ist gesperrt, ausser den drei Skripten,
+# die tatsaechlich als Formularziel dienen sollen. lib/ und config.php
+# muessen dadurch nicht einzeln geschuetzt werden - sie liegen automatisch
+# mit darunter. Der eigentliche Schluessel und die verschluesselten
+# Antraege liegen ohnehin ausserhalb dieses Verzeichnisses (SECRETS_DIR in
+# config.php), dies hier ist eine zweite Sicherung.
+Options -Indexes
+
+<FilesMatch "\.php$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^(contact|membership|confirm)\.php$">
+    Require all granted
+</FilesMatch>

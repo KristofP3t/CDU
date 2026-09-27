@@ -278,37 +278,54 @@
     <script src="../../js/main.js"></script>
 
     <script>
-        // Bestätigt die E-Mail-Adresse eines Mitgliedsantrags anhand der URL-Parameter
-        // (?email=...&token=...), die im Bestätigungslink der E-Mail enthalten sind.
-        // Hinweis: Ohne eigenes Backend kann der Token hier nur auf Vorhandensein
-        // geprüft werden. Für eine belastbare Prüfung (Ablaufdatum, Einmalverwendung)
-        // sollte dieser Link künftig gegen einen serverseitigen Endpunkt validiert werden.
+        /* Diese Seite meldet selbst nichts - api/confirm.php hat die
+           eigentliche Bestaetigung (Token pruefen, Antrag an die
+           Geschaeftsstelle weiterleiten) bereits erledigt und leitet
+           hierher weiter, mit dem Ergebnis im Parameter "status". Die
+           fruehere Fassung hielt schon das blosse Vorhandensein von
+           E-Mail und Token fuer eine gueltige Bestaetigung - das liess
+           sich durch einen selbst zusammengebauten Link faelschen, ganz
+           ohne echten Versand. */
         (() => {
             const params = new URLSearchParams(window.location.search);
-            const email = params.get('email');
-            const token = params.get('token');
+            const status = params.get('status');
 
             const section = document.getElementById('confirm-section');
             const icon = document.getElementById('confirm-icon');
             const title = document.getElementById('confirm-title');
             const text = document.getElementById('confirm-text');
 
-            if (email && token) {
-                icon.textContent = '✓';
-                title.textContent = 'E-Mail-Adresse bestätigt!';
-                text.innerHTML = `Vielen Dank! Die E-Mail-Adresse <strong>${email.replace(/</g, '&lt;')}</strong> wurde erfolgreich bestätigt. Ihr Mitgliedsantrag ist damit vollständig und wird nun von unserer Geschäftsstelle bearbeitet.`;
-
-                try {
-                    localStorage.setItem('cdu-mitgliedsantrag-bestaetigt', JSON.stringify({ email, confirmedAt: new Date().toISOString() }));
-                } catch (e) {
-                    // localStorage evtl. nicht verfügbar – kein Abbruch nötig
+            const zustaende = {
+                confirmed: {
+                    symbol: '✓',
+                    ueberschrift: 'E-Mail-Adresse bestätigt!',
+                    inhalt: 'Vielen Dank! Ihr Mitgliedsantrag ist damit vollständig und wird nun von unserer Geschäftsstelle bearbeitet.'
+                },
+                invalid: {
+                    symbol: '!',
+                    ueberschrift: 'Bestätigungslink ungültig',
+                    inhalt: 'Dieser Link ist nicht mehr gültig – entweder wurde er bereits verwendet, oder er ist älter als sieben Tage. Bitte stellen Sie Ihren Mitgliedsantrag erneut.',
+                    fehler: true
+                },
+                error: {
+                    symbol: '!',
+                    ueberschrift: 'Bestätigung fehlgeschlagen',
+                    inhalt: 'Ihre Bestätigung konnte gerade nicht verarbeitet werden. Bitte versuchen Sie es in ein paar Minuten erneut oder wenden Sie sich an unsere Geschäftsstelle.',
+                    fehler: true
                 }
-            } else {
-                section.classList.add('state-error');
-                icon.textContent = '!';
-                title.textContent = 'Bestätigungslink unvollständig';
-                text.textContent = 'Dieser Link enthält nicht alle nötigen Informationen. Bitte nutzen Sie den vollständigen Link aus der E-Mail oder wenden Sie sich an unsere Geschäftsstelle.';
-            }
+            };
+
+            const zustand = zustaende[status] || {
+                symbol: '!',
+                ueberschrift: 'Bestätigungslink unvollständig',
+                inhalt: 'Dieser Link enthält nicht alle nötigen Informationen. Bitte nutzen Sie den vollständigen Link aus der E-Mail oder wenden Sie sich an unsere Geschäftsstelle.',
+                fehler: true
+            };
+
+            if (zustand.fehler) section.classList.add('state-error');
+            icon.textContent = zustand.symbol;
+            title.textContent = zustand.ueberschrift;
+            text.textContent = zustand.inhalt;
         })();
     </script>
     <!-- Such-Overlay -->

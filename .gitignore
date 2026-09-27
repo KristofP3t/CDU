@@ -1,2 +1,14 @@
 # Bytecode-Zwischenspeicher des Build-Skripts
 __pycache__/
+
+# Echte Zugangsdaten fuer den Formularversand - nur config.example.php wird
+# eingecheckt. Die ausgefuellte config.php gehoert nicht hierher, sondern
+# ausserhalb des Web-Verzeichnisses auf den Server (siehe
+# api/config.example.php); diese Zeile ist nur ein Sicherheitsnetz, falls
+# sie versehentlich doch im Projektordner landet.
+api/config.php
+cdu-secrets/
+
+# Bankleitzahlendatei der Bundesbank (1,8 MB, wechselt quartalsweise).
+# Eingecheckt wird nur das Ergebnis js/bankleitzahlen.js.
+inhalte/bankleitzahlen/

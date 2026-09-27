@@ -9,6 +9,8 @@
   newsarchiv/**       – Meldungsseiten, Archivliste und Kategorieseiten
   aktuelles/index.html – die neuesten Meldungen
   assets/images/spenden-girocode-*.svg – GiroCodes fuer die Spendenseite
+  js/bankleitzahlen.js – Bankleitzahl -> Geldinstitut und BIC, fuer den
+                         Mitgliedsantrag
 
 Gepflegt wird je Meldung genau eine Datei in inhalte/meldungen/<slug>.html:
 oben die Angaben als <meta>, darunter der Text. Alles unter newsarchiv/
@@ -33,6 +35,13 @@ Text koennen also nicht auseinanderlaufen. Dafuer wird segno gebraucht:
 Fehlt es, bleiben die eingecheckten SVG liegen und der Lauf geht weiter;
 neu gebaut werden muessen sie ohnehin nur, wenn sich die Bankdaten
 aendern.
+
+Die Bankleitzahlen stammen aus der Bankleitzahlendatei der Bundesbank.
+Sie gilt jeweils ein Quartal (Wechsel im Maerz, Juni, September und
+Dezember). Zum Aktualisieren das ZIP unter "Bankleitzahlendateien (CSV)"
+auf bundesbank.de herunterladen, unveraendert in inhalte/bankleitzahlen/
+legen und den Build laufen lassen. Die Quelldatei wird nicht eingecheckt,
+nur das Ergebnis; fehlt sie, bleibt js/bankleitzahlen.js unveraendert.
 
 Aufruf nach inhaltlichen Aenderungen:
     python3 tools/build-site-data.py
@@ -105,6 +114,7 @@ def main() -> int:
     build_news()
     build_events()
     build_girocodes()
+    build_bankleitzahlen()
     build_404()
     ergebnis = build_search()
     build_sitemap()
@@ -211,6 +221,79 @@ def build_girocodes() -> None:
         )
     print(f"{len(QR_BETRAEGE)} GiroCodes -> assets/images/spenden-girocode-*.svg"
           f" (Empfaenger: {name})")
+
+
+# ============================================================================
+# Bankleitzahlen fuer den Mitgliedsantrag
+# ============================================================================
+
+QUELLE_BLZ = ROOT / "inhalte" / "bankleitzahlen"
+OUT_BLZ = ROOT / "js" / "bankleitzahlen.js"
+
+
+def lies_blz_csv() -> tuple[str, str] | None:
+    """Liefert (Dateiname, Inhalt) der neuesten Bankleitzahlendatei.
+
+    Akzeptiert wird die CSV der Bundesbank oder das ZIP, in dem sie
+    ausgeliefert wird - so kann man den Download unveraendert ablegen.
+    """
+    import zipfile
+
+    if not QUELLE_BLZ.is_dir():
+        return None
+    kandidaten = sorted(
+        (p for p in QUELLE_BLZ.iterdir() if p.suffix.lower() in {".csv", ".zip"}),
+        key=lambda p: p.stat().st_mtime,
+    )
+    if not kandidaten:
+        return None
+
+    quelle = kandidaten[-1]
+    if quelle.suffix.lower() == ".zip":
+        with zipfile.ZipFile(quelle) as z:
+            name = next((n for n in z.namelist() if n.lower().endswith(".csv")), None)
+            if name is None:
+                return None
+            roh = z.read(name)
+    else:
+        roh = quelle.read_bytes()
+    # Die Bundesbank liefert ISO-8859-1, nicht UTF-8.
+    return quelle.name, roh.decode("latin-1")
+
+
+def build_bankleitzahlen() -> None:
+    import csv
+    import io
+
+    gelesen = lies_blz_csv()
+    if gelesen is None:
+        # Wie bei den GiroCodes kein harter Fehler: die erzeugte Datei liegt im
+        # Repository und bleibt bis zum naechsten Quartal gueltig.
+        print("  Hinweis: keine Bankleitzahlendatei in inhalte/bankleitzahlen/"
+              " – js/bankleitzahlen.js unveraendert.")
+        return
+
+    dateiname, inhalt = gelesen
+    zeilen = csv.DictReader(io.StringIO(inhalt), delimiter=";")
+    # Merkmal 1 ist die Hauptstelle; je Bankleitzahl gibt es genau eine. Die
+    # Filialen (Merkmal 2) tragen dieselbe Bankleitzahl und wuerden sie nur
+    # mehrfach belegen.
+    banken = {
+        z["Bankleitzahl"]: [z["Bezeichnung"].strip(), z["BIC"].strip()]
+        for z in zeilen
+        if z.get("Merkmal") == "1"
+    }
+    if len(banken) < 1000:
+        print(f"  ACHTUNG: nur {len(banken)} Bankleitzahlen in {dateiname} gefunden"
+              " – falsches Format? js/bankleitzahlen.js unveraendert.")
+        return
+
+    daten = json.dumps(dict(sorted(banken.items())), ensure_ascii=False, separators=(",", ":"))
+    schreibe(OUT_BLZ,
+             "/* Automatisch erzeugt von tools/build-site-data.py aus der\n"
+             "   Bankleitzahlendatei der Deutschen Bundesbank – nicht von Hand aendern. */\n"
+             f"window.CDU_BANKLEITZAHLEN = {daten};\n")
+    print(f"{len(banken)} Bankleitzahlen aus {dateiname} -> {OUT_BLZ.relative_to(ROOT)}")
 
 
 def build_search() -> int:
@@ -922,10 +1005,12 @@ def build_sitemap() -> None:
              '<?xml version="1.0" encoding="UTF-8"?>\n'
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
              f"{zeilen}</urlset>\n")
+    prefix = urllib.parse.urlparse(SITE_URL).path
     schreibe(OUT_ROBOTS,
              "# Automatisch erzeugt von tools/build-site-data.py.\n"
              "User-agent: *\n"
-             f"Disallow: {urllib.parse.urlparse(SITE_URL).path}mitglied-werden/bestaetigung/\n"
+             f"Disallow: {prefix}mitglied-werden/bestaetigung/\n"
+             f"Disallow: {prefix}api/\n"
              f"\nSitemap: {SITE_URL}sitemap.xml\n")
     print(f"{len(urls)} Seiten -> {OUT_SITEMAP.relative_to(ROOT)}, {OUT_ROBOTS.relative_to(ROOT)}")
 

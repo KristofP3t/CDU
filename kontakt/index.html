@@ -348,6 +348,21 @@
             margin-right: 6px;
             flex-shrink: 0;
         }
+
+        /* Unsichtbares Feld gegen einfache Bots (Honeypot, siehe PLAN.md,
+           Phase 1). Absichtlich per Position aus dem Bild geschoben statt
+           display:none oder visibility:hidden - manche Bots meiden genau
+           diese beiden Deklarationen gezielt. aria-hidden und tabindex="-1"
+           halten es aus Screenreader und Tastaturbedienung heraus, ein
+           Mensch soll es nie zu sehen bekommen. */
+        .hp-field {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -507,6 +522,17 @@
                             <p id="error-text">Bitte überprüfen Sie Ihre Eingaben.</p>
                             <ul id="error-list" class="error-list" hidden></ul>
                         </div>
+                    </div>
+
+                    <!-- Honeypot: fuer Menschen unsichtbar, ein Bot fuellt
+                         es trotzdem meist aus. aria-hidden und tabindex="-1"
+                         halten es aus Screenreader und Tastaturbedienung
+                         heraus - eine sichtbare Beschriftung braucht es
+                         deshalb nicht; sie wuerde nur in die Suche geraten
+                         (js/search-index.js). autocomplete="off" haelt es
+                         zusaetzlich aus dem Autofill des Browsers heraus. -->
+                    <div class="hp-field" aria-hidden="true">
+                        <input type="text" name="website" tabindex="-1" autocomplete="off">
                     </div>
 
                     <!-- Die Felder tragen kein aria-label mehr. Es wiederholte nur
@@ -750,42 +776,16 @@
     <script src="../js/search-index.js"></script>
     <script src="../js/main.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
     <script>
         /* ==================================================================
            E-Mail-Versand
 
-           Derselbe EmailJS-Zugang wie beim Mitgliedsantrag
-           (mitglied-werden/index.html): gleicher Public Key, gleicher
-           Service. Dazu kommt nur eine eigene Vorlage fuer Nachrichten.
-           Vorher ging das Formular an einen Formspree-Platzhalter und
-           jede Nachricht war verloren.
-
-           Die Vorlage braucht diese Platzhalter:
-             An:       {{empfaenger}}
-             Antwort:  {{antwort_an}}
-             Betreff:  Kontaktformular: {{betreff}}
-             Inhalt:   {{name}} ({{email}}, {{telefon}}) schreibt:
-                       {{nachricht}}
-
-           Solange die Platzhalter unten stehen, wird nichts gesendet und
-           das Formular sagt das auch.
+           Geht an api/contact.php - ein eigenes PHP-Skript im Webpaket, das
+           ueber SMTP aus dem Postfach des Kreisverbands verschickt (siehe
+           PLAN.md, Phase 1). Vorher lief der Versand ueber EmailJS und
+           damit ueber einen externen Anbieter, der die Daten auch sah.
            ================================================================== */
-        const MAIL = {
-            schluessel:    'EMAILJS_PUBLIC_KEY_EINFUEGEN',
-            dienst:        'EMAILJS_SERVICE_ID_EINFUEGEN',
-            vorlage:       'EMAILJS_TEMPLATE_KONTAKT_EINFUEGEN',
-            empfaenger:    'kreisverband@cdu-schwerin.com'
-        };
-
-        const mailBereit = () =>
-            typeof emailjs !== 'undefined' &&
-            !Object.values(MAIL).some(wert => wert.endsWith('_EINFUEGEN'));
-
-        if (mailBereit()) {
-            emailjs.init({ publicKey: MAIL.schluessel });
-        }
+        const ZIEL_ADRESSE = 'kreisverband@cdu-schwerin.com';
 
         // Contact Form Management
         const ContactForm = (() => {
@@ -919,41 +919,29 @@
                     return;
                 }
 
-                /* Ohne Zugangsdaten wird nichts gesendet - und das steht dann
-                   auch da, statt Erfolg zu melden. */
-                if (!mailBereit()) {
-                    showError(
-                        'Der Versand ist auf dieser Seite noch nicht eingerichtet, '
-                        + 'Ihre Nachricht wurde nicht übermittelt. Bitte schreiben Sie '
-                        + 'direkt an ' + MAIL.empfaenger + ' oder rufen Sie uns an: '
-                        + '(0385) 59 00 426.'
-                    );
-                    return;
-                }
-
                 showLoading();
 
-                const wert = (name) => form.querySelector(`[name="${name}"]`).value.trim();
-
                 try {
-                    await emailjs.send(MAIL.dienst, MAIL.vorlage, {
-                        empfaenger: MAIL.empfaenger,
-                        antwort_an: wert('email'),
-                        name: wert('name'),
-                        email: wert('email'),
-                        telefon: wert('phone') || 'keine Angabe',
-                        betreff: wert('subject'),
-                        nachricht: wert('message')
+                    const antwort = await fetch('../api/contact.php', {
+                        method: 'POST',
+                        body: new FormData(form)
                     });
+                    const ergebnis = await antwort.json().catch(() => null);
+
+                    if (!antwort.ok || !ergebnis || !ergebnis.ok) {
+                        throw new Error(ergebnis && ergebnis.error);
+                    }
+
                     showSuccess();
                     form.reset();
                     updateCharCount();
                 } catch (error) {
                     console.error('Versand fehlgeschlagen:', error);
                     showError(
-                        'Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen '
-                        + 'Sie es später erneut oder schreiben Sie direkt an '
-                        + MAIL.empfaenger + '.'
+                        (error && error.message)
+                            || ('Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen '
+                                + 'Sie es später erneut oder schreiben Sie direkt an '
+                                + ZIEL_ADRESSE + '.')
                     );
                 } finally {
                     hideLoading();

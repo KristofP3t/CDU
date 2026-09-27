@@ -741,6 +741,115 @@
             margin-right: 6px;
             flex-shrink: 0;
         }
+
+        /* Unsichtbares Feld gegen einfache Bots (Honeypot, siehe PLAN.md,
+           Phase 1). Absichtlich per Position aus dem Bild geschoben statt
+           display:none oder visibility:hidden - manche Bots meiden genau
+           diese beiden Deklarationen gezielt. aria-hidden und tabindex="-1"
+           halten es aus Screenreader und Tastaturbedienung heraus, ein
+           Mensch soll es nie zu sehen bekommen. */
+        .hp-field {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        /* Feldpruefung - dieselben Regeln wie im Kontaktformular
+           (kontakt/index.html). #b3261e traegt 6,54:1 auf Weiss; der Text
+           steht zusaetzlich zum roten Rahmen da, Farbe allein darf die
+           Aussage nicht tragen (1.4.1). */
+        .form-hint {
+            display: block;
+            margin-top: var(--spacing-xs);
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        .form-error {
+            margin: 4px 0 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #b3261e;
+        }
+
+        .form-error[hidden] {
+            display: none;
+        }
+
+        .membership-form .form-input.is-invalid,
+        .membership-form .form-input.is-invalid:hover {
+            border-color: #b3261e;
+        }
+
+        .radio-fieldset.is-invalid .radio-group-label {
+            color: #b3261e;
+        }
+
+        .error-list {
+            margin: var(--spacing-xs) 0 0;
+            padding-left: 1.2em;
+            font-size: 14px;
+        }
+
+        .error-list a {
+            color: inherit;
+        }
+
+        .error-list li + li {
+            margin-top: 4px;
+        }
+
+        /* Die Zusammenfassung bekommt nach einem fehlgeschlagenen Schritt
+           den Fokus per Skript - wer per Tastatur arbeitet, soll sehen, wo
+           er gelandet ist. */
+        .form-message:focus-visible {
+            outline: 2px solid var(--color-focus);
+            outline-offset: 2px;
+        }
+
+        /* Hinweis, kein Fehler: blockiert nichts, soll aber auffallen - etwa
+           eine Strasse, die im Verzeichnis fehlt. Bernstein statt Rot, damit
+           er nicht wie ein Fehler aussieht; #8a5300 traegt 6,3:1 auf Weiss. */
+        .form-warnung {
+            margin: 4px 0 0;
+            font-size: 14px;
+            color: #8a5300;
+        }
+
+        .form-warnung:empty {
+            display: none;
+        }
+
+        .quellenhinweis {
+            margin: var(--feld-zeile) 0 0;
+            font-size: 12px;
+            color: var(--color-text-light);
+        }
+
+        .quellenhinweis a {
+            color: inherit;
+        }
+
+        /* "Meinten Sie ...?": ein Knopf, der wie ein Link aussieht - er
+           aendert ein Feld, fuehrt aber nirgendwohin. */
+        .vorschlag-btn {
+            padding: 0;
+            border: 0;
+            background: none;
+            font: inherit;
+            font-weight: 600;
+            color: var(--color-primary-text);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .vorschlag-btn:focus-visible {
+            outline: 2px solid var(--color-focus);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
@@ -878,7 +987,7 @@
             <!-- Online Membership Form Section -->
             <section class="membership-form-section">
                 <h2>Jetzt anmelden – Online-Formular</h2>
-                <p class="form-intro">6 einfache Schritte zur CDU-Mitgliedschaft. Alle Felder werden benötigt.</p>
+                <p class="form-intro">6 einfache Schritte zur CDU-Mitgliedschaft. Pflichtfelder sind mit * markiert. Online können wir Anträge mit Wohnsitz in Schwerin annehmen.</p>
 
                 <!-- Progress Bar -->
                 <div class="progress-bar">
@@ -893,9 +1002,14 @@
                     </div>
                 </div>
 
-                <!-- Kein action: der Versand laeuft ueber EmailJS im Skript weiter unten.
-                         Ein POST-Ziel im Markup waere ein zweiter, toter Weg. -->
-                    <form class="membership-form" id="membership-form">
+                <!-- Kein action: der Versand laeuft per fetch() gegen api/membership.php
+                         im Skript weiter unten. Ein POST-Ziel im Markup waere ein zweiter,
+                         toter Weg.
+                         novalidate: die Pruefung uebernimmt das Skript, mit deutschen
+                         Meldungen direkt am Feld. Ohne das Attribut zeigt der Browser
+                         eigene Blasen und blockiert das Absenden, bevor das Skript
+                         ueberhaupt etwas sagen kann. -->
+                    <form class="membership-form" id="membership-form" novalidate>
                     <!-- Success Message -->
                     <div id="membership-success" class="form-message success-message" style="display: none;">
                         <span class="message-icon" aria-hidden="true">✓</span>
@@ -905,13 +1019,29 @@
                         </div>
                     </div>
 
-                    <!-- Error Message -->
-                    <div id="membership-error" class="form-message error-message" style="display: none;">
-                        <span class="message-icon">!</span>
+                    <!-- Fehlerzusammenfassung. role="alert" meldet den Text beim
+                         Einblenden an, tabindex="-1" macht den Kasten per Skript
+                         fokussierbar. Die Liste verlinkt jedes beanstandete Feld;
+                         sie schrumpft, sobald ein Feld stimmt, und der Kasten
+                         verschwindet mit dem letzten Fehler. -->
+                    <div id="membership-error" class="form-message error-message" role="alert" tabindex="-1" style="display: none;">
+                        <span class="message-icon" aria-hidden="true">!</span>
                         <div>
-                            <strong>Fehler beim Absenden</strong>
+                            <strong id="membership-error-title">Fehler beim Absenden</strong>
                             <p id="membership-error-text">Bitte überprüfen Sie Ihre Eingaben.</p>
+                            <ul id="membership-error-list" class="error-list" hidden></ul>
                         </div>
+                    </div>
+
+                    <!-- Honeypot: fuer Menschen unsichtbar, ein Bot fuellt
+                         es trotzdem meist aus. aria-hidden und tabindex="-1"
+                         halten es aus Screenreader und Tastaturbedienung
+                         heraus - eine sichtbare Beschriftung braucht es
+                         deshalb nicht; sie wuerde nur in die Suche geraten
+                         (js/search-index.js). autocomplete="off" haelt es
+                         zusaetzlich aus dem Autofill des Browsers heraus. -->
+                    <div class="hp-field" aria-hidden="true">
+                        <input type="text" name="website" tabindex="-1" autocomplete="off">
                     </div>
 
                     <!-- Step 1: Personal Data -->
@@ -949,10 +1079,10 @@
                         <h2>Schritt 2: Kontaktdaten</h2>
                         <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-2-announcement">Schritt 2 von 6: Kontaktdaten</div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="email" class="form-label">E-Mail <span class="required">*</span></label><div class="form-field"><input type="email" id="email" name="email" class="form-input" required maxlength="100" autocomplete="email" placeholder=""></div></div>
+                            <div class="form-group"><label for="email" class="form-label">E-Mail <span class="required">*</span></label><div class="form-field"><input type="email" id="email" name="email" class="form-input" required maxlength="100" autocomplete="email" spellcheck="false" placeholder=""></div><p class="form-hint" id="email-vorschlag" aria-live="polite"></p></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="phone" class="form-label">Telefon/Mobil <span class="required">*</span></label><div class="form-field"><input type="tel" id="phone" name="phone" class="form-input" required maxlength="20" autocomplete="tel" inputmode="tel" placeholder=""></div></div>
+                            <div class="form-group"><label for="phone" class="form-label">Telefon/Mobil <span class="required">*</span></label><div class="form-field"><input type="tel" id="phone" name="phone" class="form-input" required maxlength="20" autocomplete="tel" inputmode="tel" aria-describedby="phone-hint" placeholder=""></div><span class="form-hint" id="phone-hint">Zum Beispiel 0385 1234567 oder +49 170 1234567</span></div>
                         </div>
                         <div class="form-row full">
                             <div class="form-group"><label for="recruited-by" class="form-label">Geworben durch</label><div class="form-field"><input type="text" id="recruited-by" name="recruited-by" class="form-input" maxlength="50" placeholder=""></div></div>
@@ -964,13 +1094,17 @@
                         <h2>Schritt 3: Adresse</h2>
                         <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-3-announcement">Schritt 3 von 6: Adresse</div>
                         <div class="form-row">
-                            <div class="form-group"><label for="street" class="form-label">Straße <span class="required">*</span></label><div class="form-field"><input type="text" id="street" name="street" class="form-input" required maxlength="100" autocomplete="street-address" placeholder=""></div></div>
+                            <div class="form-group"><label for="street" class="form-label">Straße <span class="required">*</span></label><div class="form-field"><input type="text" id="street" name="street" class="form-input" required maxlength="100" autocomplete="street-address" list="strassen-liste" aria-describedby="street-hinweis" placeholder=""></div><p class="form-warnung" id="street-hinweis" aria-live="polite"></p><datalist id="strassen-liste"></datalist></div>
                             <div class="form-group"><label for="house-number" class="form-label">Hausnummer <span class="required">*</span></label><div class="form-field"><input type="text" id="house-number" name="house-number" class="form-input" required maxlength="10" placeholder=""></div></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label for="postal-code" class="form-label">PLZ <span class="required">*</span></label><div class="form-field"><input type="text" id="postal-code" name="postal-code" class="form-input" required maxlength="10" autocomplete="postal-code" placeholder=""></div></div>
-                            <div class="form-group"><label for="city" class="form-label">Stadt <span class="required">*</span></label><div class="form-field"><input type="text" id="city" name="city" class="form-input" required maxlength="50" autocomplete="address-level2" placeholder=""></div></div>
+                            <div class="form-group"><label for="postal-code" class="form-label">PLZ <span class="required">*</span></label><div class="form-field"><input type="text" id="postal-code" name="postal-code" class="form-input" required maxlength="5" autocomplete="postal-code" inputmode="numeric" aria-describedby="postal-code-hint" placeholder=""></div><span class="form-hint" id="postal-code-hint">Online nur mit Wohnsitz in Schwerin (19053 bis 19063)</span></div>
+                            <div class="form-group"><label for="city" class="form-label">Stadt <span class="required">*</span></label><div class="form-field"><input type="text" id="city" name="city" class="form-input" required maxlength="50" autocomplete="address-level2" value="Schwerin" placeholder=""></div></div>
                         </div>
+                        <!-- Pflichtangabe der Open Database License fuer das
+                             Strassenverzeichnis (js/strassen-schwerin.js). Neues
+                             Fenster, damit der halb ausgefuellte Antrag bleibt. -->
+                        <p class="quellenhinweis">Straßenverzeichnis: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" aria-label="OpenStreetMap-Mitwirkende (öffnet in neuem Fenster)">OpenStreetMap-Mitwirkende</a></p>
                     </div>
 
                     <!-- Step 4: Profession & Functions -->
@@ -991,16 +1125,16 @@
                         <div aria-live="polite" aria-atomic="true" class="sr-only" id="step-5-announcement">Schritt 5 von 6: Vereinigungen</div>
                         <p class="step-intro">Wählen Sie die Vereinigungen, zu denen Sie Informationen erhalten möchten:</p>
                         <div class="checkbox-group">
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="JU" aria-label="Junge Union Deutschlands"> Junge Union Deutschlands (JU)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="FU" aria-label="Frauen Union der CDU Deutschlands"> Frauen Union der CDU Deutschlands (FU)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="CDA" aria-label="Christlich-Demokratische Arbeitnehmerschaft"> Christlich-Demokratische Arbeitnehmerschaft (CDA)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="KPV" aria-label="Kommunalpolitische Vereinigung"> Kommunalpolitische Vereinigung (KPV)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="MIT" aria-label="Mittelstands- und Wirtschaftsunion"> Mittelstands- und Wirtschaftsunion (MIT)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="OMV" aria-label="Ost- und Mitteldeutsche Vereinigung"> Ost- und Mitteldeutsche Vereinigung (OMV)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="SU" aria-label="Senioren-Union"> Senioren-Union (SU)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="EAK" aria-label="Evangelischer Arbeitskreis"> Evangelischer Arbeitskreis (EAK)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="RCDS" aria-label="Ring Christlich-Demokratischer Studenten"> Ring Christlich-Demokratischer Studenten (RCDS)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="organizations" value="LSU" aria-label="Lesben und Schwule in der Union"> Lesben und Schwule in der Union (LSU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="JU" aria-label="Junge Union Deutschlands"> Junge Union Deutschlands (JU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="FU" aria-label="Frauen Union der CDU Deutschlands"> Frauen Union der CDU Deutschlands (FU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="CDA" aria-label="Christlich-Demokratische Arbeitnehmerschaft"> Christlich-Demokratische Arbeitnehmerschaft (CDA)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="KPV" aria-label="Kommunalpolitische Vereinigung"> Kommunalpolitische Vereinigung (KPV)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="MIT" aria-label="Mittelstands- und Wirtschaftsunion"> Mittelstands- und Wirtschaftsunion (MIT)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="OMV" aria-label="Ost- und Mitteldeutsche Vereinigung"> Ost- und Mitteldeutsche Vereinigung (OMV)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="SU" aria-label="Senioren-Union"> Senioren-Union (SU)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="EAK" aria-label="Evangelischer Arbeitskreis"> Evangelischer Arbeitskreis (EAK)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="RCDS" aria-label="Ring Christlich-Demokratischer Studenten"> Ring Christlich-Demokratischer Studenten (RCDS)</label>
+                            <label class="checkbox-label"><input type="checkbox" name="organizations[]" value="LSU" aria-label="Lesben und Schwule in der Union"> Lesben und Schwule in der Union (LSU)</label>
                         </div>
                     </div>
 
@@ -1026,7 +1160,7 @@
                             <div class="form-group"><label for="startup-fee" class="form-label">Aufnahmespende (€) - optional</label><div class="form-field"><input type="number" id="startup-fee" name="startup-fee" class="form-input" min="0" step="0.01" placeholder=""></div></div>
                         </div>
                         <div class="form-row full">
-                            <div class="form-group"><label for="iban" class="form-label">IBAN <span class="required">*</span></label><div class="form-field"><input type="text" id="iban" name="iban" class="form-input" required maxlength="34" placeholder=""></div></div>
+                            <div class="form-group"><label for="iban" class="form-label">IBAN <span class="required">*</span></label><div class="form-field"><input type="text" id="iban" name="iban" class="form-input" required maxlength="42" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-describedby="iban-hint" placeholder=""></div><span class="form-hint" id="iban-hint" aria-live="polite">Bei deutschen IBANs tragen wir Geldinstitut und BIC selbst ein.</span></div>
                         </div>
                         <div class="form-row">
                             <div class="form-group"><label for="bank-name" class="form-label">Geldinstitut <span class="required">*</span></label><div class="form-field"><input type="text" id="bank-name" name="bank-name" class="form-input" required maxlength="100" placeholder=""></div></div>
@@ -1191,61 +1325,21 @@
 
     <!-- PDF-Erzeugung für die Antrags-Zusammenfassung -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- Versand der Bestätigungs-E-Mail (Double-Opt-in) ohne eigenes Backend -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <script>
         /* ==================================================================
            E-Mail-Versand
 
-           Beim Absenden gehen zwei Nachrichten raus:
-             1. an die Geschaeftsstelle - der vollstaendige Antrag
-             2. an die Antragstellerin oder den Antragsteller - eine Kopie
-                ohne Bankdaten und der Bestaetigungslink (Double-Opt-in)
-
-           Beides laeuft ueber EmailJS. Vorher ging die Kopie an die
-           Geschaeftsstelle ueber Formspree und nur die Bestaetigung ueber
-           EmailJS - zwei Dienste, zwei Zugaenge, zwei Ausfallquellen. Jetzt
-           einer.
-
-           EINZUTRAGEN SIND NUR DIE FUENF WERTE HIER DARUNTER.
-
-           Dazu im Dashboard auf emailjs.com anlegen:
-             - einen Service (das Postfach, ueber das gesendet wird)
-             - zwei Vorlagen
-
-           Die Vorlagen brauchen diese Platzhalter:
-
-             Vorlage "an die Geschaeftsstelle"
-               An:       {{empfaenger}}
-               Antwort:  {{antwort_an}}
-               Betreff:  Mitgliedsantrag: {{name}}
-               Inhalt:   {{antrag}}
-
-             Vorlage "an das neue Mitglied"
-               An:       {{empfaenger}}
-               Betreff:  Ihr Mitgliedsantrag bei der CDU Schwerin
-               Inhalt:   Hallo {{name}}, ... {{bestaetigung_link}} ... {{antrag}}
-
-           Solange die Platzhalter unten stehen, wird nichts gesendet und
-           das Formular sagt das auch - statt Erfolg zu melden und die
-           Daten zu verlieren.
-           ================================================================== */
-        const MAIL = {
-            schluessel:      'EMAILJS_PUBLIC_KEY_EINFUEGEN',
-            dienst:          'EMAILJS_SERVICE_ID_EINFUEGEN',
-            vorlageCdu:      'EMAILJS_TEMPLATE_CDU_EINFUEGEN',
-            vorlageMitglied: 'EMAILJS_TEMPLATE_MITGLIED_EINFUEGEN',
-            empfaengerCdu:   'kreisverband@cdu-schwerin.com'
-        };
-
-        const mailBereit = () =>
-            typeof emailjs !== 'undefined' &&
-            !Object.values(MAIL).some(wert => wert.endsWith('_EINFUEGEN'));
-
-        if (mailBereit()) {
-            emailjs.init({ publicKey: MAIL.schluessel });
-        }
+           Geht an api/membership.php - ein eigenes PHP-Skript im Webpaket,
+           das ueber SMTP aus dem Postfach des Kreisverbands verschickt
+           (siehe PLAN.md, Phase 1). Das Skript speichert den Antrag
+           zunaechst nur verschluesselt und schickt der antragstellenden
+           Person den Bestaetigungslink; die Geschaeftsstelle bekommt den
+           vollstaendigen Antrag mit Bankdaten erst, wenn dieser Link
+           angeklickt wurde (echter Double-Opt-in). Vorher lief der Versand
+           ueber EmailJS und damit ueber einen externen Anbieter, der auch
+           die IBAN sah. */
+        const ZIEL_ADRESSE = 'kreisverband@cdu-schwerin.com';
 
         // Erzeugt eine PDF-Zusammenfassung des Mitgliedsantrags und bietet sie zum Download an
         const buildMembershipPdf = (formData) => {
@@ -1316,7 +1410,7 @@
                 {
                     title: 'Vereinigungen',
                     rows: [
-                        ['Ausgewählt', formData.getAll('organizations').join(', ') || 'Keine']
+                        ['Ausgewählt', formData.getAll('organizations[]').join(', ') || 'Keine']
                     ]
                 },
                 {
@@ -1379,107 +1473,263 @@
             }
         };
 
-        // Erzeugt einen einfachen Bestätigungslink-Token (keine kryptografische Prüfung,
-        // dient nur dazu, den Link eindeutig und nicht erratbar zu machen)
-        const createConfirmationToken = (email) => {
-            const raw = `${email}|${Date.now()}|${Math.random().toString(36).slice(2)}`;
-            return typeof btoa === 'function' ? btoa(unescape(encodeURIComponent(raw))) : encodeURIComponent(raw);
+        /* ==================================================================
+           Feldpruefung
+
+           Dieselben Regeln prueft api/lib/Validation.php auf dem Server
+           noch einmal. Hier geht es um eine schnelle, verstaendliche
+           Rueckmeldung, nicht um Sicherheit - die Pruefung im Browser
+           laesst sich umgehen.
+           ================================================================== */
+        const SCHWERIN_PLZ = ['19053', '19055', '19057', '19059', '19061', '19063'];
+
+        /* IBAN-Laenge je Land im SEPA-Raum - nur dort ist eine Lastschrift
+           moeglich. Dieselbe Liste steht in api/lib/Validation.php. */
+        const IBAN_LAENGEN = {
+            AD: 24, AL: 28, AT: 20, BE: 16, BG: 22, CH: 21, CY: 28, CZ: 24, DE: 22,
+            DK: 18, EE: 20, ES: 24, FI: 18, FR: 27, GB: 22, GI: 23, GR: 27, HR: 21,
+            HU: 28, IE: 22, IS: 26, IT: 27, LI: 21, LT: 20, LU: 20, LV: 21, MC: 27,
+            MD: 24, ME: 22, MK: 19, MT: 31, NL: 18, NO: 15, PL: 28, PT: 25, RO: 24,
+            SE: 24, SI: 19, SK: 24, SM: 27, VA: 22
         };
 
-        /* Bankdaten gehen an die Geschaeftsstelle, aber nicht zurueck an den
-           Antragsteller: eine IBAN per Mail zu verschicken vergroessert die
-           Angriffsflaeche ohne Nutzen. Wer seine Angaben nachlesen will, hat
-           das PDF, das beim Absenden heruntergeladen wird. */
-        const BANKFELDER = ['iban', 'bank-name', 'bic', 'account-holder'];
+        const ibanKompakt = (wert) => wert.replace(/\s+/g, '').toUpperCase();
 
-        /* Die Beschriftungen stehen im Markup und werden von dort gelesen,
-           nicht hier ein zweites Mal gepflegt. Sonst laufen Formular und
-           E-Mail nach der ersten Textaenderung auseinander. */
-        const beschriftungFuer = (form, feld) => {
-            const zu = feld.id && form.querySelector(`label[for="${feld.id}"]`);
-            if (zu) return zu.textContent.replace('*', '').trim();
-            const legende = feld.closest('fieldset') && feld.closest('fieldset').querySelector('legend');
-            if (legende) return legende.textContent.replace('*', '').trim();
-            const huelle = feld.closest('.form-group');
-            const auf = huelle && huelle.querySelector('.checkbox-group-label, .radio-group-label');
-            return auf ? auf.textContent.replace('*', '').trim() : feld.name;
+        /* Pruefsumme nach ISO 13616 (Modulo 97), stueckweise gerechnet - die
+           Zahl hat bis zu 70 Stellen und passt in keine normale Zahl. */
+        const ibanPruefsummeStimmt = (iban) => {
+            const umgestellt = iban.slice(4) + iban.slice(0, 4);
+            let rest = 0;
+            for (const zeichen of umgestellt) {
+                const wert = /[A-Z]/.test(zeichen) ? String(zeichen.charCodeAt(0) - 55) : zeichen;
+                for (const ziffer of wert) rest = (rest * 10 + Number(ziffer)) % 97;
+            }
+            return rest === 1;
         };
 
-        /* Baut den Antrag als lesbaren Text, nach Schritten gegliedert. So
-           braucht die EmailJS-Vorlage nur einen einzigen Platzhalter
-           ({{antrag}}) statt siebenunddreissig. */
-        const antragAlsText = (form, { ohneBankdaten = false } = {}) => {
-            const teile = [];
+        /* Die Meldungen sagen, was genau nicht passt - "ungueltig" allein
+           hilft beim Suchen eines Tippfehlers nicht. */
+        const ibanFehler = (eingabe) => {
+            const iban = ibanKompakt(eingabe);
+            if (!/^[A-Z0-9]+$/.test(iban)) {
+                return 'Die IBAN enthält nur Buchstaben und Ziffern.';
+            }
+            if (!/^[A-Z]{2}[0-9]{2}/.test(iban)) {
+                return 'Die IBAN beginnt mit dem Ländercode und zwei Ziffern, zum Beispiel DE12.';
+            }
+            const laenge = IBAN_LAENGEN[iban.slice(0, 2)];
+            if (!laenge) {
+                return 'Bitte geben Sie eine IBAN aus dem SEPA-Raum an – nur dafür ist eine Lastschrift möglich.';
+            }
+            if (iban.length !== laenge) {
+                return `Eine IBAN mit ${iban.slice(0, 2)} am Anfang hat ${laenge} Zeichen, Ihre Eingabe hat ${iban.length}.`;
+            }
+            if (!ibanPruefsummeStimmt(iban)) {
+                return 'Die Prüfziffer der IBAN passt nicht – vermutlich ein Tippfehler oder Zahlendreher.';
+            }
+            return '';
+        };
 
-            form.querySelectorAll('.form-step').forEach(schritt => {
-                const ueberschrift = schritt.querySelector('h2');
-                const zeilen = [];
-                const erledigt = new Set();
+        const emailFehler = (feld) => {
+            const wert = feld.value.trim();
+            const at = wert.lastIndexOf('@');
+            if (feld.validity.typeMismatch || at < 1) {
+                return 'Bitte geben Sie eine E-Mail-Adresse mit @ ein, zum Beispiel name@beispiel.de.';
+            }
+            const lokal = wert.slice(0, at);
+            if (lokal.startsWith('.') || lokal.endsWith('.') || wert.includes('..')) {
+                return 'In der E-Mail-Adresse steht ein Punkt an falscher Stelle.';
+            }
+            if (!/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i.test(wert.slice(at + 1))) {
+                return 'Nach dem @ fehlt die Endung, zum Beispiel .de wie in name@beispiel.de.';
+            }
+            return '';
+        };
 
-                schritt.querySelectorAll('input[name], textarea[name], select[name]').forEach(feld => {
-                    if (ohneBankdaten && BANKFELDER.includes(feld.name)) return;
-                    if (erledigt.has(feld.name)) return;
+        const telefonFehler = (wert) => {
+            if (!/^\+?[0-9\s\/()\-]+$/.test(wert)) {
+                return 'Bitte nur Ziffern verwenden, dazu + am Anfang, Leerzeichen, /, - oder Klammern.';
+            }
+            const ziffern = wert.replace(/\D/g, '').length;
+            if (ziffern < 6) return 'Die Telefonnummer ist zu kurz. Bitte mit Vorwahl angeben.';
+            if (ziffern > 15) return 'Die Telefonnummer ist zu lang.';
+            return '';
+        };
 
-                    if (feld.type === 'radio' || feld.type === 'checkbox') {
-                        erledigt.add(feld.name);
-                        const gewaehlt = Array.from(
-                            schritt.querySelectorAll(`[name="${feld.name}"]:checked`)
-                        ).map(x => {
-                            const huelle = x.closest('label');
-                            return huelle ? huelle.textContent.trim() : x.value;
-                        });
-                        if (gewaehlt.length) {
-                            zeilen.push(`${beschriftungFuer(form, feld)}: ${gewaehlt.join(', ')}`);
-                        }
-                    } else if (feld.value.trim()) {
-                        /* <input type="date"> liefert 1981-04-12; in einer
-                           deutschen E-Mail liest sich das als Datum nicht. */
-                        const wert = feld.type === 'date'
-                            ? feld.value.split('-').reverse().join('.')
-                            : feld.value.trim();
-                        zeilen.push(`${beschriftungFuer(form, feld)}: ${wert}`);
+        const plzFehler = (wert) => {
+            if (!/^\d{5}$/.test(wert)) return 'Die Postleitzahl hat 5 Ziffern.';
+            if (!SCHWERIN_PLZ.includes(wert)) {
+                return 'Diese Postleitzahl liegt nicht in Schwerin. Online können wir nur Anträge mit '
+                     + 'Wohnsitz in Schwerin annehmen – für andere Orte ist der CDU-Kreisverband vor Ort zuständig.';
+            }
+            return '';
+        };
+
+        /* Zusatzregeln je Feldname, ueber das hinaus, was der Browser mit
+           required, min und maxlength ohnehin prueft. Sie greifen nur bei
+           ausgefuellten Feldern - ein leeres meldet schon das required. */
+        const ZUSATZREGELN = {
+            'email': (feld) => emailFehler(feld),
+            'phone': (feld) => telefonFehler(feld.value.trim()),
+            'house-number': (feld) => /^\d{1,4}\s?[a-z]?(\s?[-–\/]\s?\d{1,4}\s?[a-z]?)?$/i.test(feld.value.trim())
+                ? '' : 'Bitte geben Sie die Hausnummer an, zum Beispiel 12, 12a oder 12–14.',
+            'postal-code': (feld) => plzFehler(feld.value.trim()),
+            'city': (feld) => feld.value.trim().toLowerCase() === 'schwerin'
+                ? '' : 'Online können wir nur Anträge mit Wohnsitz in Schwerin annehmen. Bitte tragen Sie hier „Schwerin“ ein.',
+            'iban': (feld) => ibanFehler(feld.value)
+        };
+
+        /* Haeufige Anbieter fuer den Hinweis "Meinten Sie ...?". Nur ein
+           Hinweis, keine Sperre - wer wirklich eine aehnlich klingende
+           Adresse hat, kann trotzdem absenden. */
+        const HAEUFIGE_DOMAINS = [
+            'gmail.com', 'googlemail.com', 'web.de', 'gmx.de', 'gmx.net', 'gmx.at', 'gmx.ch',
+            't-online.de', 'yahoo.de', 'yahoo.com', 'outlook.de', 'outlook.com', 'hotmail.de',
+            'hotmail.com', 'live.de', 'icloud.com', 'me.com', 'freenet.de', 'posteo.de',
+            'mailbox.org', 'aol.com', 'arcor.de'
+        ];
+
+        /* Anzahl der Tippfehler zwischen zwei Woertern; zwei vertauschte
+           Nachbarn zaehlen als einer (gmial -> gmail = 1). */
+        const tippabstand = (a, b) => {
+            const d = Array.from({ length: a.length + 1 }, (_, i) =>
+                Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0)));
+            for (let i = 1; i <= a.length; i++) {
+                for (let j = 1; j <= b.length; j++) {
+                    d[i][j] = Math.min(
+                        d[i - 1][j] + 1,
+                        d[i][j - 1] + 1,
+                        d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+                    );
+                    if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+                        d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
                     }
-                });
+                }
+            }
+            return d[a.length][b.length];
+        };
 
-                if (zeilen.length) {
-                    teile.push(ueberschrift ? ueberschrift.textContent.trim() : '');
-                    teile.push('-'.repeat(46));
-                    teile.push(...zeilen, '');
+        const emailVorschlag = (email) => {
+            const at = email.lastIndexOf('@');
+            const domain = email.slice(at + 1).toLowerCase();
+            if (at < 1 || !domain || HAEUFIGE_DOMAINS.includes(domain)) return null;
+
+            let bester = null;
+            let besterAbstand = Infinity;
+            HAEUFIGE_DOMAINS.forEach(kandidat => {
+                const abstand = tippabstand(domain, kandidat);
+                if (abstand < besterAbstand) {
+                    bester = kandidat;
+                    besterAbstand = abstand;
                 }
             });
-
-            return teile.join('\n');
+            /* Kurze Domains nur bei einem einzigen Fehler: gmx.at und
+               gmx.de liegen zwei auseinander und sind beide echt. */
+            const grenze = domain.length <= 6 ? 1 : 2;
+            return besterAbstand <= grenze ? email.slice(0, at + 1) + bester : null;
         };
 
-        const bestaetigungsLink = (email) => {
-            const token = createConfirmationToken(email);
-            return `${new URL('bestaetigung/', window.location.href).href}`
-                 + `?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
+        /* Nachschlagedaten laden erst, wenn jemand das passende Feld
+           betritt - die Bankleitzahlen (rund 200 KB) beim IBAN-Feld, die
+           Strassen beim Strassenfeld. Wer vorher abbricht, laedt sie nie.
+           Als Skript statt per fetch, damit es auch beim lokalen Oeffnen
+           per Doppelklick funktioniert (wie die uebrigen Datendateien).
+           Liefert null, wenn die Datei fehlt - die Pruefungen, die darauf
+           bauen, fallen dann still weg. */
+        const ladevorgaenge = {};
+        const datenLaden = (datei, globalName) => {
+            if (window[globalName]) return Promise.resolve(window[globalName]);
+            if (!ladevorgaenge[datei]) {
+                ladevorgaenge[datei] = new Promise(resolve => {
+                    const skript = document.createElement('script');
+                    skript.src = `../js/${datei}`;
+                    skript.onload = () => resolve(window[globalName] || null);
+                    skript.onerror = () => {
+                        delete ladevorgaenge[datei];
+                        resolve(null);
+                    };
+                    document.head.append(skript);
+                });
+            }
+            return ladevorgaenge[datei];
+        };
+        const bankleitzahlen = () => datenLaden('bankleitzahlen.js', 'CDU_BANKLEITZAHLEN');
+
+        /* Vergleichsform eines Strassennamens: "Hagenower Str.",
+           "hagenower strasse" und "Hagenower Straße" werden gleich. Muss
+           genau schluessel() in tools/strassen-laden.py entsprechen. */
+        const strassenSchluessel = (name) => name.toLowerCase()
+            .replace(/ß/g, 'ss').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue')
+            .replace(/str\.?(?=\s|$)/g, 'strasse')
+            .replace(/[^a-z0-9]/g, '');
+
+        /* Schluessel -> [Name, Postleitzahlen], einmal aus
+           js/strassen-schwerin.js aufgebaut. */
+        let strassenIndex = null;
+        const strassen = async () => {
+            if (strassenIndex) return strassenIndex;
+            const daten = await datenLaden('strassen-schwerin.js', 'CDU_STRASSEN');
+            if (!daten) return null;
+            strassenIndex = new Map(Object.entries(daten).map(([name, plz]) => [strassenSchluessel(name), [name, plz]]));
+            return strassenIndex;
         };
 
-        /* Beide Nachrichten. Sie laufen nebeneinander; schlaegt eine fehl,
-           schlaegt das Absenden fehl - sonst meldet die Seite Erfolg,
-           waehrend die Geschaeftsstelle nichts bekommen hat. */
-        const sendeAntrag = (form) => {
-            const email = form.querySelector('[name="email"]').value.trim();
-            const vorname = form.querySelector('[name="first-name"]').value.trim();
-            const name = `${vorname} ${form.querySelector('[name="last-name"]').value.trim()}`.trim();
+        const plzListe = (plz) => plz.length === 1 ? plz[0] : `${plz.slice(0, -1).join(', ')} oder ${plz[plz.length - 1]}`;
 
-            return Promise.all([
-                emailjs.send(MAIL.dienst, MAIL.vorlageCdu, {
-                    empfaenger: MAIL.empfaengerCdu,
-                    antwort_an: email,
-                    name: name,
-                    email: email,
-                    antrag: antragAlsText(form)
-                }),
-                emailjs.send(MAIL.dienst, MAIL.vorlageMitglied, {
-                    empfaenger: email,
-                    name: vorname,
-                    bestaetigung_link: bestaetigungsLink(email),
-                    antrag: antragAlsText(form, { ohneBankdaten: true })
-                })
-            ]);
+        /* Liefert fuer eine Strasseneingabe, was zu sagen ist: nichts, einen
+           Hinweis oder einen Hinweis mit Vorschlag. Nie einen Fehler - das
+           Verzeichnis kann Luecken haben, und niemand soll deshalb seinen
+           Antrag nicht abschicken koennen. */
+        const strassenBefund = (eingabe, plz, index) => {
+            const wert = eingabe.trim();
+            if (!wert || !index) return null;
+
+            /* Autofill traegt oft "Wismarsche Straße 173" in das Feld ein -
+               die Nummer gehoert ins Feld daneben. */
+            const mitNummer = wert.match(/^(.*\D)\s+(\d{1,4}\s?[a-z]?(?:\s?[-–\/]\s?\d{1,4}\s?[a-z]?)?)$/i);
+            if (mitNummer && index.has(strassenSchluessel(mitNummer[1]))) {
+                return {
+                    text: `Die Hausnummer ${mitNummer[2]} gehört ins Feld „Hausnummer“.`,
+                    knopf: 'Hausnummer verschieben',
+                    strasse: mitNummer[1].trim(),
+                    hausnummer: mitNummer[2]
+                };
+            }
+
+            const schluessel = strassenSchluessel(wert);
+            const treffer = index.get(schluessel);
+            if (treffer) {
+                const [name, postleitzahlen] = treffer;
+                if (SCHWERIN_PLZ.includes(plz) && postleitzahlen.length && !postleitzahlen.includes(plz)) {
+                    return { text: `Die ${name} liegt laut Straßenverzeichnis in ${plzListe(postleitzahlen)}. Bitte prüfen Sie Straße und PLZ.` };
+                }
+                return null;
+            }
+
+            /* Nicht gefunden: erst ein eindeutiger Anfang ("Wismarsche"),
+               dann die naechste aehnliche Schreibweise. */
+            const kandidaten = Array.from(index.keys());
+            let vorschlag = null;
+            const anfang = schluessel.length >= 4 ? kandidaten.filter(k => k.startsWith(schluessel)) : [];
+            if (anfang.length === 1) {
+                vorschlag = anfang[0];
+            } else {
+                let bester = Infinity;
+                kandidaten.forEach(k => {
+                    const abstand = tippabstand(schluessel, k);
+                    if (abstand < bester) {
+                        bester = abstand;
+                        vorschlag = k;
+                    }
+                });
+                if (bester > (schluessel.length <= 8 ? 1 : 2)) vorschlag = null;
+            }
+
+            if (vorschlag) {
+                const name = index.get(vorschlag)[0];
+                return { text: 'Diese Straße finden wir in Schwerin nicht. Meinten Sie', knopf: name, strasse: name, frage: true };
+            }
+            return { text: 'Diese Straße finden wir in unserem Schweriner Straßenverzeichnis nicht. Bitte prüfen Sie die Schreibweise – weitermachen können Sie trotzdem.' };
         };
 
         // Multi-Step Membership Form Wizard
@@ -1490,6 +1740,20 @@
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
             const submitBtn = document.getElementById('membership-submit-btn');
+            const errorBox = document.getElementById('membership-error');
+            const successBox = document.getElementById('membership-success');
+
+            const emailFeld = document.getElementById('email');
+            const vorschlagZeile = document.getElementById('email-vorschlag');
+            const ibanFeld = document.getElementById('iban');
+            const ibanHinweis = document.getElementById('iban-hint');
+            const bankFeld = document.getElementById('bank-name');
+            const bicFeld = document.getElementById('bic');
+            const IBAN_HINWEIS = ibanHinweis ? ibanHinweis.textContent : '';
+            const strasseFeld = document.getElementById('street');
+            const strasseHinweis = document.getElementById('street-hinweis');
+            const hausnummerFeld = document.getElementById('house-number');
+            const plzFeld = document.getElementById('postal-code');
 
             const init = () => {
                 if (!form) return;
@@ -1498,16 +1762,440 @@
                 nextBtn.addEventListener('click', goToNextStep);
                 form.addEventListener('submit', handleSubmit);
 
+                /* Geprueft wird beim Verlassen eines Feldes - aber nur, wenn
+                   schon etwas drinsteht: wer mit Tab durch leere Felder
+                   springt, soll nicht angemeckert werden; leere Pflichtfelder
+                   meldet "Weiter". Ein schon gemeldeter Fehler verschwindet
+                   dagegen sofort beim Tippen, sobald die Eingabe stimmt. */
+                form.addEventListener('focusout', ({ target }) => {
+                    if (!istPruefbar(target)) return;
+                    if (target.value.trim() !== '' || target.hasAttribute('aria-invalid')) {
+                        pruefenUndAnzeigen(target);
+                    }
+                    if (target === emailFeld) vorschlagAktualisieren();
+                    if (target === strasseFeld || (target === plzFeld && strasseFeld.value.trim())) {
+                        strasseHinweisAktualisieren();
+                    }
+                });
+                form.addEventListener('input', ({ target }) => {
+                    if (istPruefbar(target) && target.hasAttribute('aria-invalid')) {
+                        pruefenUndAnzeigen(target);
+                    }
+                    if (target === emailFeld) vorschlagAktualisieren(null);
+                    if (target === strasseFeld) strasseHinweisLeeren();
+                    if (target === ibanFeld) bankErgaenzen();
+                    // Eigene Eingaben ueberschreibt die IBAN-Hilfe nicht mehr.
+                    if (target === bankFeld || target === bicFeld) delete target.dataset.automatisch;
+                });
+                form.addEventListener('change', ({ target }) => {
+                    if (target.type === 'radio' && target.hasAttribute('aria-invalid')) {
+                        pruefenUndAnzeigen(target);
+                    }
+                });
+                ibanFeld.addEventListener('focus', bankleitzahlen, { once: true });
+                strasseFeld.addEventListener('focus', strassenlisteFuellen, { once: true });
+
                 updateDisplay();
             };
 
-            const goToNextStep = () => {
-                if (validateCurrentStep()) {
-                    if (currentStep < totalSteps) {
-                        currentStep++;
-                        updateDisplay();
-                        scrollToForm();
+            /* ---------- Einzelne Felder ---------- */
+
+            const istPruefbar = (el) =>
+                el.matches && el.matches('.form-step input[name]:not([type="radio"]):not([type="checkbox"]), .form-step textarea[name]');
+
+            /* Alle zu pruefenden Felder eines Schritts; eine Radiogruppe
+               zaehlt einmal, vertreten durch ihren ersten Knopf. */
+            const felderIn = (schritt) => {
+                const gesehen = new Set();
+                return Array.from(schritt.querySelectorAll('input[name], textarea[name]')).filter(feld => {
+                    if (feld.type === 'checkbox') return false;
+                    if (feld.type === 'radio') {
+                        if (gesehen.has(feld.name)) return false;
+                        gesehen.add(feld.name);
                     }
+                    return true;
+                });
+            };
+
+            const gruppeVon = (feld) => feld.type === 'radio'
+                ? Array.from(form.querySelectorAll(`input[type="radio"][name="${feld.name}"]`))
+                : [feld];
+
+            const schrittVon = (feld) => Number(feld.closest('.form-step').dataset.step);
+
+            const bezeichnungFuer = (feld) => {
+                const beschriftung = (feld.id && form.querySelector(`label[for="${feld.id}"]`))
+                    || (feld.closest('fieldset') && feld.closest('fieldset').querySelector('legend'));
+                return beschriftung
+                    ? beschriftung.textContent.replace('*', '').replace(/\s+/g, ' ').trim()
+                    : 'Dieses Feld';
+            };
+
+            /* Setzt die eigene Meldung ueber setCustomValidity - damit
+               bleibt checkValidity() die eine Stelle, die ueber gueltig
+               oder nicht entscheidet, fuer Browser- und eigene Regeln. */
+            const pruefeFeld = (feld) => {
+                feld.setCustomValidity('');
+                if (feld.type === 'radio' || feld.validity.badInput) return feld.checkValidity();
+
+                const wert = feld.value.trim();
+                if (feld.required && wert === '') {
+                    // Auch "   " gilt als leer - required allein sieht das anders.
+                    feld.setCustomValidity(`Bitte füllen Sie das Feld „${bezeichnungFuer(feld)}“ aus.`);
+                } else if (wert !== '' && ZUSATZREGELN[feld.name]) {
+                    feld.setCustomValidity(ZUSATZREGELN[feld.name](feld));
+                }
+                return feld.checkValidity();
+            };
+
+            const meldungFuer = (feld) => {
+                const v = feld.validity;
+                if (v.badInput) {
+                    return feld.type === 'date'
+                        ? 'Bitte geben Sie ein vollständiges Datum an.'
+                        : 'Bitte geben Sie eine Zahl an.';
+                }
+                if (v.customError) return feld.validationMessage;
+                if (v.valueMissing) {
+                    return feld.type === 'radio'
+                        ? `Bitte wählen Sie bei „${bezeichnungFuer(feld)}“ eine Angabe.`
+                        : `Bitte füllen Sie das Feld „${bezeichnungFuer(feld)}“ aus.`;
+                }
+                if (v.rangeUnderflow) {
+                    return feld.name === 'monthly-fee'
+                        ? 'Der Monatsbeitrag beträgt mindestens 8 Euro.'
+                        : 'Der Betrag darf nicht negativ sein.';
+                }
+                if (v.stepMismatch) return 'Bitte geben Sie höchstens zwei Nachkommastellen an.';
+                if (v.tooLong) return `Bitte kürzen Sie die Eingabe auf höchstens ${feld.maxLength} Zeichen.`;
+                return 'Bitte prüfen Sie diese Eingabe.';
+            };
+
+            const fehlerId = (feld) => `${feld.type === 'radio' ? feld.name : feld.id}-error`;
+
+            /* Der Meldungsabsatz entsteht erst beim ersten Fehler, direkt
+               unter dem Feld - so braucht das Markup keine 20 leeren
+               Absaetze auf Vorrat. */
+            const fehlerKasten = (feld) => {
+                let kasten = document.getElementById(fehlerId(feld));
+                if (!kasten) {
+                    kasten = document.createElement('p');
+                    kasten.className = 'form-error';
+                    kasten.id = fehlerId(feld);
+                    kasten.hidden = true;
+                    feld.closest('.form-group').append(kasten);
+                }
+                return kasten;
+            };
+
+            /* aria-describedby traegt teils schon einen Hinweis und soll ihn
+               behalten - die Fehler-id kommt nur dazu und wieder weg. */
+            const beschreibungSetzen = (feld, id, dazu) => {
+                const teile = (feld.getAttribute('aria-describedby') || '')
+                    .split(/\s+/).filter(Boolean).filter(t => t !== id);
+                if (dazu) teile.push(id);
+                if (teile.length) feld.setAttribute('aria-describedby', teile.join(' '));
+                else feld.removeAttribute('aria-describedby');
+            };
+
+            const fehlerZeigen = (feld) => {
+                const kasten = fehlerKasten(feld);
+                kasten.textContent = meldungFuer(feld);
+                kasten.hidden = false;
+                gruppeVon(feld).forEach(f => {
+                    f.setAttribute('aria-invalid', 'true');
+                    beschreibungSetzen(f, kasten.id, true);
+                    if (f.type !== 'radio') f.classList.add('is-invalid');
+                });
+                const gruppe = feld.closest('fieldset');
+                if (gruppe) gruppe.classList.add('is-invalid');
+            };
+
+            const fehlerLoeschen = (feld) => {
+                const kasten = document.getElementById(fehlerId(feld));
+                if (kasten) {
+                    kasten.hidden = true;
+                    kasten.textContent = '';
+                }
+                gruppeVon(feld).forEach(f => {
+                    f.removeAttribute('aria-invalid');
+                    f.classList.remove('is-invalid');
+                    if (kasten) beschreibungSetzen(f, kasten.id, false);
+                });
+                const gruppe = feld.closest('fieldset');
+                if (gruppe) gruppe.classList.remove('is-invalid');
+            };
+
+            const pruefenUndAnzeigen = (feld) => {
+                const ok = pruefeFeld(feld);
+                if (ok) fehlerLoeschen(feld);
+                else fehlerZeigen(feld);
+                zusammenfassungAktualisieren();
+                return ok;
+            };
+
+            /* ---------- Zusammenfassung oben ---------- */
+
+            const gemeldeteFelder = () => {
+                const gesehen = new Set();
+                return Array.from(form.querySelectorAll('.form-step [aria-invalid="true"]')).filter(feld => {
+                    const schluessel = fehlerId(feld);
+                    if (gesehen.has(schluessel)) return false;
+                    gesehen.add(schluessel);
+                    return true;
+                });
+            };
+
+            const gehZuFeld = (feld) => {
+                const schritt = schrittVon(feld);
+                if (schritt !== currentStep) {
+                    currentStep = schritt;
+                    updateDisplay();
+                }
+                const ziel = feld.type === 'radio'
+                    ? (gruppeVon(feld).find(f => f.checked) || feld)
+                    : feld;
+                ziel.focus();
+            };
+
+            const zusammenfassungZeigen = (felder) => {
+                errorBox.querySelector('#membership-error-title').textContent = 'Bitte prüfen Sie Ihre Eingaben';
+                errorBox.querySelector('#membership-error-text').textContent = felder.length === 1
+                    ? 'Eine Eingabe fehlt oder stimmt noch nicht:'
+                    : `${felder.length} Eingaben fehlen oder stimmen noch nicht:`;
+
+                const liste = errorBox.querySelector('#membership-error-list');
+                liste.replaceChildren(...felder.map(feld => {
+                    const eintrag = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = `#${feld.id || fehlerId(feld)}`;
+                    link.textContent = document.getElementById(fehlerId(feld)).textContent;
+                    /* Der Sprung soll den Fokus mitnehmen und notfalls den
+                       Schritt wechseln - ein Anker allein kaeme an ein Feld
+                       in einem ausgeblendeten Schritt gar nicht heran. */
+                    link.addEventListener('click', ev => {
+                        ev.preventDefault();
+                        gehZuFeld(feld);
+                    });
+                    eintrag.append(link);
+                    return eintrag;
+                }));
+                liste.hidden = false;
+
+                errorBox.dataset.modus = 'felder';
+                errorBox.dataset.felder = felder.map(fehlerId).join(' ');
+                errorBox.style.display = 'flex';
+                successBox.style.display = 'none';
+            };
+
+            const fehlerkastenAusblenden = () => {
+                errorBox.style.display = 'none';
+                errorBox.dataset.modus = '';
+                errorBox.dataset.felder = '';
+            };
+
+            /* Haelt die Liste mit den Feldern in Einklang: ein korrigiertes
+               Feld faellt heraus, mit dem letzten verschwindet der Kasten.
+               Neu aufgebaut wird nur, wenn sich die Menge der Felder
+               aendert - role="alert" wuerde sonst jeden Tastendruck erneut
+               vorlesen. */
+            const zusammenfassungAktualisieren = () => {
+                if (errorBox.dataset.modus !== 'felder') return;
+                const felder = gemeldeteFelder();
+                if (!felder.length) {
+                    fehlerkastenAusblenden();
+                } else if (felder.map(fehlerId).join(' ') !== errorBox.dataset.felder) {
+                    zusammenfassungZeigen(felder);
+                }
+            };
+
+            /* Fuehrt zum Schritt des ersten beanstandeten Feldes und setzt
+               den Fokus auf die Zusammenfassung, damit die Meldung per
+               Tastatur und Screenreader ankommt. */
+            const fehlerMelden = () => {
+                const felder = gemeldeteFelder();
+                if (!felder.length) return;
+                const schritt = schrittVon(felder[0]);
+                if (schritt !== currentStep) {
+                    currentStep = schritt;
+                    updateDisplay();
+                }
+                zusammenfassungZeigen(felder);
+                scrollenZu(errorBox, 'nearest');
+                errorBox.focus({ preventScroll: true });
+            };
+
+            /** Prueft die genannten Schritte, zeigt die Meldungen an den
+                Feldern und liefert, ob alles stimmt. */
+            const schritteGueltig = (schritte) => {
+                let alleOk = true;
+                schritte.forEach(nummer => {
+                    felderIn(form.querySelector(`.form-step[data-step="${nummer}"]`)).forEach(feld => {
+                        if (pruefeFeld(feld)) {
+                            fehlerLoeschen(feld);
+                        } else {
+                            fehlerZeigen(feld);
+                            alleOk = false;
+                        }
+                    });
+                });
+                return alleOk;
+            };
+
+            /* Der Server prueft dieselben Regeln und nennt je Feld eine
+               Meldung - greift, wenn die Pruefung hier umgangen wurde oder
+               die beiden Seiten einmal auseinanderlaufen. */
+            const serverFehlerZeigen = (fehler) => {
+                Object.entries(fehler).forEach(([name, meldung]) => {
+                    const feld = form.querySelector(`.form-step [name="${CSS.escape(name)}"]`);
+                    if (!feld) return;
+                    feld.setCustomValidity(meldung);
+                    fehlerZeigen(feld);
+                });
+                if (gemeldeteFelder().length) fehlerMelden();
+                else showError('Bitte prüfen Sie Ihre Eingaben.');
+            };
+
+            /* ---------- E-Mail: "Meinten Sie ...?" ---------- */
+
+            /* Ohne Argument neu berechnen, mit null leeren. Unveraenderte
+               Vorschlaege werden nicht neu gezeichnet - sonst verschwaende
+               der Knopf zwischen Maustaste runter und hoch, und der Klick
+               ginge ins Leere. */
+            const vorschlagAktualisieren = (vorgabe) => {
+                const wert = emailFeld.value.trim();
+                const vorschlag = vorgabe === null
+                    ? null
+                    : (wert && !emailFeld.hasAttribute('aria-invalid') ? emailVorschlag(wert) : null);
+                if ((vorschlag || '') === (vorschlagZeile.dataset.wert || '')) return;
+
+                vorschlagZeile.dataset.wert = vorschlag || '';
+                vorschlagZeile.replaceChildren();
+                if (!vorschlag) return;
+
+                const knopf = document.createElement('button');
+                knopf.type = 'button';
+                knopf.className = 'vorschlag-btn';
+                knopf.textContent = vorschlag;
+                knopf.addEventListener('click', () => {
+                    emailFeld.value = vorschlag;
+                    vorschlagAktualisieren(null);
+                    pruefenUndAnzeigen(emailFeld);
+                    emailFeld.focus();
+                });
+                vorschlagZeile.append('Meinten Sie ', knopf, '?');
+            };
+
+            /* ---------- Strasse: Verzeichnis und Abgleich mit der PLZ ---------- */
+
+            /* Die Vorschlagsliste beim Tippen kommt vom Browser selbst
+               (datalist) - sie ist ohne eigenes Zutun per Tastatur und
+               Screenreader bedienbar, was ein nachgebautes Aufklappmenue
+               erst muehsam lernen muesste. */
+            const strassenlisteFuellen = async () => {
+                const index = await strassen();
+                const liste = document.getElementById('strassen-liste');
+                if (!index || liste.options.length) return;
+                liste.append(...Array.from(index.values(), ([name]) => new Option(name)));
+            };
+
+            const strasseHinweisLeeren = () => {
+                strasseHinweis.dataset.wert = '';
+                strasseHinweis.replaceChildren();
+            };
+
+            /* Wie beim E-Mail-Vorschlag: ein unveraenderter Hinweis wird
+               nicht neu gezeichnet, sonst ginge der Klick auf den Knopf
+               ins Leere. */
+            const strasseHinweisAktualisieren = async () => {
+                const eingabe = strasseFeld.value;
+                const befund = strassenBefund(eingabe, plzFeld.value.trim(), await strassen());
+                // Waehrend des Ladens weitergetippt? Dann gilt der neue Stand.
+                if (strasseFeld.value !== eingabe) return;
+
+                const kennung = befund ? befund.text + (befund.knopf || '') : '';
+                if (kennung === (strasseHinweis.dataset.wert || '')) return;
+                strasseHinweisLeeren();
+                strasseHinweis.dataset.wert = kennung;
+                if (!befund) return;
+
+                strasseHinweis.append(befund.text);
+                if (!befund.knopf) return;
+
+                const knopf = document.createElement('button');
+                knopf.type = 'button';
+                knopf.className = 'vorschlag-btn';
+                knopf.textContent = befund.knopf;
+                knopf.addEventListener('click', () => {
+                    strasseFeld.value = befund.strasse;
+                    if (befund.hausnummer) {
+                        hausnummerFeld.value = befund.hausnummer;
+                        if (hausnummerFeld.hasAttribute('aria-invalid')) pruefenUndAnzeigen(hausnummerFeld);
+                    }
+                    if (strasseFeld.hasAttribute('aria-invalid')) pruefenUndAnzeigen(strasseFeld);
+                    strasseHinweisAktualisieren();
+                    strasseFeld.focus();
+                });
+                strasseHinweis.append(' ', knopf);
+                if (befund.frage) strasseHinweis.append('?');
+            };
+
+            /* ---------- IBAN: Geldinstitut und BIC ergaenzen ---------- */
+
+            const hinweisSetzen = (text) => {
+                // Nur bei Aenderung - der Hinweis ist aria-live.
+                if (ibanHinweis.textContent !== text) ibanHinweis.textContent = text;
+            };
+
+            /* Traegt nur in leere oder selbst befuellte Felder ein - was
+               jemand von Hand geschrieben hat, bleibt stehen. */
+            const automatischSetzen = (feld, wert) => {
+                if (!wert) return false;
+                if (feld.value.trim() !== '' && feld.dataset.automatisch !== 'ja') return false;
+                feld.value = wert;
+                feld.dataset.automatisch = 'ja';
+                if (feld.hasAttribute('aria-invalid')) pruefenUndAnzeigen(feld);
+                return true;
+            };
+
+            const bankErgaenzen = async () => {
+                const iban = ibanKompakt(ibanFeld.value);
+                if (!iban.startsWith('DE') || ibanFehler(iban) !== '') {
+                    hinweisSetzen(IBAN_HINWEIS);
+                    return;
+                }
+                const liste = await bankleitzahlen();
+                // Waehrend des Ladens weitergetippt? Dann gilt der neue Stand.
+                if (ibanKompakt(ibanFeld.value) !== iban) return;
+
+                const eintrag = liste && liste[iban.slice(4, 12)];
+                if (!eintrag) {
+                    hinweisSetzen(liste
+                        ? 'Die Bankleitzahl dieser IBAN ist uns nicht bekannt. Bitte tragen Sie Geldinstitut und BIC selbst ein.'
+                        : IBAN_HINWEIS);
+                    return;
+                }
+                const eingetragen = [
+                    automatischSetzen(bankFeld, eintrag[0]) && 'Geldinstitut',
+                    automatischSetzen(bicFeld, eintrag[1]) && 'BIC'
+                ].filter(Boolean);
+                hinweisSetzen(`Erkannt: ${eintrag[0]}.`
+                    + (eingetragen.length === 2 ? ' Geldinstitut und BIC sind eingetragen.'
+                        : eingetragen.length === 1 ? ` ${eingetragen[0]} ist eingetragen.` : ''));
+            };
+
+            /* ---------- Schritte ---------- */
+
+            const goToNextStep = () => {
+                if (!schritteGueltig([currentStep])) {
+                    fehlerMelden();
+                    return;
+                }
+                zusammenfassungAktualisieren();
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateDisplay();
+                    scrollToForm();
                 }
             };
 
@@ -1517,34 +2205,6 @@
                     updateDisplay();
                     scrollToForm();
                 }
-            };
-
-            const validateCurrentStep = () => {
-                const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
-                if (!currentStepElement) return true;
-
-                const requiredInputs = currentStepElement.querySelectorAll('input[required], textarea[required]');
-                for (let input of requiredInputs) {
-                    if (input.type === 'radio' || input.type === 'checkbox') {
-                        const groupName = input.name;
-                        const group = document.querySelectorAll(`input[name="${groupName}"]`);
-                        let isChecked = false;
-                        for (let item of group) {
-                            if (item.checked) {
-                                isChecked = true;
-                                break;
-                            }
-                        }
-                        if (!isChecked) {
-                            showError(`Bitte füllen Sie alle erforderlichen Felder in Schritt ${currentStep} aus.`);
-                            return false;
-                        }
-                    } else if (!input.value) {
-                        showError(`Bitte füllen Sie alle erforderlichen Felder in Schritt ${currentStep} aus.`);
-                        return false;
-                    }
-                }
-                return true;
             };
 
             const updateDisplay = () => {
@@ -1564,6 +2224,11 @@
                 prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
                 nextBtn.style.display = currentStep < totalSteps ? 'block' : 'none';
                 submitBtn.style.display = currentStep === totalSteps ? 'flex' : 'none';
+
+                /* Eine Versandmeldung gehoert zum Absenden, nicht zum
+                   naechsten Schritt; eine Feldliste bleibt, solange noch
+                   Felder offen sind. */
+                if (errorBox.dataset.modus === 'text') fehlerkastenAusblenden();
             };
 
             const updateAriaAnnouncement = () => {
@@ -1598,25 +2263,27 @@
                 document.getElementById('progress-fill').style.width = progress + '%';
             };
 
+            /* Der Seitenkopf klebt oben (position: sticky) und wuerde sonst
+               genau das verdecken, wohin gescrollt wird. Gemessen statt
+               fest eingetragen: seine Hoehe haengt von der Breite ab. */
+            const scrollenZu = (el, block) => {
+                const kopf = document.querySelector('.site-header');
+                el.style.scrollMarginTop = `${(kopf ? kopf.offsetHeight : 0) + 16}px`;
+                el.scrollIntoView({ behavior: 'smooth', block });
+            };
+
             const scrollToForm = () => {
-                document.querySelector('.membership-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                scrollenZu(document.querySelector('.membership-form-section'), 'start');
             };
 
             const handleSubmit = async (e) => {
                 e.preventDefault();
 
-                if (!validateCurrentStep()) return;
-
-                /* Ohne Zugangsdaten wird nichts gesendet - und das steht dann
-                   auch da. Vorher lief der Versand in einen Platzhalter und
-                   der Antrag war weg. Der Postweg steht unter dem Formular. */
-                if (!mailBereit()) {
-                    showError(
-                        'Der Versand ist auf dieser Seite noch nicht eingerichtet, '
-                        + 'Ihr Antrag wurde nicht übermittelt. Bitte laden Sie ihn als '
-                        + 'PDF herunter und senden Sie ihn per E-Mail an '
-                        + MAIL.empfaengerCdu + ' oder per Post an die Geschäftsstelle.'
-                    );
+                /* Alle Schritte, nicht nur der letzte: wer zurueckgeblaettert
+                   und dort etwas geaendert hat, ist ueber "Weiter" nicht
+                   zwingend noch einmal geprueft worden. */
+                if (!schritteGueltig([1, 2, 3, 4, 5, 6])) {
+                    fehlerMelden();
                     return;
                 }
 
@@ -1627,17 +2294,35 @@
                 downloadMembershipPdf(new FormData(form));
 
                 try {
-                    await sendeAntrag(form);
+                    const antwort = await fetch('../api/membership.php', {
+                        method: 'POST',
+                        body: new FormData(form)
+                    });
+                    const ergebnis = await antwort.json().catch(() => null);
+
+                    if (ergebnis && ergebnis.errors) {
+                        serverFehlerZeigen(ergebnis.errors);
+                        return;
+                    }
+                    if (!antwort.ok || !ergebnis || !ergebnis.ok) {
+                        throw new Error(ergebnis && ergebnis.error);
+                    }
+
                     showSuccess();
                     form.reset();
+                    gemeldeteFelder().forEach(fehlerLoeschen);
+                    vorschlagAktualisieren(null);
+                    strasseHinweisLeeren();
+                    hinweisSetzen(IBAN_HINWEIS);
                     currentStep = 1;
                     updateDisplay();
                 } catch (error) {
                     console.error('Versand fehlgeschlagen:', error);
                     showError(
-                        'Ihr Antrag konnte nicht übermittelt werden. Bitte versuchen '
-                        + 'Sie es später erneut oder senden Sie das heruntergeladene '
-                        + 'PDF an ' + MAIL.empfaengerCdu + '.'
+                        (error && error.message)
+                            || ('Ihr Antrag konnte nicht übermittelt werden. Bitte versuchen '
+                                + 'Sie es später erneut oder senden Sie das heruntergeladene '
+                                + 'PDF an ' + ZIEL_ADRESSE + '.')
                     );
                 } finally {
                     hideLoading();
@@ -1657,17 +2342,23 @@
             };
 
             const showSuccess = () => {
-                document.getElementById('membership-success').style.display = 'flex';
-                document.getElementById('membership-error').style.display = 'none';
-                document.getElementById('membership-success').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                fehlerkastenAusblenden();
+                successBox.style.display = 'flex';
+                scrollenZu(successBox, 'nearest');
             };
 
+            /* Fuer Fehler beim Versand selbst (Netz, Server) - die
+               Feldfehler laufen ueber zusammenfassungZeigen. */
             const showError = (message) => {
-                const errorMsg = document.getElementById('membership-error');
-                errorMsg.querySelector('#membership-error-text').textContent = message;
-                errorMsg.style.display = 'flex';
-                document.getElementById('membership-success').style.display = 'none';
-                errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                errorBox.querySelector('#membership-error-title').textContent = 'Fehler beim Absenden';
+                errorBox.querySelector('#membership-error-text').textContent = message;
+                errorBox.querySelector('#membership-error-list').hidden = true;
+                errorBox.dataset.modus = 'text';
+                errorBox.dataset.felder = '';
+                errorBox.style.display = 'flex';
+                successBox.style.display = 'none';
+                scrollenZu(errorBox, 'nearest');
+                errorBox.focus({ preventScroll: true });
             };
 
             return { init };

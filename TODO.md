@@ -20,12 +20,32 @@ Begründung und Einzelheiten in `PLAN.md`, Phase 1.
       SFTP und Subdomains.
 - [ ] **[KV]** Beim Schatzmeister oder der Bank klären, ob ein online
       bestätigtes SEPA-Mandat ohne Unterschrift reicht.
-- [ ] **[Tech]** PHP-Skript für Mitgliedsantrag und Kontaktformular: Versand
+- [x] **[Tech]** PHP-Skript für Mitgliedsantrag und Kontaktformular: Versand
       über SMTP, echter Double-Opt-in, Anträge bis zur Bestätigung
       verschlüsselt gespeichert und nach 7 Tagen gelöscht, Honeypot und
-      Ratenlimit, keine Bankdaten in Logs.
-- [ ] **[Tech]** EmailJS aus `mitglied-werden/index.html` und
-      `kontakt/index.html` entfernen.
+      Ratenlimit, keine Bankdaten in Logs. Liegt jetzt unter `api/` (siehe
+      `api/config.example.php` für die Einrichtung); lokal mit einem
+      Mitschnitt-SMTP-Server durchgetestet, aber noch nicht gegen einen
+      echten Mailserver.
+- [x] **[Tech]** EmailJS aus `mitglied-werden/index.html` und
+      `kontakt/index.html` entfernen. Beide Formulare senden jetzt per
+      `fetch()` an `api/contact.php` beziehungsweise `api/membership.php`.
+- [x] **[Tech]** Feldprüfung im Mitgliedsantrag: Meldung direkt am Feld,
+      E-Mail mit Tippfehler-Hinweis, Telefonnummer, Hausnummer, nur
+      Schweriner PLZ (19053–19063), IBAN mit Prüfziffer; Geldinstitut und
+      BIC werden aus deutschen IBANs ergänzt. Derselbe Regelsatz im
+      Browser und in `api/lib/Validation.php`.
+- [ ] **[Tech]** Bankleitzahlen jedes Quartal erneuern, nächster Wechsel am
+      7. Dezember 2026: ZIP unter „Bankleitzahlendateien (CSV)“ auf
+      bundesbank.de laden, nach `inhalte/bankleitzahlen/` legen, Build
+      laufen lassen.
+- [x] **[Tech]** Adressprüfung im Mitgliedsantrag: Schweriner Straßen als
+      Vorschlagsliste beim Tippen, Abgleich von Straße und PLZ, Tippfehler-
+      Vorschlag und Erkennen einer Hausnummer im Straßenfeld. Nur Hinweise,
+      kein Fehler: eine unbekannte Straße blockiert das Absenden nicht.
+- [ ] **[Tech]** Straßenverzeichnis etwa einmal im Jahr erneuern:
+      `python3 tools/strassen-laden.py` (holt die Daten aus OpenStreetMap,
+      Stand zurzeit 27. September 2026).
 - [ ] **[KV]** SPF, DKIM und DMARC der Domain prüfen, damit die Mails aus dem
       Paket nicht im Spam landen.
 - [ ] **[Tech]** Auf der Test-Subdomain einen echten Testantrag mit IBAN und
