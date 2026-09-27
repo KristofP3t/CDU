@@ -1,6 +1,6 @@
 # Plan: Ausbau und Modernisierung
 
-Stand: 26. September 2026. Hier steht, **was** getan werden soll und
+Stand: 27. September 2026. Hier steht, **was** getan werden soll und
 **warum**. Die Checkliste zum Abhaken steht in `TODO.md`, der bisherige
 Verlauf in `RELAUNCH.md`.
 
@@ -19,6 +19,12 @@ python3 -m http.server 8000                      # dann http://localhost:8000 ö
 
 - Das Build-Skript braucht Python 3.9 oder neuer. Für die GiroCodes auf
   der Spendenseite zusätzlich `pip install segno`.
+- Die Formulare laufen nur mit PHP (`api/`), also nicht über
+  `python3 -m http.server`. Zum Ausprobieren: `php -S localhost:8000`.
+  Die Zugangsdaten gehören nach `cdu-secrets/config.php` eine Ebene über
+  dem Web-Verzeichnis (Vorlage: `api/config.example.php`).
+- Bankleitzahlen (quartalsweise) und Straßenverzeichnis (jährlich)
+  erneuern: siehe `TODO.md`, Abschnitt 1.
 - Meldungen werden in `inhalte/meldungen/` gepflegt, Termine in
   `inhalte/termine/`. Die erzeugten Seiten nicht von Hand ändern, sondern
   danach das Build-Skript laufen lassen.
@@ -112,9 +118,14 @@ wenn SPF, DKIM und DMARC der Domain den Versand nicht abdecken.
 die Rechte an der Kopie des Wahlprogramm-PDFs, ein Vergleich der
 Antragszahlen vor und nach dem Umzug.
 
-*Erledigt:* Kontaktformular an EmailJS angebunden (noch ohne IDs), Symbole
-und Links auf der Terminseite repariert, 404-Seite, Sitemap und
-`robots.txt`.
+*Erledigt:* Symbole und Links auf der Terminseite repariert, 404-Seite,
+Sitemap und `robots.txt`. Im Code außerdem (Stand 27. September 2026): das
+PHP-Skript für beide Formulare unter `api/` statt EmailJS, Feld- und
+Adressprüfung im Mitgliedsantrag, Cookie-Banner mit Widerruf auf allen
+Seiten, jsPDF vom eigenen Server, Impressum nach DDG, Entwurf der
+Datenschutzerklärung, Alternativtexte der Meldungsbilder, `.htaccess` für
+die 404-Seite. Getestet ist das lokal; der Test mit echtem Mailserver
+steht aus, bis die Angaben unten da sind.
 
 ### Phase 2: Inhalte, die Wähler suchen
 
@@ -213,7 +224,11 @@ Am schnellsten geht es voran mit diesen Angaben vom Kreisverband:
 3. die Texte der vier Meldungen
 4. eine Liste der alten WordPress-Adressen, zum Beispiel deren Sitemap,
    für die Weiterleitungen
+5. die Freigabe der Rechtstexte: wer im Impressum nach § 18 MStV
+   verantwortlich zeichnet, und die offenen Annahmen, die als Kommentar
+   am Anfang der Datenschutzerklärung stehen
 
-Parallel im Code: das PHP-Skript für beide Formulare, jsPDF selbst hosten,
-das Cookie-Banner auf alle Seiten, Alternativtexte, Entwürfe der
-Rechtstexte.
+Im Code ist für Phase 1 vorbereitet, was ohne diese Angaben geht. Offen
+bleiben die Deploy-Action (braucht den SFTP-Zugang) und die
+Weiterleitungen (brauchen die alte Sitemap); danach die Abnahme nach
+`TODO.md`, Abschnitt 3.
