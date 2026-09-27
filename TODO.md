@@ -79,7 +79,10 @@ Begründung und Einzelheiten in `PLAN.md`, Phase 1.
       Monat geschätzt.
 - [ ] **[KV]** Die Beitragsbilder in rund 840px Breite aus der
       WordPress-Mediathek liefern; lokal liegen sie nur in 272px vor.
-- [ ] **[Tech]** Alternativtexte für die Meldungsbilder ergänzen.
+- [x] **[Tech]** Alternativtexte für die Meldungsbilder ergänzen. Die
+      Personen auf den beiden Gruppenfotos sind bewusst nicht benannt – wer
+      wer ist, kann nur der Kreisverband sicher sagen und bei Bedarf in
+      `inhalte/meldungen/` ergänzen.
 
 ### Fakten, die jemand prüfen muss
 - [ ] **[KV]** Spenden: Stimmt der BIC `COBADEFFXXX` mit dem Kontoauszug überein?
