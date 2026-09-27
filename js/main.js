@@ -17,64 +17,42 @@ const sitePrefix = () => {
 };
 
 // ============================================================================
-// Cookie Consent Management
+// Einwilligung in Google Analytics
 // ============================================================================
 
+/* Banner und Knopf "Cookie-Einstellungen" entstehen hier, nicht im Markup
+   jeder Seite: so haben alle Seiten dasselbe Banner, auch neue und die vom
+   Build erzeugten, ohne 36 Kopien pflegen zu muessen. Ohne JavaScript gibt
+   es auch keine Messung - dann braucht es das Banner nicht. */
 const ConsentManager = (() => {
     const STORAGE_KEY = 'cdu-consent';
     const GA_ID = 'G-3L54P95RC8';
+    let banner = null;
+    let gaGeladen = false;
 
-    const init = () => {
-        const consentBanner = document.getElementById('consent-banner');
-        const acceptBtn = document.getElementById('consent-accept');
-        const declineBtn = document.getElementById('consent-decline');
-
-        if (!consentBanner || !acceptBtn || !declineBtn) return;
-
-        // Check if user has already made a choice
-        if (!hasConsent()) {
-            setTimeout(() => {
-                consentBanner.classList.add('show');
-            }, 500);
-        } else {
-            consentBanner.classList.add('hidden');
-            if (getConsent()) {
-                loadGoogleAnalytics();
-            }
+    // Privates Fenster oder gesperrter Speicher: dann gilt "nicht gefragt".
+    const lesen = () => {
+        try {
+            return localStorage.getItem(STORAGE_KEY);
+        } catch (e) {
+            return null;
         }
-
-        acceptBtn.addEventListener('click', () => {
-            setConsent(true);
-            consentBanner.classList.remove('show');
-            consentBanner.classList.add('hidden');
-            loadGoogleAnalytics();
-        });
-
-        declineBtn.addEventListener('click', () => {
-            setConsent(false);
-            consentBanner.classList.remove('show');
-            consentBanner.classList.add('hidden');
-        });
     };
 
-    const hasConsent = () => {
-        return localStorage.getItem(STORAGE_KEY) !== null;
-    };
-
-    const getConsent = () => {
-        const value = localStorage.getItem(STORAGE_KEY);
-        return value === 'true';
-    };
-
-    const setConsent = (value) => {
-        localStorage.setItem(STORAGE_KEY, value ? 'true' : 'false');
+    const speichern = (zugestimmt) => {
+        try {
+            localStorage.setItem(STORAGE_KEY, zugestimmt ? 'true' : 'false');
+        } catch (e) {
+            // Nicht speicherbar - die Wahl gilt dann nur fuer diesen Seitenaufruf.
+        }
     };
 
     const loadGoogleAnalytics = () => {
-        // Load GA4 script conditionally
-        const script = document.getElementById('ga-script');
-        if (!script) return;
+        window[`ga-disable-${GA_ID}`] = false;
+        if (gaGeladen) return;
+        gaGeladen = true;
 
+        const script = document.createElement('script');
         script.async = true;
         script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
         document.head.appendChild(script);
@@ -89,6 +67,105 @@ const ConsentManager = (() => {
             'anonymize_ip': true,
             'allow_google_signals': false
         });
+    };
+
+    /* Widerruf: der offizielle Schalter von Google stoppt weitere Aufrufe
+       auf dieser Seite, danach verschwinden die Cookies. Sie liegen auf der
+       Hauptdomain (.cdu-schwerin.com), deshalb jede Stufe des Hostnamens. */
+    const googleAnalyticsBeenden = () => {
+        window[`ga-disable-${GA_ID}`] = true;
+        const namen = document.cookie.split(';')
+            .map(c => c.split('=')[0].trim())
+            .filter(n => n === '_ga' || n === '_gid' || n.startsWith('_ga_'));
+        const teile = location.hostname.split('.');
+        const domains = [''];
+        for (let i = 0; i < teile.length - 1; i++) {
+            domains.push(`; domain=.${teile.slice(i).join('.')}`);
+        }
+        namen.forEach(name => domains.forEach(domain => {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domain}`;
+        }));
+    };
+
+    const entscheiden = (zugestimmt) => {
+        speichern(zugestimmt);
+        if (zugestimmt) loadGoogleAnalytics();
+        else googleAnalyticsBeenden();
+        banner.classList.remove('show');
+        banner.classList.add('hidden');
+    };
+
+    /* Beide Knoepfe gleich gestaltet: Ablehnen muss so leicht sein wie
+       Zustimmen. Vorher stand "Ablehnen" als tuerkiser Rahmen auf dunklem
+       Grund - schwach lesbar und optisch zweiter Rang. */
+    const bannerBauen = () => {
+        const el = document.createElement('div');
+        el.id = 'consent-banner';
+        el.className = 'consent-banner hidden';
+        el.setAttribute('role', 'region');
+        el.setAttribute('aria-label', 'Einwilligung in die Reichweitenmessung');
+
+        const text = document.createElement('p');
+        text.append(
+            'Mit Ihrer Einwilligung messen wir mit Google Analytics, wie unsere Seite genutzt wird. '
+            + 'Ihre Wahl können Sie jederzeit über „Cookie-Einstellungen“ am Seitenende ändern. '
+        );
+        const link = document.createElement('a');
+        link.href = `${sitePrefix()}datenschutz/`;
+        link.textContent = 'Mehr in der Datenschutzerklärung';
+        text.append(link, '.');
+
+        const knoepfe = document.createElement('div');
+        knoepfe.className = 'consent-actions';
+        [['Akzeptieren', true], ['Ablehnen', false]].forEach(([beschriftung, zugestimmt]) => {
+            const knopf = document.createElement('button');
+            knopf.type = 'button';
+            knopf.className = 'btn btn-primary';
+            knopf.textContent = beschriftung;
+            knopf.addEventListener('click', () => entscheiden(zugestimmt));
+            knoepfe.append(knopf);
+        });
+
+        const inhalt = document.createElement('div');
+        inhalt.className = 'consent-content';
+        inhalt.append(text, knoepfe);
+        el.append(inhalt);
+
+        // Direkt hinter dem Sprunglink: Screenreader treffen es zuerst.
+        const sprunglink = document.querySelector('.skip-link');
+        if (sprunglink) sprunglink.after(el);
+        else document.body.prepend(el);
+        return el;
+    };
+
+    const zeigen = () => {
+        banner.classList.remove('hidden');
+        // Ein Bild spaeter, sonst springt das Banner statt zu gleiten.
+        requestAnimationFrame(() => requestAnimationFrame(() => banner.classList.add('show')));
+    };
+
+    const init = () => {
+        banner = bannerBauen();
+
+        // Widerruf muss so einfach sein wie die Einwilligung (Art. 7 Abs. 3 DSGVO).
+        document.querySelectorAll('.footer-links').forEach(leiste => {
+            const knopf = document.createElement('button');
+            knopf.type = 'button';
+            knopf.className = 'footer-link-button';
+            knopf.textContent = 'Cookie-Einstellungen';
+            knopf.addEventListener('click', () => {
+                zeigen();
+                banner.querySelector('button').focus({ preventScroll: true });
+            });
+            leiste.append(knopf);
+        });
+
+        const wahl = lesen();
+        if (wahl === null) {
+            setTimeout(zeigen, 500);
+        } else if (wahl === 'true') {
+            loadGoogleAnalytics();
+        }
     };
 
     return { init };

@@ -22,9 +22,6 @@
     <meta property="og:image:alt" content="Das Schweriner Schloss">
     <meta name="twitter:card" content="summary_large_image">
 
-    <!-- Preconnect to GA (optional) -->
-    <link rel="preconnect" href="https://www.googletagmanager.com">
-
     <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="css/styles.css">
     <!-- Bildmarke der CDU, wie sie auch cdu-schwerin.com im Browser-Tab
@@ -38,17 +35,6 @@
 <body>
     <!-- Skip Link for Keyboard Navigation -->
     <a href="#main" class="skip-link">Direkt zum Inhalt</a>
-
-    <!-- Cookie Consent Banner -->
-    <div id="consent-banner" class="consent-banner" role="region" aria-label="Cookie-Zustimmung">
-        <div class="consent-content">
-            <p>Wir nutzen Google Analytics zur Verbesserung unserer Website. Sie können Ihre Zustimmung jederzeit ändern.</p>
-            <div class="consent-actions">
-                <button id="consent-accept" class="btn btn-primary">Akzeptieren</button>
-                <button id="consent-decline" class="btn btn-secondary">Ablehnen</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Header -->
     <header id="header" class="site-header" role="banner">
@@ -476,12 +462,10 @@
         </div>
     </footer>
 
-    <!-- Google Analytics (loaded conditionally based on consent) -->
     <script src="js/events-data.js"></script>
     <script src="js/news-data.js"></script>
     <script src="js/search-index.js"></script>
     <script src="js/main.js"></script>
-    <script id="ga-script"></script>
     <!-- Such-Overlay -->
     <div id="search-overlay" class="search-overlay" role="dialog" aria-modal="true" aria-label="Suche" hidden>
         <div class="search-overlay-inner">

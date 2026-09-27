@@ -1,6 +1,6 @@
 # Offene Punkte bis zum Start auf cdu-schwerin.com
 
-Stand: 26. September 2026. Der Plan mit Begründung steht in `PLAN.md`. Einzelheiten zu vielen Punkten stehen in
+Stand: 27. September 2026. Der Plan mit Begründung steht in `PLAN.md`. Einzelheiten zu vielen Punkten stehen in
 `RELAUNCH.md`.
 
 Bei jedem Punkt steht, wer ihn erledigen kann:
@@ -60,9 +60,10 @@ Begründung und Einzelheiten in `PLAN.md`, Phase 1.
 - [ ] **[KV]** Beide Entwürfe prüfen und freigeben.
 
 ### Google Analytics
-- [ ] **[Tech]** Das Cookie-Banner auf alle Seiten bringen; GA lädt erst nach
-      der Einwilligung.
-- [ ] **[Tech]** Den `preconnect` zu googletagmanager.com in `index.html`
+- [x] **[Tech]** Das Cookie-Banner auf alle Seiten bringen; GA lädt erst nach
+      der Einwilligung. Das Banner entsteht jetzt in `js/main.js`, dazu
+      „Cookie-Einstellungen“ im Footer jeder Seite für den Widerruf.
+- [x] **[Tech]** Den `preconnect` zu googletagmanager.com in `index.html`
       entfernen, er baut schon vor der Einwilligung eine Verbindung auf.
 
 ### Meldungen
@@ -115,8 +116,9 @@ Begründung und Einzelheiten in `PLAN.md`, Phase 1.
 - [ ] **[KV]** Die neue Sitemap in der Google Search Console einreichen.
 - [ ] **[Tech]** Die Stadtfraktion ist unter `www.cdu-schwerin.de` verlinkt.
       Klären, ob die Domain bleibt oder mit umzieht.
-- [ ] **[Tech]** Das Wahlprogramm-PDF liegt auf `danielpeters-mv.de`. Eine
-      Kopie auf die eigene Domain legen.
+- [x] **[Tech]** Das Wahlprogramm-PDF liegt auf `danielpeters-mv.de`. Eine
+      Kopie auf die eigene Domain legen. Entfällt: Seit dem Umbau der
+      Startseite (13. September 2026) ist das PDF nirgends mehr verlinkt.
 
 ---
 

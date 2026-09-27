@@ -255,6 +255,17 @@ body {
     flex-shrink: 0;
 }
 
+.consent-content a {
+    color: var(--color-white);
+    text-decoration: underline;
+}
+
+.consent-content a:focus-visible,
+.consent-actions .btn:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+}
+
 /* ==========================================================================
    Container & Layout
    ========================================================================== */
@@ -1653,20 +1664,35 @@ body {
     flex-wrap: wrap;
 }
 
-.footer-links a {
+/* "Cookie-Einstellungen" ist ein Knopf (er oeffnet das Banner, fuehrt
+   nirgendwohin), soll aber aussehen wie die Links daneben. */
+.footer-links a,
+.footer-link-button {
     color: #b0d4da;
     text-decoration: none;
     font-size: 14px;
     transition: color 0.2s;
 }
 
+.footer-link-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    line-height: inherit;
+    cursor: pointer;
+}
+
 .footer-links a:hover,
-.footer-links a:focus-visible {
+.footer-links a:focus-visible,
+.footer-link-button:hover,
+.footer-link-button:focus-visible {
     color: var(--color-white);
     text-decoration: underline;
 }
 
-.footer-links a:focus-visible {
+.footer-links a:focus-visible,
+.footer-link-button:focus-visible {
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
