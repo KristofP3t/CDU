@@ -107,8 +107,9 @@ Begründung und Einzelheiten in `PLAN.md`, Phase 1.
       `main`. Die Zugangsdaten liegen als Secret im Repo.
 - [ ] **[KV]** Eine Test-Subdomain mit Passwortschutz anlegen, zum Beispiel
       `neu.cdu-schwerin.com`.
-- [ ] **[Tech]** Über `.htaccess` dafür sorgen, dass der Server `404.html` für
-      unbekannte Adressen ausliefert.
+- [x] **[Tech]** Über `.htaccess` dafür sorgen, dass der Server `404.html` für
+      unbekannte Adressen ausliefert. Mit einem lokalen Apache getestet,
+      auch unter strengen Hoster-Einstellungen.
 - [ ] **[KV]** Beim Umstellen WordPress in seinem Verzeichnis liegen lassen und
       die Domain auf das neue Verzeichnis umhängen. So geht es mit einem
       Klick zurück.

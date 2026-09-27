@@ -1,0 +1,9 @@
+# Regeln fuer den Webserver (Apache) im Webpaket auf cdu-schwerin.com.
+# Auf GitHub Pages ohne Wirkung - dort liefert GitHub 404.html selbst aus.
+
+# Eigene Fehlerseite statt der des Anbieters, fuer jede unbekannte Adresse.
+# Absoluter Pfad: der Fehler kann in beliebiger Tiefe auftreten.
+#
+# Bewusst ohne "Options -Indexes": manche Hoster verbieten Options in
+# .htaccess, dann antwortet die ganze Seite mit Fehler 500.
+ErrorDocument 404 /404.html

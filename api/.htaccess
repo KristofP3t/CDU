@@ -1,10 +1,14 @@
 # Alles unter diesem Verzeichnis ist gesperrt, ausser den drei Skripten,
-# die tatsaechlich als Formularziel dienen sollen. lib/ und config.php
-# muessen dadurch nicht einzeln geschuetzt werden - sie liegen automatisch
-# mit darunter. Der eigentliche Schluessel und die verschluesselten
-# Antraege liegen ohnehin ausserhalb dieses Verzeichnisses (SECRETS_DIR in
-# config.php), dies hier ist eine zweite Sicherung.
-Options -Indexes
+# die tatsaechlich als Formularziel dienen sollen. lib/ muss dadurch nicht
+# einzeln geschuetzt werden - es liegt automatisch mit darunter. Die
+# Zugangsdaten, der Schluessel und die verschluesselten Antraege liegen
+# ohnehin ausserhalb des Web-Verzeichnisses (cdu-secrets/, siehe
+# config.example.php), dies hier ist eine zweite Sicherung.
+#
+# Bewusst ohne "Options -Indexes": verbietet der Hoster Options in
+# .htaccess, antwortet sonst das ganze Verzeichnis mit Fehler 500 - und
+# beide Formulare waeren tot. Eine Verzeichnisliste zeigte nur die drei
+# Endpunkte, die ohnehin oeffentlich im Repository stehen.
 
 <FilesMatch "\.php$">
     Require all denied
